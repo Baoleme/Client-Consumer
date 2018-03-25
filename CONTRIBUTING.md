@@ -37,7 +37,7 @@ develop分支通过`pull request`与master分支合并
 ![](http://ocphk5wc7.bkt.clouddn.com//17-3-26/93856202-file_1490459215675_97f4.png)
 ## 2.1 clone
 ```bash
-git clone git@gitlab.com:sysu-xianzhi/front-end.git
+git clone https://github.com/Baoleme/Client-Consumer.git
 ```
 
 ## 2.2 切换到特定分支
