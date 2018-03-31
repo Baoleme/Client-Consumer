@@ -48,8 +48,12 @@ export default class extends wepy.app {
   }
 
   async checkLogin () {
+    wepy.showLoading({
+      mask: true
+    });
+
     try {
-      const { data } = await request('http://localhost:8520/customer/self');
+      const { data } = await request('/customer/self');
       store.dispatch({ type: USER_UPDATE, payload: { openid: data['openid'] } });
     } catch (err) {
       const { statusCode } = err;
@@ -62,12 +66,14 @@ export default class extends wepy.app {
     }
     const { userInfo } = await wepy.getUserInfo();
     store.dispatch({ type: USER_UPDATE, payload: userInfo });
+
+    wepy.hideLoading();
   }
 
   async login () {
     const { code } = await wepy.login();
     const { data } = await request({
-      url: 'http://localhost:8520/customer/session',
+      url: '/customer/session',
       method: 'post',
       data: { code }
     });

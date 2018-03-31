@@ -43,7 +43,8 @@ module.exports = {
   plugins: {
   },
   appConfig: {
-    noPromiseAPI: ['createSelectorQuery']
+    noPromiseAPI: ['createSelectorQuery'],
+    baseUrl: prod ? 'http://api.a-fake-url.com/api/' : 'http://localhost:8520/'
   }
 };
 

@@ -1,5 +1,6 @@
 import wepy from 'wepy';
 import jar from './cookieJar';
+import { resolve } from 'url';
 
 export default async function request (arg) {
   const config = typeof arg === 'string' ? { url: arg, method: 'GET' } : arg;
@@ -9,8 +10,7 @@ export default async function request (arg) {
     ...config.header,
     cookie: jar.take()
   };
-
-  console.log(config);
+  config.url = resolve(wepy.$appConfig.baseUrl, config.url);
 
   const res = await wepy.request(config);
 
