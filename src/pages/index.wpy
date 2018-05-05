@@ -1,15 +1,19 @@
-<template>
+<template lang="pug">
   <view class="container">
-    <p>{{user.nickName}}</p>
-    <p>{{user.openid}}</p>
+    //- <p>{{user.nickName}}</p>
+    //- <p>{{user.openid}}</p>
+    <header @navChanged.user="onNavChanged"/>
   </view>
 </template>
 
 <script>
   import wepy from 'wepy';
-  import { connect } from 'wepy-redux';
+  import { connect, getStore } from 'wepy-redux';
+  import { RESTAURANT_UPDATE } from '../store/types/restaurant';
 
-  // const store = getStore();
+  import Header from '../components/Header';
+
+  const store = getStore();
 
   @connect({
     user: 'user'
@@ -19,7 +23,9 @@
     config = {
       navigationBarTitleText: '饱了么'
     }
+
     components = {
+      header: Header
     }
 
     data = {
@@ -29,6 +35,20 @@
     }
 
     methods = {
+      onNavChanged (which) {
+        console.log(`nav changed: ${which}`);
+      }
+    }
+
+    async init () {
+      // mock
+      const restaurant = {
+        name: '糊涂·龙虾（八佰伴店）',
+        phone: '13827361837',
+        logo: ''
+      };
+
+      store.dispatch({ type: RESTAURANT_UPDATE, payload: restaurant });
     }
   }
 </script>

@@ -28,10 +28,12 @@ export default class extends wepy.app {
       'pages/index'
     ],
     window: {
+      backgroundColor: '#f9f9f9',
       backgroundTextStyle: 'light',
       navigationBarBackgroundColor: '#fff',
       navigationBarTitleText: 'WeChat',
-      navigationBarTextStyle: 'black'
+      navigationBarTextStyle: 'black',
+      navigationStyle: 'custom'
     }
   }
 
@@ -62,6 +64,7 @@ export default class extends wepy.app {
         await this.login();
       } else {
         // unknown error
+        // TODO: universal error handler
       }
     }
     const { userInfo } = await wepy.getUserInfo();
