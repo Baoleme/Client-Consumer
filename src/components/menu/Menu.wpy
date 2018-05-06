@@ -1,0 +1,50 @@
+<template>
+  <view class="menu">
+    <category @navChanged.user="onNavChanged" />
+    <menuList />
+  </view>
+</template>
+
+<style lang="scss">
+  .menu {
+    // bug: 如果使用height: 100%，无法撑到和父级一样高度
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: #fff;
+    display: flex;
+  }
+</style>
+
+<script>
+import wepy from 'wepy';
+
+import { connect } from 'wepy-redux';
+
+import Category from './Category';
+import MenuList from './MenuList';
+
+// const store = getStore();
+
+@connect({
+})
+export default class Header extends wepy.component {
+  components = {
+    category: Category,
+    menuList: MenuList
+  }
+
+  data = {
+    nav: 0
+  }
+
+  methods = {
+    onNavChanged (nav) {
+      this.nav = nav;
+      this.$apply();
+    }
+  }
+}
+</script>

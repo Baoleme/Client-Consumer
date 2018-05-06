@@ -1,0 +1,105 @@
+<template>
+  <scroll-view class="menu-list" scroll-y>
+    <view class="category-name">{{title}}</view>
+    <repeat for="{{list}}" index="index" item="item">
+      <dishItem :data="item" />
+    </repeat>
+    <view class="empty-spaceholder" />
+  </scroll-view>
+</template>
+
+<style lang="scss">
+  .menu-list {
+    height: 100%;
+    flex-grow: 1;
+    padding-left: 5rpx;
+    .category-name {
+      margin: 30rpx 0;
+      color: #535353;
+    }
+    .empty-spaceholder {
+      height: 200rpx;
+    }
+  }
+</style>
+
+<script>
+import wepy from 'wepy';
+
+import { connect } from 'wepy-redux';
+
+import DishItem from './DishItem';
+
+// const store = getStore();
+
+@connect({
+})
+export default class Header extends wepy.component {
+  components = {
+    dishItem: DishItem
+  }
+
+  data = {
+    title: '招牌推荐',
+    list: [
+      {
+        name: '方鱼炒芥兰',
+        image: 'http://ouim3dnf4.bkt.clouddn.com/18-5-6/69615219.jpg',
+        description: '做法是方鱼和芥兰一起炒',
+        price: 12,
+        spiciness: 3, // 辣度0-5
+        tags: ['人气推荐', '折扣'],
+        spec: null // 规格
+      },
+      {
+        name: '方鱼炒芥兰',
+        image: 'http://ouim3dnf4.bkt.clouddn.com/18-5-6/69615219.jpg',
+        description: '',
+        price: 12,
+        spiciness: 3, // 辣度0-5
+        tags: ['人气推荐', '折扣'],
+        spec: null // 规格
+      },
+      {
+        name: '方鱼炒芥兰',
+        image: 'http://ouim3dnf4.bkt.clouddn.com/18-5-6/69615219.jpg',
+        description: '',
+        price: 12,
+        spiciness: 3, // 辣度0-5
+        tags: ['人气推荐', '折扣'],
+        spec: null // 规格
+      },
+      {
+        name: '方鱼炒芥兰',
+        image: 'http://ouim3dnf4.bkt.clouddn.com/18-5-6/69615219.jpg',
+        description: '',
+        price: 12,
+        spiciness: 3, // 辣度0-5
+        tags: ['人气推荐', '折扣'],
+        spec: null // 规格
+      },
+      {
+        name: '方鱼炒芥兰',
+        image: 'http://ouim3dnf4.bkt.clouddn.com/18-5-6/69615219.jpg',
+        description: '',
+        price: 12,
+        spiciness: 3, // 辣度0-5
+        tags: ['人气推荐', '折扣'],
+        spec: null // 规格
+      },
+      {
+        name: '方鱼炒芥兰',
+        image: 'http://ouim3dnf4.bkt.clouddn.com/18-5-6/69615219.jpg',
+        description: '',
+        price: 12,
+        spiciness: 3, // 辣度0-5
+        tags: ['人气推荐', '折扣'],
+        spec: null // 规格
+      }
+    ]
+  }
+
+  methods = {
+  }
+}
+</script>

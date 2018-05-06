@@ -39,32 +39,32 @@ export default class Header extends wepy.component {
     display: flex;
     align-items: center;
     padding: 15rpx 0;
-    .logo {
+    > .logo {
       width: 180rpx;
       height: 180rpx;
       border-radius: 10rpx;
       box-shadow: 0rpx 5rpx 20rpx 1rpx rgba(255, 135, 0, 0.4);
       margin: 0 40rpx;
     }
-    .content {
+    > .content {
       height: 180rpx;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      .info {
+      > .info {
         padding: 10rpx 0;
-        .name {
+        > .name {
           font-size: 36rpx;
           color: #232323;
           font-weight: bold;
         }
-        .phone {
+        > .phone {
           margin-top: 20rpx;
           font-size: 24rpx;
           color: #535353;
         }
       }
-      .notification {
+      > .notification {
         font-size: 20rpx;
         color: #535353;
       }

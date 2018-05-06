@@ -1,0 +1,87 @@
+<template>
+  <view class="category" >
+    <repeat for="{{list}}" key="index" index="index" item="item">
+      <view class="item {{state === index ? 'activated' : ''}}"
+        @tap="select({{index}})">
+        <span>{{item}}</span>
+      </view>
+    </repeat>
+    <view class="indicator" style="top: {{indicatorTopOffset}}" />
+  </view>
+</template>
+
+<style lang="scss">
+  .category {
+    height: 100%;
+    width: 150rpx;
+    display: flex;
+    flex-direction: column;
+    > .item {
+      margin-top: 30rpx;
+      padding: 0 20rpx;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24rpx;
+      font-weight: bold;
+      color: #606060;
+      height: 75rpx;
+      width: calc(100% - 40rpx);
+      text-align: center;
+      &.activated {
+        color: #000;
+      }
+      > span {
+        word-wrap: break-word;
+        word-break: break-all;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+      }
+    }
+    > .indicator {
+      position: absolute;
+      height: 75rpx;
+      width: 8rpx;
+      border-radius: 4rpx;
+      background-color: rgb(254, 196, 51);
+      transition: top 0.2s;
+    }
+  }
+</style>
+
+<script>
+import wepy from 'wepy';
+
+import { connect } from 'wepy-redux';
+
+// const store = getStore();
+
+@connect({
+})
+export default class Header extends wepy.component {
+  data = {
+    list: [
+      '招牌推荐',
+      '好吃小龙虾',
+      '本店八月新品陆续出现'
+    ],
+    state: 0
+  }
+
+  methods = {
+    select (which) {
+      this.state = Number(which);
+      this.$emit('navChanged', this.state);
+      this.$apply();
+    }
+  }
+
+  computed = {
+    indicatorTopOffset () {
+      return `${this.state * (75 + 30) + 30}rpx`;
+    }
+  }
+}
+</script>

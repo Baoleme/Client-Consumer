@@ -1,0 +1,81 @@
+<template>
+  <view class="dish-item">
+    <image class="image" src="{{data.image}}" mode="aspectFill"/>
+    <view class="content">
+      <view class="slot name">{{data.name}}</view>
+      <view class="slot"></view>
+      <view class="slot"></view>
+      <view class="slot price">
+        <span class="pre">¥</span>
+        <span class="mid">{{data.price}}</span>
+        <span class="post">起</span>
+      </view>
+    </view>
+  </view>
+</template>
+
+<style lang="scss">
+  .dish-item {
+    height: 175rpx;
+    margin-bottom: 40rpx;
+    display: flex;
+    align-items: center;
+    > .image {
+      height: 175rpx;
+      width: 175rpx;
+      border-radius: 5rpx;
+    }
+    > .content {
+      flex-grow: 1;
+      height: 100%;
+      margin-left: 20rpx;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      > .slot {
+        height: 40rpx;
+      }
+      > .name {
+        font-size: 32rpx;
+        color: #000;
+        font-weight: bold;
+      }
+      > .price {
+        color: rgb(255, 132, 98);
+        > .pre {
+          font-size: 24rpx;
+        }
+        > .mid {
+          font-size: 32rpx;
+          font-weight: bold;
+        }
+        > .post {
+          margin-left: 10rpx;
+          color: #b0b0b0;
+        }
+      }
+    }
+  }
+</style>
+
+<script>
+import wepy from 'wepy';
+
+import { connect } from 'wepy-redux';
+
+// const store = getStore();
+
+@connect({
+})
+export default class Header extends wepy.component {
+  components = {
+  }
+
+  props = {
+    data: Object
+  }
+
+  methods = {
+  }
+}
+</script>

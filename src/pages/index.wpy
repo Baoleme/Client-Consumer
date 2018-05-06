@@ -4,6 +4,12 @@
     <!-- <p>{{user.openid}}</p> -->
     <header @navChanged.user="onNavChanged"/>
     <restaurantInfo />
+    <view class="nav-tab nav-1" wx:if="{{nav === 1}}">
+      <menu />
+    </view>
+    <view class="nav-tab nav-2" wx:else>
+      nav-2!
+    </view>
   </view>
 </template>
 
@@ -14,6 +20,7 @@
 
   import Header from '../components/Header';
   import RestaurantInfo from '../components/RestaurantInfo';
+  import Menu from '../components/menu/Menu';
 
   const store = getStore();
 
@@ -28,10 +35,12 @@
 
     components = {
       header: Header,
-      restaurantInfo: RestaurantInfo
+      restaurantInfo: RestaurantInfo,
+      menu: Menu
     }
 
     data = {
+      nav: 1
     }
 
     computed = {
@@ -39,7 +48,7 @@
 
     methods = {
       onNavChanged (which) {
-        console.log(`nav changed: ${which}`);
+        this.nav = which;
       }
     }
 
@@ -61,4 +70,13 @@
 </script>
 
 <style lang="scss">
+  .container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    > .nav-tab {
+      flex-grow: 1;
+      position: relative;
+    }
+  }
 </style>

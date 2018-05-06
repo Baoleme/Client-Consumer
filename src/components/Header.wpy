@@ -5,13 +5,13 @@
       <span>饱了么</span>
     </view>
     <view class="switch">
-      <view class="button {{ state == 1 ? 'activated' : '' }}" @tap="select(1)">
+      <view class="button {{ state === 1 ? 'activated' : '' }}" @tap="select(1)">
         点餐
       </view>
-      <view class="button {{ state == 2 ? 'activated' : '' }}" @tap="select(2)">
+      <view class="button {{ state === 2 ? 'activated' : '' }}" @tap="select(2)">
         订单
       </view>
-      <view class="activate-bar {{ 'at-' + state }}" />
+      <view class="indicator {{ 'at-' + state }}" />
     </view>
   </view>
 </template>
@@ -32,8 +32,8 @@ export default class Header extends wepy.component {
 
   methods = {
     select (which) {
-      this.state = which;
-      this.$emit('navChanged', which);
+      this.state = Number(which);
+      this.$emit('navChanged', this.state);
       this.$apply();
     }
   }
@@ -81,7 +81,7 @@ export default class Header extends wepy.component {
           color: black;
         }
       }
-      .activate-bar {
+      .indicator {
         position: absolute;
         height: 8rpx;
         width: 225rpx;
