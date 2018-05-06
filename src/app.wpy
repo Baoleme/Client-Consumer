@@ -1,5 +1,6 @@
 <style lang="scss">
   page {
+    font-family:PingFangSC-Regular;
     height: 100%;
     background-color: #f9f9f9;
     font-size: 24rpx;
