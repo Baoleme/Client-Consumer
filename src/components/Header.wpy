@@ -64,7 +64,7 @@ export default class Header extends wepy.component {
     .switch {
       width: 100%;
       margin-top: 26rpx;
-      height: 100rpx;
+      height: 80rpx;
       display: flex;
       position: relative;
       align-items: center;

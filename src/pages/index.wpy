@@ -1,8 +1,9 @@
-<template lang="pug">
+<template>
   <view class="container">
-    //- <p>{{user.nickName}}</p>
-    //- <p>{{user.openid}}</p>
+    <!-- <p>{{user.nickName}}</p> -->
+    <!-- <p>{{user.openid}}</p> -->
     <header @navChanged.user="onNavChanged"/>
+    <restaurantInfo />
   </view>
 </template>
 
@@ -12,6 +13,7 @@
   import { RESTAURANT_UPDATE } from '../store/types/restaurant';
 
   import Header from '../components/Header';
+  import RestaurantInfo from '../components/RestaurantInfo';
 
   const store = getStore();
 
@@ -25,7 +27,8 @@
     }
 
     components = {
-      header: Header
+      header: Header,
+      restaurantInfo: RestaurantInfo
     }
 
     data = {
@@ -40,12 +43,16 @@
       }
     }
 
+    async onLoad () {
+      this.init();
+    }
+
     async init () {
       // mock
       const restaurant = {
         name: '糊涂·龙虾（八佰伴店）',
         phone: '13827361837',
-        logo: ''
+        logo: 'http://ouim3dnf4.bkt.clouddn.com/18-5-6/62965288.jpg'
       };
 
       store.dispatch({ type: RESTAURANT_UPDATE, payload: restaurant });
