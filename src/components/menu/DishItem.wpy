@@ -2,7 +2,14 @@
   <view class="dish-item">
     <image class="image" src="{{data.image}}" mode="aspectFill"/>
     <view class="content">
-      <view class="slot name">{{data.name}}</view>
+      <view class="slot">
+        <span class="name">{{data.name}}</span>
+        <view class="spiciness">
+          <repeat for="{{data.spiciness}}" index="index">
+            <image src="../assets/spicy.png" class="spicy"/>
+          </repeat>
+        </view>
+      </view>
       <view class="slot description">{{data.description}}</view>
       <view class="slot"></view>
       <view class="slot price">
@@ -37,15 +44,25 @@
       justify-content: space-between;
       > .slot {
         height: calc(100% / 4);
+        width: 100%;
         display: flex;
         align-items: center;
       }
-      > .name {
+      > .slot:first-child {
+        justify-content: space-between;
+      }
+      > .slot > .name {
         font-size: 32rpx;
         width: 290rpx;
         @include line-limit;
         color: #232323;
         font-weight: bold;
+      }
+      .spiciness {
+        > .spicy {
+          width: 27rpx;
+          height: 23rpx;
+        }
       }
       > .description {
         width: 100%;

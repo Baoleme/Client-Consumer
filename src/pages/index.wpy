@@ -3,9 +3,11 @@
     <!-- <p>{{user.nickName}}</p> -->
     <!-- <p>{{user.openid}}</p> -->
     <header @navChanged.user="onNavChanged"/>
-    <restaurantInfo />
     <view class="nav-tab nav-1" wx:if="{{nav === 1}}">
-      <menu />
+      <view class="tab-wrapper">
+        <restaurantInfo />
+        <menu />
+      </view>
     </view>
     <view class="nav-tab nav-2" wx:else>
       nav-2!
@@ -74,9 +76,21 @@
     height: 100%;
     display: flex;
     flex-direction: column;
+    > view {
+      flex-shrink: 0;
+    }
     > .nav-tab {
       flex-grow: 1;
       position: relative;
+      display: flex;
+      flex-direction: column;
+      > .tab-wrapper {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+      }
     }
   }
 </style>
