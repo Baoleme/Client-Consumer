@@ -42,58 +42,61 @@ export default class Header extends wepy.component {
 
 <style lang="scss">
   .header {
-    padding-top: 55rpx;
+    height: 205rpx;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     width: 100%;
     .title {
+      margin-top: 61rpx;
       display: flex;
       align-items: center;
       image {
-        height: 40rpx;
-        width: 40rpx;
-        margin-right: 10rpx;
+        height: 47rpx;
+        width: 47rpx;
+        margin-right: 9rpx;
       }
       span {
-        color: #404040;
-        font-size: 27rpx;
+        font-size: 32rpx;
+        color:#3f3f3f;
+        letter-spacing:3px;
       }
     }
     .switch {
       width: 100%;
-      margin-top: 26rpx;
-      height: 80rpx;
+      margin-top: 21rpx;
+      height: 75rpx;
       display: flex;
       position: relative;
       align-items: center;
       .button {
         height: 100%;
-        width: 225rpx;
+        width: 193rpx;
         display: flex;
         justify-content: center;
         align-items: center;
-        margin-left: 100rpx;
-        font-size: 26rpx;
-        color: #a9a9a9;
+        margin-left: 121rpx;
+        font-size: 30rpx;
+        font-weight: bold;
+        color:#aaaaaa;
+        letter-spacing:0;
         &.activated {
-          color: black;
+          color: #232323;
         }
       }
       .indicator {
         position: absolute;
         height: 8rpx;
-        width: 225rpx;
-        background-color: rgb(254, 197, 67);
+        width: 193rpx;
+        background-color: #fdc543;
         border-radius: 4rpx;
-        left: 100rpx;
-        bottom: 4rpx;
-
+        left: 121rpx;
+        bottom: 0;
         // transition
         transition: left 0.2s;
         &.at-2 {
-          left: 425rpx;
+          left: calc(121rpx + 193rpx + 121rpx);
         }
       }
     }
