@@ -12,10 +12,12 @@
   .menu-list {
     height: 100%;
     flex-grow: 1;
-    padding-left: 5rpx;
     .category-name {
-      margin: 30rpx 0;
-      color: #535353;
+      height: 70rpx;
+      display: flex;
+      align-items: center;
+      font-size: 26rpx;
+      color: #232323;
     }
     .empty-spaceholder {
       height: 200rpx;
