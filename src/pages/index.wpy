@@ -7,6 +7,7 @@
       <view class="tab-wrapper">
         <restaurantInfo />
         <menu />
+        <cart />
       </view>
     </view>
     <view class="nav-tab nav-2" wx:else>
@@ -23,6 +24,7 @@
   import Header from '../components/Header';
   import RestaurantInfo from '../components/RestaurantInfo';
   import Menu from '../components/menu/Menu';
+  import Cart from '../components/Cart';
 
   const store = getStore();
 
@@ -38,7 +40,8 @@
     components = {
       header: Header,
       restaurantInfo: RestaurantInfo,
-      menu: Menu
+      menu: Menu,
+      cart: Cart
     }
 
     data = {

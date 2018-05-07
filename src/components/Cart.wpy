@@ -1,0 +1,171 @@
+<template>
+  <view class="cart-container {{active ? 'active' : ''}}" @tap="toggle">
+    <view class="cart-bar">
+      <view class="left" @tap.stop="toggle">
+        <image src="../assets/cart.png" />
+        <view class="price">
+          <span>¥</span>26
+        </view>
+      </view>
+      <view class="right">选好了</view>
+    </view>
+    <view class="float" wx:if="{{active}}" @tap.stop="noop">
+      <view class="triangle" />
+      <view class="header">
+        <view class="left">购物车</view>
+        <view class="right">
+          <image src="../assets/trash.png" />
+          清空
+        </view>
+      </view>
+      <view class="content">
+      </view>
+    </view>
+  </view>
+</template>
+
+<style lang="scss">
+  @import "../lib/var.scss";
+
+  .cart-container {
+    position: absolute;
+    margin-left: auto;
+    margin-right: auto;
+    left: 0;
+    right: 0;
+    width: 710rpx;
+    &.active {
+      position: fixed;
+      background-color: rgba(0, 0, 0, 0.45);
+      top: 0;
+      bottom: 0;
+      width: 100%;
+      > .cart-bar, > .float {
+        left: 0;
+        right: 0;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      > .cart-bar {
+        bottom: 27rpx; // 我也不知道为啥，不改成27就会有些许位移
+      }
+    }
+    > .cart-bar {
+      position: absolute;
+      bottom: 30rpx;
+      background-image: linear-gradient(-106deg, #ff5639 0%, #fd6e6a 99%);
+      box-shadow: 0 2px 10px 0 rgba(252, 193, 56, 0.63), 0 8px 20px 0 rgba(255, 144, 24, 0.33);
+      border-radius: 25rpx;
+      width: 710rpx;
+      height: 100rpx;
+      display: flex;
+      font-weight: bold;
+      > .left {
+        // background-image:linear-gradient(-95deg, #fccf31 14%, #fdaa47 100%);
+        background-image: linear-gradient(95deg, #fccf31 14%, #fdaa47 100%);
+        width: 522rpx;
+        height: 100%;
+        border-top-left-radius: 25rpx;
+        border-bottom-left-radius: 25rpx;
+        display: flex;
+        align-items: center;
+        > image {
+          width: 48rpx;
+          height: 48rpx;
+          margin: 28rpx;
+        }
+        > .price {
+          font-size: 26px;
+          color: #ffffff;
+          > span {
+            font-size: 36rpx;
+          }
+        }
+      }
+      > .right {
+        width: calc(100% - 522rpx);
+        @include center-flex;
+        font-size: 36rpx;
+        color:#ffffff;
+      }
+    }
+    > .float {
+      position: absolute;
+      bottom: 180rpx;
+      height: 780rpx;
+      width: 680rpx;
+      background-color: #fff;
+      border-radius: 15rpx;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      > .triangle {
+        position: absolute;
+        width: 0;
+        height: 0;
+        left: 55rpx;
+        bottom: -20rpx;
+        transform: rotate(225deg);
+        border-width: 25rpx;
+        border-color: #fff transparent transparent #fff;
+        border-style: solid;
+        border-top-left-radius: 10rpx;
+      }
+      > .header {
+        width: calc(100% - 88rpx); // padding有bug，会往外顶
+        height: 80rpx;
+        background-color: #f9f9f9;
+        border-top-left-radius: 15rpx;
+        border-top-right-radius: 15rpx;
+        padding: 0 44rpx;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        > .left {
+          font-size: 30rpx;
+          color:#606060;
+          letter-spacing: 1.15rpx;
+          font-weight: bold;
+        }
+        > .right {
+          font-size: 26rpx;
+          color: #606060;
+          letter-spacing: 1rpx;
+          display: flex;
+          align-items: center;
+          image {
+            width: 20rpx;
+            height: 24rpx;
+          }
+        }
+      }
+      > .content {
+
+      }
+    }
+  }
+</style>
+
+<script>
+import wepy from 'wepy';
+
+import { connect } from 'wepy-redux';
+
+// const store = getStore();
+
+@connect({
+})
+export default class Cart extends wepy.component {
+  data = {
+    active: true
+  }
+
+  methods = {
+    toggle () {
+      this.active = !this.active;
+      this.$apply();
+    },
+    noop () {}
+  }
+}
+</script>

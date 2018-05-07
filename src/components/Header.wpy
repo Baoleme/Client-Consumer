@@ -1,5 +1,5 @@
 <template>
-  <view class="header">
+  <view class="app-header">
     <view class="title">
       <image src="../assets/baoleme_logo_cat.png" />
       <span>饱了么</span>
@@ -41,7 +41,7 @@ export default class Header extends wepy.component {
 </script>
 
 <style lang="scss">
-  .header {
+  .app-header {
     height: 205rpx;
     display: flex;
     flex-direction: column;
@@ -59,8 +59,8 @@ export default class Header extends wepy.component {
       }
       span {
         font-size: 32rpx;
-        color:#3f3f3f;
-        letter-spacing:3px;
+        color: #3f3f3f;
+        letter-spacing: 3rpx;
       }
     }
     .switch {
@@ -80,7 +80,7 @@ export default class Header extends wepy.component {
         font-size: 30rpx;
         font-weight: bold;
         color:#aaaaaa;
-        letter-spacing:0;
+        letter-spacing: 0;
         &.activated {
           color: #232323;
         }
