@@ -1,6 +1,6 @@
 <template>
   <view class="category" >
-    <repeat for="{{list}}" key="index" index="index" item="item">
+    <repeat for="{{menu.categories}}" key="index" index="index" item="item">
       <view class="item {{state === index ? 'activated' : ''}}"
         @tap="select({{index}})">
         <span>{{item}}</span>
@@ -18,6 +18,7 @@
     width: 170rpx;
     display: flex;
     flex-direction: column;
+    position: relative;
     > .item {
       margin-top: 30rpx;
       padding: 0 10rpx;
@@ -56,21 +57,17 @@ import { connect } from 'wepy-redux';
 // const store = getStore();
 
 @connect({
+  menu: 'menu'
 })
 export default class Header extends wepy.component {
   data = {
-    list: [
-      '招牌推荐',
-      '好吃小龙虾',
-      '本店八月新品陆续出现'
-    ],
     state: 0
   }
 
   methods = {
     select (which) {
       this.state = Number(which);
-      this.$emit('navChanged', this.state);
+      this.$emit('categoryChange', this.menu.categories[this.state]);
       this.$apply();
     }
   }

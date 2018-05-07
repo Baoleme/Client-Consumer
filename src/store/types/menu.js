@@ -1,0 +1,2 @@
+export const MENU_UPDATE = 'MENU_UPDATE';
+export const MENU_MODIFY_ITEM_COUNT = 'MENU_MODIFY_ITEM_COUNT';

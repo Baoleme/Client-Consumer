@@ -133,11 +133,12 @@
 <script>
 import wepy from 'wepy';
 
-import { connect } from 'wepy-redux';
+import { connect, getStore } from 'wepy-redux';
+import { MENU_MODIFY_ITEM_COUNT } from '../../store/types';
 
 import Counter from './DishCounter';
 
-// const store = getStore();
+const store = getStore();
 
 @connect({
 })
@@ -152,11 +153,23 @@ export default class Header extends wepy.component {
 
   methods = {
     minus () {
-      this.item.context.count = Math.max(0, this.item.context.count - 1);
+      store.dispatch({
+        type: MENU_MODIFY_ITEM_COUNT,
+        payload: {
+          id: this.item.context.id,
+          modifier: -1
+        }
+      });
       this.$apply();
     },
     plus () {
-      this.item.context.count = Math.min(99, this.item.context.count + 1);
+      store.dispatch({
+        type: MENU_MODIFY_ITEM_COUNT,
+        payload: {
+          id: this.item.context.id,
+          modifier: 1
+        }
+      });
       this.$apply();
     }
   }
