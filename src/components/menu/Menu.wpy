@@ -1,0 +1,47 @@
+<template>
+  <view class="menu">
+    <category @categoryChange.user="onCategoryChanged" />
+    <menuList :category.sync="category"/>
+  </view>
+</template>
+
+<style lang="scss">
+  .menu {
+    // bug: 如果使用height: 100%，无法撑到和父级一样高度
+    height: calc(100% - 200rpx);
+    background-color: #fff;
+    display: flex;
+  }
+</style>
+
+<script>
+import wepy from 'wepy';
+
+import { connect } from 'wepy-redux';
+
+import Category from './Category';
+import MenuList from './MenuList';
+
+// const store = getStore();
+
+@connect({
+  menu: 'menu'
+})
+export default class Header extends wepy.component {
+  components = {
+    category: Category,
+    menuList: MenuList
+  }
+
+  data = {
+    category: null
+  }
+
+  methods = {
+    onCategoryChanged (cate) {
+      this.category = cate;
+      this.$apply();
+    }
+  }
+}
+</script>

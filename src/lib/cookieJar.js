@@ -32,10 +32,9 @@ class CookieJar {
       .filter(m => !!m)
       .map(m => [m[1], m[2]])
       .forEach(([k, v]) => {
-        console.log(k, v);
         this.data[k] = v;
       });
-    wepy.setStorageSync('cookies', this.data); // use sync version to ensure consistency
+    wepy.setStorageSync('cookies', this.data); // use sync version to ensure consistency TODO: any way to avoid use of sync API?
   }
 }
 

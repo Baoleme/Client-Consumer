@@ -1,0 +1,56 @@
+<template>
+  <scroll-view class="menu-list" scroll-y>
+    <view class="category-name">{{title}}</view>
+    <repeat for="{{list}}" index="index" item="item">
+      <dishItem :item="item" />
+    </repeat>
+    <view class="empty-spaceholder" />
+  </scroll-view>
+</template>
+
+<style lang="scss">
+  .menu-list {
+    height: 100%;
+    flex-grow: 1;
+    .category-name {
+      height: 70rpx;
+      display: flex;
+      align-items: center;
+      font-size: 26rpx;
+      color: #232323;
+    }
+    .empty-spaceholder {
+      height: 200rpx;
+    }
+  }
+</style>
+
+<script>
+import wepy from 'wepy';
+
+import { connect } from 'wepy-redux';
+
+import DishItem from './DishItem';
+
+// const store = getStore();
+
+@connect({
+  menu: 'menu'
+})
+export default class Header extends wepy.component {
+  components = {
+    dishItem: DishItem
+  }
+
+  props = {
+    category: String
+  }
+
+  computed = {
+    list () {
+      if (!this.menu) return [];
+      return this.menu.data[this.category || this.menu.categories[0]] || [];
+    }
+  }
+}
+</script>

@@ -1,0 +1,33 @@
+<template>
+  <view class="dish-counter">
+    <view class="button minus" @tap="minus">
+      <i class="iconfont icon-jianhao"/>
+    </view>
+    <view class="count">{{count}}</view>
+    <view class="button plus" @tap="plus">
+      <i class="iconfont icon-jiahao1"/>
+    </view>
+  </view>
+</template>
+
+<style lang="scss">
+</style>
+
+<script>
+import wepy from 'wepy';
+
+export default class Header extends wepy.component {
+  props = {
+    count: Number
+  }
+
+  methods = {
+    minus () {
+      this.$emit('minus');
+    },
+    plus () {
+      this.$emit('plus');
+    }
+  }
+}
+</script>

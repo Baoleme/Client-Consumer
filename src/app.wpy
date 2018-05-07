@@ -1,12 +1,13 @@
 <style lang="scss">
-.container {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  box-sizing: border-box;
-}
+  @import 'lib/iconfont.scss';
+
+  page {
+    font-family:PingFangSC-Regular;
+    height: 100%;
+    background-color: #f9f9f9;
+    font-size: 24rpx;
+    overflow: hidden;
+  }
 </style>
 
 <script>
@@ -28,10 +29,12 @@ export default class extends wepy.app {
       'pages/index'
     ],
     window: {
+      backgroundColor: '#f9f9f9',
       backgroundTextStyle: 'light',
       navigationBarBackgroundColor: '#fff',
       navigationBarTitleText: 'WeChat',
-      navigationBarTextStyle: 'black'
+      navigationBarTextStyle: 'black',
+      navigationStyle: 'custom'
     }
   }
 
@@ -62,6 +65,7 @@ export default class extends wepy.app {
         await this.login();
       } else {
         // unknown error
+        // TODO: universal error handler
       }
     }
     const { userInfo } = await wepy.getUserInfo();

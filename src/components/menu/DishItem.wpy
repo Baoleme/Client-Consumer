@@ -1,0 +1,177 @@
+<template>
+  <view class="dish-item">
+    <image class="image" src="{{item.image}}" mode="aspectFill" @tap="add"/>
+    <view class="content">
+      <view class="slot">
+        <span class="name">{{item.name}}</span>
+        <view class="spiciness">
+          <repeat for="{{item.spiciness}}" index="index">
+            <image src="../assets/spicy.png" class="spicy"/>
+          </repeat>
+        </view>
+      </view>
+      <view class="slot description">{{item.description}}</view>
+      <view class="slot"></view>
+      <view class="slot">
+        <view class="price">
+          <span class="pre">¥</span>
+          <span class="mid">{{item.price}}</span>
+          <span class="post">起</span>
+        </view>
+        <view class="dish-counter">
+          <view class="button minus" wx:if="{{item.context.count !== 0}}" @tap="minus">
+            <i class="iconfont icon-jianhao"/>
+          </view>
+          <view class="count" wx:if="{{item.context.count !== 0}}">{{item.context.count}}</view>
+          <view class="button plus" @tap="plus">
+            <i class="iconfont icon-jiahao1"/>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</template>
+
+<style lang="scss">
+  @import "../../lib/var.scss";
+
+  .dish-item {
+    height: 150rpx;
+    margin-bottom: 40rpx;
+    display: flex;
+    align-items: center;
+    > .image {
+      height: 150rpx;
+      width: 150rpx;
+      border-radius: 5rpx;
+    }
+    > .content {
+      flex-grow: 1;
+      height: 100%;
+      margin-left: 17rpx;
+      margin-right: 30rpx;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      > .slot {
+        height: calc(100% / 4);
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      > .slot > .name {
+        font-size: 32rpx;
+        width: 290rpx;
+        @include line-limit;
+        color: #232323;
+        font-weight: bold;
+      }
+      .spiciness {
+        > .spicy {
+          width: 27rpx;
+          height: 23rpx;
+        }
+      }
+      > .description {
+        width: 100%;
+        font-size: 22rpx;
+        color: #9b9b9b;
+        @include line-limit;
+      }
+      > .slot > .price {
+        color: #fe8966;
+        > .pre {
+          font-size: 24rpx;
+        }
+        > .mid {
+          font-size: 36rpx;
+          font-weight: bold;
+        }
+        > .post {
+          margin-left: 13rpx;
+          color: #9b9b9b;
+        }
+      }
+    }
+  }
+
+  .dish-counter {
+    display: flex;
+    .button {
+      width: 45rpx;
+      height: 45rpx;
+      border-radius: 15rpx;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-weight: bold;
+      font-size: 25rpx;
+      &.minus {
+        background-color: #f5f5f5;
+        color: #979797;
+      }
+      &.plus {
+        background-color: #fcc138;
+        color: #ffffff;
+      }
+    }
+    .count {
+      display: flex;
+      width: 36rpx;
+      align-items: center;
+      justify-content: center;
+      font-size: 28rpx;
+      color: #606060;
+      letter-spacing:1.08px;
+      margin: 0 16rpx;
+      font-weight: bold;
+    }
+  }
+</style>
+
+<script>
+import wepy from 'wepy';
+
+import { connect, getStore } from 'wepy-redux';
+import { MENU_MODIFY_ITEM_COUNT } from '../../store/types';
+
+import Counter from './DishCounter';
+
+const store = getStore();
+
+@connect({
+})
+export default class Header extends wepy.component {
+  components = {
+    counter: Counter
+  }
+
+  props = {
+    item: Object
+  }
+
+  methods = {
+    minus () {
+      store.dispatch({
+        type: MENU_MODIFY_ITEM_COUNT,
+        payload: {
+          id: this.item.context.id,
+          modifier: -1
+        }
+      });
+      this.$apply();
+    },
+    plus () {
+      store.dispatch({
+        type: MENU_MODIFY_ITEM_COUNT,
+        payload: {
+          id: this.item.context.id,
+          modifier: 1
+        }
+      });
+      this.$apply();
+    }
+  }
+}
+</script>

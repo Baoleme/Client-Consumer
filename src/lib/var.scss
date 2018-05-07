@@ -1,0 +1,14 @@
+@mixin line-limit($n: 1) {
+  word-wrap: break-word;
+  word-break: break-all;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  @if $n==1 {
+    white-space: nowrap;
+  }
+  @else {
+    display: -webkit-box;
+    -webkit-line-clamp: $n;
+    -webkit-box-orient: vertical;
+  }
+}

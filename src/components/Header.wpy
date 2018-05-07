@@ -1,0 +1,110 @@
+<template>
+  <view class="header">
+    <view class="title">
+      <image src="../assets/baoleme_logo_cat.png" />
+      <span>饱了么</span>
+    </view>
+    <view class="switch">
+      <view class="button {{ state === 1 ? 'activated' : '' }}" @tap="select(1)">
+        点餐
+      </view>
+      <view class="button {{ state === 2 ? 'activated' : '' }}" @tap="select(2)">
+        订单
+      </view>
+      <view class="indicator {{ 'at-' + state }}" />
+    </view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy';
+
+import { connect } from 'wepy-redux';
+
+// const store = getStore();
+
+@connect({
+})
+export default class Header extends wepy.component {
+  data = {
+    state: 1
+  }
+
+  methods = {
+    select (which) {
+      this.state = Number(which);
+      this.$emit('navChanged', this.state);
+      this.$apply();
+    }
+  }
+}
+</script>
+
+<style lang="scss">
+  .header {
+    height: 205rpx;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    .title {
+      margin-top: 61rpx;
+      display: flex;
+      align-items: center;
+      image {
+        height: 47rpx;
+        width: 47rpx;
+        margin-right: 9rpx;
+      }
+      span {
+        font-size: 32rpx;
+        color:#3f3f3f;
+        letter-spacing:3px;
+      }
+    }
+    .switch {
+      width: 100%;
+      margin-top: 21rpx;
+      height: 75rpx;
+      display: flex;
+      position: relative;
+      align-items: center;
+      .button {
+        height: 100%;
+        width: 193rpx;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-left: 121rpx;
+        font-size: 30rpx;
+        font-weight: bold;
+        color:#aaaaaa;
+        letter-spacing:0;
+        &.activated {
+          color: #232323;
+        }
+      }
+      .indicator {
+        position: absolute;
+        height: 8rpx;
+        width: 193rpx;
+        background-color: #fdc543;
+        border-radius: 4rpx;
+        left: 121rpx;
+        bottom: 0;
+        // transition
+        transition: left 0.2s;
+        &.at-2 {
+          left: calc(121rpx + 193rpx + 121rpx);
+        }
+      }
+    }
+  }
+
+  .clickable {
+    &.activate {
+      // TODO: add click effect
+    }
+  }
+</style>
