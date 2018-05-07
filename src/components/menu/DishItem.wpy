@@ -18,7 +18,7 @@
           <span class="mid">{{item.price}}</span>
           <span class="post">起</span>
         </view>
-        <view class="dish-counter">
+        <view class="dish-counter" wx:if="{{!item.spec}}">
           <view class="button minus" wx:if="{{item.context.count !== 0}}" @tap="minus">
             <i class="iconfont icon-jianhao"/>
           </view>
@@ -26,6 +26,9 @@
           <view class="button plus" @tap="plus">
             <i class="iconfont icon-jiahao1"/>
           </view>
+        </view>
+        <view class="spec-button" wx:if="{{item.spec}}" @tap="selectSpec">
+          选规格
         </view>
       </view>
     </view>
@@ -128,6 +131,16 @@
       font-weight: bold;
     }
   }
+
+  .spec-button {
+    background-color: #fcc138;
+    color: #232323;
+    font-size: 24rpx;
+    height: 50rpx;
+    width: 108rpx;
+    border-radius: 12rpx;
+    @include center-flex;
+  }
 </style>
 
 <script>
@@ -171,6 +184,10 @@ export default class Header extends wepy.component {
         }
       });
       this.$apply();
+    },
+    selectSpec () {
+      // stub
+      console.log('select spec');
     }
   }
 }
