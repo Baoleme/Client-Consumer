@@ -24,7 +24,7 @@
   import Header from '../components/Header';
   import RestaurantInfo from '../components/RestaurantInfo';
   import Menu from '../components/menu/Menu';
-  import Cart from '../components/Cart';
+  import Cart from '../components/Cart/Cart';
 
   const store = getStore();
 

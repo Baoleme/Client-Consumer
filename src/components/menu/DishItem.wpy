@@ -16,7 +16,7 @@
         <view class="price">
           <span class="pre">¥</span>
           <span class="mid">{{item.price}}</span>
-          <span class="post">起</span>
+          <span class="post" wx:if="{{!!item.spec}}">起</span>
         </view>
         <view class="dish-counter" wx:if="{{!item.spec}}">
           <view class="button minus" wx:if="{{item.context.count !== 0}}" @tap="minus">

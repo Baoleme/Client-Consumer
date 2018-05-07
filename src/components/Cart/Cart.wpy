@@ -2,7 +2,7 @@
   <view class="cart-container {{active ? 'active' : ''}}" @tap="toggle">
     <view class="cart-bar">
       <view class="left" @tap.stop="toggle">
-        <image src="../assets/cart.png" />
+        <image src="../../assets/cart.png" />
         <view class="bubble" wx:if="{{basketSize !== 0}}">{{basketSize}}</view>
         <view class="price">
           <span>¥</span>{{total}}
@@ -15,18 +15,22 @@
       <view class="header">
         <view class="left">购物车</view>
         <view class="right" @tap="empty">
-          <image src="../assets/trash.png" />
+          <image src="../../assets/trash.png" />
           清空
         </view>
       </view>
       <view class="content">
+        <repeat for="{{basketArray}}" index="index" item="item">
+          <view class="divider" wx:if="{{index !== 0}}"/>
+          <cartItem :item="item" />
+        </repeat>
       </view>
     </view>
   </view>
 </template>
 
 <style lang="scss">
-  @import "../lib/var.scss";
+  @import "../../lib/var.scss";
 
   .cart-container {
     position: absolute;
@@ -108,13 +112,18 @@
     > .float {
       position: absolute;
       bottom: 180rpx;
-      height: 780rpx;
+      min-height: 150rpx;
+      max-height: 780rpx;
+      // max-height: 200rpx;
       width: 680rpx;
       background-color: #fff;
       border-radius: 15rpx;
       display: flex;
       flex-direction: column;
       align-items: center;
+      > view {
+        flex-shrink: 0;
+      }
       > .triangle {
         position: absolute;
         width: 0;
@@ -157,7 +166,15 @@
         }
       }
       > .content {
-
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        > .divider {
+          width: 551rpx;
+          height: 3rpx;
+          background-color: #ededed;
+        }
       }
     }
   }
@@ -168,7 +185,8 @@ import wepy from 'wepy';
 
 import { connect, getStore } from 'wepy-redux';
 
-import { MENU_EMPTY_BASKET } from '../store/types';
+import { MENU_EMPTY_BASKET } from '../../store/types';
+import CartItem from './CartItem';
 
 const store = getStore();
 
@@ -181,13 +199,50 @@ const store = getStore();
   basket (state) {
     return state.menu.basket;
   },
+  basketArray (state) {
+    // return state.menu.basket.toArray();
+    console.log(state.menu.basket.toArray());
+    return state.menu.basket.toArray().map(id => state.menu.idMap.get(id));
+  },
   basketSize (state) {
     return state.menu.basket.size;
   }
 })
 export default class Cart extends wepy.component {
+  components = {
+    cartItem: CartItem
+  }
+
   data = {
-    active: false
+    active: true
+  }
+
+  onLoad () {
+    // for debug
+    setTimeout(() => {
+      store.dispatch({
+        type: 'MENU_MODIFY_ITEM_COUNT',
+        payload: {
+          id: 2,
+          modifier: 1
+        }
+      });
+      store.dispatch({
+        type: 'MENU_MODIFY_ITEM_COUNT',
+        payload: {
+          id: 3,
+          modifier: 1
+        }
+      });
+      store.dispatch({
+        type: 'MENU_MODIFY_ITEM_COUNT',
+        payload: {
+          id: 4,
+          modifier: 1
+        }
+      });
+      this.$apply();
+    }, 500);
   }
 
   methods = {
