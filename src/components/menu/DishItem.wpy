@@ -155,7 +155,7 @@ const store = getStore();
 
 @connect({
 })
-export default class Header extends wepy.component {
+export default class DishItem extends wepy.component {
   components = {
     counter: Counter
   }

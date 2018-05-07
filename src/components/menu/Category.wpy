@@ -59,7 +59,7 @@ import { connect } from 'wepy-redux';
 @connect({
   menu: 'menu'
 })
-export default class Header extends wepy.component {
+export default class Category extends wepy.component {
   data = {
     state: 0
   }

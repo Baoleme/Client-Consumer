@@ -37,7 +37,7 @@ import DishItem from './DishItem';
 @connect({
   menu: 'menu'
 })
-export default class Header extends wepy.component {
+export default class MenuList extends wepy.component {
   components = {
     dishItem: DishItem
   }
