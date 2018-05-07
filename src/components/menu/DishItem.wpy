@@ -1,21 +1,32 @@
 <template>
   <view class="dish-item">
-    <image class="image" src="{{data.image}}" mode="aspectFill"/>
+    <image class="image" src="{{item.image}}" mode="aspectFill" @tap="add"/>
     <view class="content">
       <view class="slot">
-        <span class="name">{{data.name}}</span>
+        <span class="name">{{item.name}}</span>
         <view class="spiciness">
-          <repeat for="{{data.spiciness}}" index="index">
+          <repeat for="{{item.spiciness}}" index="index">
             <image src="../assets/spicy.png" class="spicy"/>
           </repeat>
         </view>
       </view>
-      <view class="slot description">{{data.description}}</view>
+      <view class="slot description">{{item.description}}</view>
       <view class="slot"></view>
-      <view class="slot price">
-        <span class="pre">¥</span>
-        <span class="mid">{{data.price}}</span>
-        <span class="post">起</span>
+      <view class="slot">
+        <view class="price">
+          <span class="pre">¥</span>
+          <span class="mid">{{item.price}}</span>
+          <span class="post">起</span>
+        </view>
+        <view class="dish-counter">
+          <view class="button minus" @tap="minus">
+            <i class="iconfont icon-jianhao"/>
+          </view>
+          <view class="count">{{item.context.count}}</view>
+          <view class="button plus" @tap="plus">
+            <i class="iconfont icon-jiahao1"/>
+          </view>
+        </view>
       </view>
     </view>
   </view>
@@ -47,8 +58,6 @@
         width: 100%;
         display: flex;
         align-items: center;
-      }
-      > .slot:first-child {
         justify-content: space-between;
       }
       > .slot > .name {
@@ -70,7 +79,7 @@
         color: #9b9b9b;
         @include line-limit;
       }
-      > .price {
+      > .slot > .price {
         color: #fe8966;
         > .pre {
           font-size: 24rpx;
@@ -86,6 +95,39 @@
       }
     }
   }
+
+  .dish-counter {
+    display: flex;
+    .button {
+      width: 45rpx;
+      height: 45rpx;
+      border-radius: 15rpx;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-weight: bold;
+      font-size: 25rpx;
+      &.minus {
+        background-color: #f5f5f5;
+        color: #979797;
+      }
+      &.plus {
+        background-color: #fcc138;
+        color: #ffffff;
+      }
+    }
+    .count {
+      display: flex;
+      width: 36rpx;
+      align-items: center;
+      justify-content: center;
+      font-size: 28rpx;
+      color: #606060;
+      letter-spacing:1.08px;
+      margin: 0 16rpx;
+      font-weight: bold;
+    }
+  }
 </style>
 
 <script>
@@ -93,19 +135,30 @@ import wepy from 'wepy';
 
 import { connect } from 'wepy-redux';
 
+import Counter from './DishCounter';
+
 // const store = getStore();
 
 @connect({
 })
 export default class Header extends wepy.component {
   components = {
+    counter: Counter
   }
 
   props = {
-    data: Object
+    item: Object
   }
 
   methods = {
+    minus () {
+      this.item.context.count = Math.max(0, this.item.context.count - 1);
+      this.$apply();
+    },
+    plus () {
+      this.item.context.count = Math.min(99, this.item.context.count + 1);
+      this.$apply();
+    }
   }
 }
 </script>

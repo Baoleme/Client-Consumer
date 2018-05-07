@@ -2,7 +2,7 @@
   <scroll-view class="menu-list" scroll-y>
     <view class="category-name">{{title}}</view>
     <repeat for="{{list}}" index="index" item="item">
-      <dishItem :data="item" />
+      <dishItem :item="item" />
     </repeat>
     <view class="empty-spaceholder" />
   </scroll-view>
@@ -51,7 +51,10 @@ export default class Header extends wepy.component {
         price: 12,
         spiciness: 3, // 辣度0-3
         tags: ['人气推荐', '折扣'],
-        spec: null // 规格
+        spec: null, // 规格
+        context: {
+          count: 5
+        }
       },
       {
         name: '方鱼炒芥兰',
@@ -60,7 +63,10 @@ export default class Header extends wepy.component {
         price: 12,
         spiciness: 0, // 辣度0-3
         tags: ['人气推荐', '折扣'],
-        spec: null // 规格
+        spec: null, // 规格
+        context: {
+          count: 1
+        }
       },
       {
         name: '方鱼炒芥兰',
@@ -69,7 +75,10 @@ export default class Header extends wepy.component {
         price: 12,
         spiciness: 0, // 辣度0-3
         tags: ['人气推荐', '折扣'],
-        spec: null // 规格
+        spec: null, // 规格
+        context: {
+          count: 2
+        }
       },
       {
         name: '方鱼炒芥兰',
@@ -78,7 +87,10 @@ export default class Header extends wepy.component {
         price: 12,
         spiciness: 0, // 辣度0-3
         tags: ['人气推荐', '折扣'],
-        spec: null // 规格
+        spec: null, // 规格
+        context: {
+          count: 3
+        }
       },
       {
         name: '方鱼炒芥兰',
@@ -87,7 +99,10 @@ export default class Header extends wepy.component {
         price: 12,
         spiciness: 0, // 辣度0-3
         tags: ['人气推荐', '折扣'],
-        spec: null // 规格
+        spec: null, // 规格
+        context: {
+          count: 4
+        }
       },
       {
         name: '方鱼炒芥兰',
@@ -96,7 +111,10 @@ export default class Header extends wepy.component {
         price: 12,
         spiciness: 0, // 辣度0-3
         tags: ['人气推荐', '折扣'],
-        spec: null // 规格
+        spec: null, // 规格
+        context: {
+          count: 0
+        }
       }
     ]
   }
