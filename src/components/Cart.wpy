@@ -3,8 +3,9 @@
     <view class="cart-bar">
       <view class="left" @tap.stop="toggle">
         <image src="../assets/cart.png" />
+        <view class="bubble">66</view>
         <view class="price">
-          <span>¥</span>26
+          <span>¥</span>{{total}}
         </view>
       </view>
       <view class="right">选好了</view>
@@ -13,7 +14,7 @@
       <view class="triangle" />
       <view class="header">
         <view class="left">购物车</view>
-        <view class="right">
+        <view class="right" @tap="empty">
           <image src="../assets/trash.png" />
           清空
         </view>
@@ -74,11 +75,26 @@
           height: 48rpx;
           margin: 28rpx;
         }
+        > .bubble {
+          position: absolute;
+          left: 68rpx;
+          bottom: 74rpx;
+          font-size: 28rpx;
+          color: #ffffff;
+          letter-spacing: 2.8rpx;
+          font-weight: lighter;
+          background: #ff693c;
+          width: 45rpx;
+          height: 45rpx;
+          border-radius: 100%;
+          @include center-flex;
+        }
         > .price {
           font-size: 26px;
           color: #ffffff;
           > span {
             font-size: 36rpx;
+            margin-right: 9rpx;
           }
         }
       }
@@ -136,6 +152,7 @@
           image {
             width: 20rpx;
             height: 24rpx;
+            margin-right: 9rpx;
           }
         }
       }
@@ -154,10 +171,15 @@ import { connect } from 'wepy-redux';
 // const store = getStore();
 
 @connect({
+  total (state) {
+    return [...state.menu.idMap.values()]
+      .map(item => item.context.count * item.price)
+      .reduce((x, acc) => x + acc, 0);
+  }
 })
 export default class Cart extends wepy.component {
   data = {
-    active: true
+    active: false
   }
 
   methods = {
@@ -165,7 +187,15 @@ export default class Cart extends wepy.component {
       this.active = !this.active;
       this.$apply();
     },
-    noop () {}
+    noop () {},
+    empty () {
+      // stub
+      console.log('empty');
+    }
+  }
+
+  computed = {
+
   }
 }
 </script>
