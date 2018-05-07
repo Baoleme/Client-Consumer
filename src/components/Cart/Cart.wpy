@@ -1,5 +1,6 @@
 <template>
-  <view class="cart-container {{active ? 'active' : ''}}" @tap="toggle">
+  <view class="cart-container {{active ? 'active' : ''}}" @tap="toggle" catchtouchmove="noop" wx:if="{{basketSize !== 0}}">
+    <!-- catchtouchmove 用于防止滚动穿透 -->
     <view class="cart-bar">
       <view class="left" @tap.stop="toggle">
         <image src="../../assets/cart.png" />
@@ -8,9 +9,9 @@
           <span>¥</span>{{total}}
         </view>
       </view>
-      <view class="right">选好了</view>
+      <view class="right" @tap="ok">选好了</view>
     </view>
-    <view class="float" wx:if="{{active}}" @tap.stop="noop">
+    <view class="cart-float" wx:if="{{active}}" @tap.stop="noop">
       <view class="triangle" />
       <view class="header">
         <view class="left">购物车</view>
@@ -19,12 +20,14 @@
           清空
         </view>
       </view>
-      <view class="content">
+      <scroll-view class="content" style="height: {{floatHeight}}rpx"  scroll-y="{{floatHeight == 700}}">
         <repeat for="{{basketArray}}" index="index" item="item">
-          <view class="divider" wx:if="{{index !== 0}}"/>
-          <cartItem :item="item" />
+          <view class="cart-item-wrapper">
+            <view class="divider" wx:if="{{index !== 0}}"/>
+            <cartItem :item="item" />
+          </view>
         </repeat>
-      </view>
+      </scroll-view>
     </view>
   </view>
 </template>
@@ -45,17 +48,17 @@
       top: 0;
       bottom: 0;
       width: 100%;
-      > .cart-bar, > .float {
+      .cart-bar, .cart-float {
         left: 0;
         right: 0;
         margin-left: auto;
         margin-right: auto;
       }
-      > .cart-bar {
+      .cart-bar {
         bottom: 27rpx; // 我也不知道为啥，不改成27就会有些许位移
       }
     }
-    > .cart-bar {
+    .cart-bar {
       position: absolute;
       bottom: 30rpx;
       background-image: linear-gradient(-106deg, #ff5639 0%, #fd6e6a 99%);
@@ -109,12 +112,9 @@
         color:#ffffff;
       }
     }
-    > .float {
+    .cart-float {
       position: absolute;
       bottom: 180rpx;
-      min-height: 150rpx;
-      max-height: 780rpx;
-      // max-height: 200rpx;
       width: 680rpx;
       background-color: #fff;
       border-radius: 15rpx;
@@ -167,13 +167,16 @@
       }
       > .content {
         width: 100%;
+        height: calc(100% - 80rpx);
         display: flex;
         flex-direction: column;
         align-items: center;
-        > .divider {
+        .divider {
           width: 551rpx;
           height: 3rpx;
           background-color: #ededed;
+          margin-left: auto;
+          margin-right: auto;
         }
       }
     }
@@ -200,8 +203,6 @@ const store = getStore();
     return state.menu.basket;
   },
   basketArray (state) {
-    // return state.menu.basket.toArray();
-    console.log(state.menu.basket.toArray());
     return state.menu.basket.toArray().map(id => state.menu.idMap.get(id));
   },
   basketSize (state) {
@@ -219,30 +220,30 @@ export default class Cart extends wepy.component {
 
   onLoad () {
     // for debug
-    setTimeout(() => {
-      store.dispatch({
-        type: 'MENU_MODIFY_ITEM_COUNT',
-        payload: {
-          id: 2,
-          modifier: 1
-        }
-      });
-      store.dispatch({
-        type: 'MENU_MODIFY_ITEM_COUNT',
-        payload: {
-          id: 3,
-          modifier: 1
-        }
-      });
-      store.dispatch({
-        type: 'MENU_MODIFY_ITEM_COUNT',
-        payload: {
-          id: 4,
-          modifier: 1
-        }
-      });
-      this.$apply();
-    }, 500);
+    // setTimeout(() => {
+    //   store.dispatch({
+    //     type: 'MENU_MODIFY_ITEM_COUNT',
+    //     payload: {
+    //       id: 2,
+    //       modifier: 1
+    //     }
+    //   });
+    //   store.dispatch({
+    //     type: 'MENU_MODIFY_ITEM_COUNT',
+    //     payload: {
+    //       id: 3,
+    //       modifier: 1
+    //     }
+    //   });
+    //   store.dispatch({
+    //     type: 'MENU_MODIFY_ITEM_COUNT',
+    //     payload: {
+    //       id: 4,
+    //       modifier: 1
+    //     }
+    //   });
+    //   this.$apply();
+    // }, 500);
   }
 
   methods = {
@@ -255,11 +256,26 @@ export default class Cart extends wepy.component {
       store.dispatch({ type: MENU_EMPTY_BASKET });
       this.active = !this.active;
       this.$apply();
+    },
+    ok () {
+      // stub
+      console.log('select ok');
     }
   }
 
   computed = {
+    floatHeight () {
+      return Math.min(700, this.basketSize * 130); // 迷之高度计算式
+    }
+  }
 
+  watch = {
+    'basketSize' (newValue, oldValue) {
+      if (newValue === 0) {
+        this.active = false;
+        this.$apply();
+      }
+    }
   }
 }
 </script>
