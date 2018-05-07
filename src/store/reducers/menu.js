@@ -1,5 +1,5 @@
 import { handleActions } from 'redux-actions';
-import { MENU_UPDATE, MENU_MODIFY_ITEM_COUNT } from '../types/menu';
+import { MENU_UPDATE, MENU_MODIFY_ITEM_COUNT, MENU_EMPTY_BASKET } from '../types/menu';
 import { List } from 'immutable';
 
 export default handleActions({
@@ -45,6 +45,17 @@ export default handleActions({
       newState.basket = newState.basket.push(id);
     }
     return newState;
+  },
+
+  [MENU_EMPTY_BASKET] (state, action) {
+    for (const item of state.idMap.values()) {
+      item.context.count = 0;
+    }
+
+    return {
+      ...state,
+      basket: new List()
+    };
   }
 }, {
   data: {},

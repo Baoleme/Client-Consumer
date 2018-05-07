@@ -166,9 +166,11 @@
 <script>
 import wepy from 'wepy';
 
-import { connect } from 'wepy-redux';
+import { connect, getStore } from 'wepy-redux';
 
-// const store = getStore();
+import { MENU_EMPTY_BASKET } from '../store/types';
+
+const store = getStore();
 
 @connect({
   total (state) {
@@ -195,8 +197,9 @@ export default class Cart extends wepy.component {
     },
     noop () {},
     empty () {
-      // stub
-      console.log('empty');
+      store.dispatch({ type: MENU_EMPTY_BASKET });
+      this.active = !this.active;
+      this.$apply();
     }
   }
 
