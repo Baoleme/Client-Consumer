@@ -23,20 +23,32 @@ export default handleActions({
   },
 
   [MENU_MODIFY_ITEM_COUNT] (state, action) {
+    const newState = { ...state };
+
     const { id, modifier } = action.payload;
-    const newItem = { ...state.idMap.get(id) };
-    newItem.context.count += modifier;
-    newItem.context.count = Math.min(99, newItem.context.count);
-    newItem.context.count = Math.max(0, newItem.context.count);
+    const oldItem = state.idMap.get(id);
+    const newItem = { ...oldItem };
+
+    const oldCount = oldItem.context.count;
+    let newCount = oldCount + modifier;
+    newCount = Math.min(99, newCount);
+    newCount = Math.max(0, newCount);
+    newItem.context.count = newCount;
     const newMap = new Map(state.idMap);
     newMap.set(id, newItem);
-    return {
-      ...state,
-      idMap: newMap
-    };
+
+    if (oldCount !== 0 && newCount === 0) {
+      // deleted from basket
+      newState.basket = newState.basket.delete(newState.basket.indexOf(id));
+    } else if (oldCount === 0 && newCount !== 0) {
+      // added to basket
+      newState.basket = newState.basket.push(id);
+    }
+    return newState;
   }
 }, {
   data: {},
   categories: [],
-  idMap: new Map()
+  idMap: new Map(),
+  basket: new List()
 });

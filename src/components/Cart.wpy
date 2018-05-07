@@ -3,7 +3,7 @@
     <view class="cart-bar">
       <view class="left" @tap.stop="toggle">
         <image src="../assets/cart.png" />
-        <view class="bubble">66</view>
+        <view class="bubble" wx:if="{{basketSize !== 0}}">{{basketSize}}</view>
         <view class="price">
           <span>¥</span>{{total}}
         </view>
@@ -175,6 +175,12 @@ import { connect } from 'wepy-redux';
     return [...state.menu.idMap.values()]
       .map(item => item.context.count * item.price)
       .reduce((x, acc) => x + acc, 0);
+  },
+  basket (state) {
+    return state.menu.basket;
+  },
+  basketSize (state) {
+    return state.menu.basket.size;
   }
 })
 export default class Cart extends wepy.component {
