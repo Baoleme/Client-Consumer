@@ -27,7 +27,7 @@ import MenuList from './MenuList';
 @connect({
   menu: 'menu'
 })
-export default class Header extends wepy.component {
+export default class Menu extends wepy.component {
   components = {
     category: Category,
     menuList: MenuList

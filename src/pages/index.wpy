@@ -7,6 +7,7 @@
       <view class="tab-wrapper">
         <restaurantInfo />
         <menu />
+        <cart />
       </view>
     </view>
     <view class="nav-tab nav-2" wx:else>
@@ -23,6 +24,7 @@
   import Header from '../components/Header';
   import RestaurantInfo from '../components/RestaurantInfo';
   import Menu from '../components/menu/Menu';
+  import Cart from '../components/Cart/Cart';
 
   const store = getStore();
 
@@ -38,7 +40,8 @@
     components = {
       header: Header,
       restaurantInfo: RestaurantInfo,
-      menu: Menu
+      menu: Menu,
+      cart: Cart
     }
 
     data = {
@@ -52,9 +55,9 @@
             price: 12,
             spiciness: 3, // 辣度0-3
             tags: ['人气推荐', '折扣'],
-            spec: null, // 规格
+            spec: {}, // 规格
             context: {
-              count: 5
+              count: 0
             }
           },
           {
@@ -66,7 +69,7 @@
             tags: ['人气推荐', '折扣'],
             spec: null, // 规格
             context: {
-              count: 1
+              count: 0
             }
           },
           {
@@ -78,7 +81,7 @@
             tags: ['人气推荐', '折扣'],
             spec: null, // 规格
             context: {
-              count: 2
+              count: 0
             }
           },
           {
@@ -90,7 +93,7 @@
             tags: ['人气推荐', '折扣'],
             spec: null, // 规格
             context: {
-              count: 3
+              count: 0
             }
           },
           {
@@ -102,7 +105,7 @@
             tags: ['人气推荐', '折扣'],
             spec: null, // 规格
             context: {
-              count: 4
+              count: 0
             }
           },
           {

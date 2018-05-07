@@ -21,7 +21,7 @@ import { connect } from 'wepy-redux';
 @connect({
   restaurant: 'restaurant'
 })
-export default class Header extends wepy.component {
+export default class RestaurantInfo extends wepy.component {
   data = {
   }
 
