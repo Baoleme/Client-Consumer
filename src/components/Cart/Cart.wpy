@@ -16,7 +16,7 @@
       <view class="header">
         <view class="left">购物车</view>
         <view class="right" @tap="empty">
-          <image src="../../assets/trash.png" />
+          <icon class="iconfont icon-bin" />
           清空
         </view>
       </view>
@@ -158,10 +158,11 @@
           letter-spacing: 1rpx;
           display: flex;
           align-items: center;
-          image {
-            width: 20rpx;
-            height: 24rpx;
+          icon {
+            font-size: 24rpx;
+            color: #aaaaaa;
             margin-right: 9rpx;
+            @include center-flex;
           }
         }
       }

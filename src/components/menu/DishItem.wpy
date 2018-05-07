@@ -6,7 +6,7 @@
         <span class="name">{{item.name}}</span>
         <view class="spiciness">
           <repeat for="{{item.spiciness}}" index="index">
-            <image src="../assets/spicy.png" class="spicy"/>
+            <image src="../assets/chilli.png" class="spicy"/>
           </repeat>
         </view>
       </view>

@@ -4,7 +4,7 @@
     <view class="content">
       <view class="info">
         <view class="name">{{restaurant.name}}</view>
-        <image src="../assets/phone.png" class="phone" @tap="openPhoneCallSheet" />
+        <icon class="iconfont icon-phone phone" @tap="openPhoneCallSheet" />
       </view>
       <view class="notification">公告：欢迎光临，用餐高峰期请提前下单，谢谢。</view>
     </view>
@@ -79,8 +79,8 @@ export default class RestaurantInfo extends wepy.component {
           @include line-limit;
         }
         > .phone {
-          height: 31rpx;
-          width: 31rpx;
+          font-size: 31rpx;
+          @include center-flex;
         }
       }
       > .notification {
