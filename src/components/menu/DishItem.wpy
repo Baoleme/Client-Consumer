@@ -19,10 +19,10 @@
           <span class="post">起</span>
         </view>
         <view class="dish-counter">
-          <view class="button minus" @tap="minus">
+          <view class="button minus" wx:if="{{item.context.count !== 0}}" @tap="minus">
             <i class="iconfont icon-jianhao"/>
           </view>
-          <view class="count">{{item.context.count}}</view>
+          <view class="count" wx:if="{{item.context.count !== 0}}">{{item.context.count}}</view>
           <view class="button plus" @tap="plus">
             <i class="iconfont icon-jiahao1"/>
           </view>
