@@ -1,6 +1,6 @@
 <template>
-  <view class="dish-item">
-    <image class="image" src="{{item.image}}" mode="aspectFill" @tap="add"/>
+  <view class="dish-item" @tap="openDetail">
+    <image class="image" src="{{item.image}}" mode="aspectFill"/>
     <view class="content">
       <view class="slot">
         <span class="name">{{item.name}}</span>
@@ -18,16 +18,16 @@
           <span class="mid">{{item.price}}</span>
           <span class="post" wx:if="{{!!item.spec}}">起</span>
         </view>
-        <view class="dish-counter" wx:if="{{!item.spec}}">
-          <view class="button minus" wx:if="{{item.context.count !== 0}}" @tap="minus">
+        <view class="dish-counter" wx:if="{{!item.spec}}" @tap.stop="noop">
+          <view class="button minus" wx:if="{{item.context.count !== 0}}" @tap.stop="minus">
             <i class="iconfont icon-jianhao"/>
           </view>
           <view class="count" wx:if="{{item.context.count !== 0}}">{{item.context.count}}</view>
-          <view class="button plus" @tap="plus">
+          <view class="button plus" @tap.stop="plus">
             <i class="iconfont icon-jiahao1"/>
           </view>
         </view>
-        <view class="spec-button" wx:if="{{item.spec}}" @tap="selectSpec">
+        <view class="spec-button" wx:if="{{item.spec}}" @tap.stop="selectSpec">
           选规格
         </view>
       </view>
@@ -147,7 +147,7 @@
 import wepy from 'wepy';
 
 import { connect, getStore } from 'wepy-redux';
-import { MENU_MODIFY_ITEM_COUNT } from '../../store/types';
+import { modifyItemCount } from '../../store/actions';
 
 import Counter from './DishCounter';
 
@@ -165,30 +165,25 @@ export default class DishItem extends wepy.component {
   }
 
   methods = {
+    noop () {},
     minus () {
-      store.dispatch({
-        type: MENU_MODIFY_ITEM_COUNT,
-        payload: {
-          id: this.item.context.id,
-          modifier: -1
-        }
-      });
+      store.dispatch(modifyItemCount(this.item.context.id, -1));
       this.$apply();
     },
     plus () {
-      store.dispatch({
-        type: MENU_MODIFY_ITEM_COUNT,
-        payload: {
-          id: this.item.context.id,
-          modifier: 1
-        }
-      });
+      store.dispatch(modifyItemCount(this.item.context.id, +1));
       this.$apply();
     },
     selectSpec () {
       // stub
       console.log('select spec');
+    },
+    openDetail () {
+      // stub
+      console.log('open detail');
+      console.log(this.item);
     }
+
   }
 }
 </script>

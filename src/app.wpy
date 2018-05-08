@@ -18,7 +18,7 @@ import jar from './lib/cookieJar';
 
 import { setStore } from 'wepy-redux';
 import configStore from './store';
-import { USER_UPDATE } from './store/types/user';
+import { updateUser } from './store/actions';
 
 const store = configStore();
 setStore(store);
@@ -57,7 +57,7 @@ export default class extends wepy.app {
 
     try {
       const { data } = await request('/customer/self');
-      store.dispatch({ type: USER_UPDATE, payload: { openid: data['openid'] } });
+      store.dispatch(updateUser({ openid: data['openid'] }));
     } catch (err) {
       const { statusCode } = err;
       if (statusCode === 400) {
@@ -69,7 +69,7 @@ export default class extends wepy.app {
       }
     }
     const { userInfo } = await wepy.getUserInfo();
-    store.dispatch({ type: USER_UPDATE, payload: userInfo });
+    store.dispatch(updateUser(userInfo));
 
     wepy.hideLoading();
   }
@@ -81,7 +81,7 @@ export default class extends wepy.app {
       method: 'post',
       data: { code }
     });
-    store.dispatch({ type: USER_UPDATE, payload: { openid: data['openid'] } });
+    store.dispatch(updateUser({ openid: data['openid'] }));
   }
 }
 </script>

@@ -19,12 +19,12 @@
 <script>
   import wepy from 'wepy';
   import { connect, getStore } from 'wepy-redux';
-  import { RESTAURANT_UPDATE, MENU_UPDATE } from '../store/types';
+  import { updateRestaurant, updateMenu } from '../store/actions';
 
   import Header from '../components/Header';
   import RestaurantInfo from '../components/RestaurantInfo';
   import Menu from '../components/menu/Menu';
-  import Cart from '../components/Cart/Cart';
+  import Cart from '../components/cart/Cart';
 
   const store = getStore();
 
@@ -148,8 +148,8 @@
         logo: 'http://ouim3dnf4.bkt.clouddn.com/18-5-6/62965288.jpg'
       };
 
-      store.dispatch({ type: RESTAURANT_UPDATE, payload: restaurant });
-      store.dispatch({ type: MENU_UPDATE, payload: this.mockMenu });
+      store.dispatch(updateRestaurant(restaurant));
+      store.dispatch(updateMenu(this.mockMenu));
     }
   }
 </script>
