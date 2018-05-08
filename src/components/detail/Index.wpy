@@ -1,7 +1,7 @@
 <template>
-  <view class="item-detail-container {{active ? 'active' : ''}}">
+  <view class="item-detail-container {{active ? 'active' : ''}}" @tap.stop="close">
     <view class="mask" />
-    <view class="item-detail">
+    <view class="item-detail" @tap.stop="noop">
       <image class="image" src="http://ouim3dnf4.bkt.clouddn.com/18-5-8/42170685.jpg" mode="aspectFill" />
       <view class="close" @tap.stop="close">
         <i class="iconfont icon-close" />
@@ -29,16 +29,44 @@
 <style lang="scss">
   @import "../../lib/var.scss";
 
+  @keyframes detail-in {
+    0% {
+      opacity: 0;
+      visibility: hidden;
+    }
+    100% {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+
   .item-detail-container {
     position: absolute;
     left: 0;
     top: 0;
     right: 0;
     bottom: 0;
+    // below are about in/out transitional effects
     background-color: rgba(#000, .45);
-    display: none;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.2s, visibility 0.2s;
+    > .item-detail {
+      transition: transform 0.5s;
+      // 以下translated3d是魔法，是玄学。传说中在移动网页端可以开启硬件加速
+      // 但在小程序上还没见到明显改善
+      transform: translateY(100%) translate3d(0,0,0);
+      webkit-transform: translate3d(0,0,0);
+      -moz-transform: translate3d(0,0,0);
+      -ms-transform: translate3d(0,0,0);
+      -o-transform: translate3d(0,0,0);
+    }
     &.active {
-      display: flex;
+      visibility: visible;
+      opacity: 1;
+      > .item-detail {
+        transform: translateY(0) translate3d(0,0,0);
+      }
     }
   }
 
@@ -54,6 +82,7 @@
     > .image {
       width: 100%;
       height: 566rpx;
+      background-color: black;
     }
     > .close {
       position: absolute;
@@ -159,7 +188,6 @@ const store = getStore();
   },
   active (state) {
     return !!state.menu.detailingItem;
-    // return true;
   }
 })
 export default class Detail extends wepy.component {
@@ -174,6 +202,7 @@ export default class Detail extends wepy.component {
   }
 
   methods = {
+    noop () {},
     close () {
       store.dispatch(closeDetail());
     }
