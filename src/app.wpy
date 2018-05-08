@@ -8,6 +8,10 @@
     font-size: 24rpx;
     overflow: hidden;
   }
+
+  .container {
+    overflow: hidden;
+  }
 </style>
 
 <script>

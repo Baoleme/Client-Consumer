@@ -1,44 +1,38 @@
 <template>
-  <view class="item-detail-container {{active ? 'active' : ''}}" @tap.stop="close">
+  <view class="item-detail-container {{active ? 'active' : ''}} {{expanded ? 'expanded' : ''}}" @tap.stop="close" catchtouchmove="noop" >
     <view class="mask" />
-    <view class="item-detail" @tap.stop="noop">
-      <image class="image" src="http://ouim3dnf4.bkt.clouddn.com/18-5-8/42170685.jpg" mode="aspectFill" />
-      <view class="close" @tap.stop="close">
-        <i class="iconfont icon-close" />
-      </view>
-      <view class="main">
-        <view class="line">
-          <view class="name">火焰奶霜红水乌龙</view>
+    <scroll-view scroll-y="{{expanded}}" class="item-detail" @tap.stop="noop">
+      <view class="item-detail-wrapper">
+        <image class="image" src="http://ouim3dnf4.bkt.clouddn.com/18-5-8/42170685.jpg" mode="aspectFill" />
+        <view class="close" @tap.stop="close">
+          <i class="iconfont icon-close" />
         </view>
-        <view class="price">
-          <span class="pre">¥</span>
-          <span class="mid">12</span>
-          <span class="post">起</span>
+        <view class="main">
+          <view class="line">
+            <view class="name">火焰奶霜红水乌龙</view>
+          </view>
+          <view class="price">
+            <span class="pre">¥</span>
+            <span class="mid">12</span>
+            <span class="post">起</span>
+          </view>
+          <view class="divider" />
+          <view class="description-title">商品描述</view>
+          <text class="description">{{description}}{{description}}{{description}}{{description}}</text>
         </view>
-        <view class="divider" />
-        <view class="description-title">商品描述</view>
-        <text class="description">{{description}}</text>
+        <view class="span-indicator" @tap.stop="expand" wx:if="{{!expanded}}">
+          <i class="iconfont icon-up" />
+        </view>
       </view>
-      <view class="span-indicator">
-        <i class="iconfont icon-up" />
-      </view>
-    </view>
+    </scroll-view>
   </view>
 </template>
 
 <style lang="scss">
   @import "../../lib/var.scss";
 
-  @keyframes detail-in {
-    0% {
-      opacity: 0;
-      visibility: hidden;
-    }
-    100% {
-      opacity: 1;
-      visibility: visible;
-    }
-  }
+  $emptyHeight: 100rpx;
+  $activeHeight: 1075rpx;
 
   .item-detail-container {
     position: absolute;
@@ -46,6 +40,7 @@
     top: 0;
     right: 0;
     bottom: 0;
+    overflow: hidden;
     // below are about in/out transitional effects
     background-color: rgba(#000, .45);
     visibility: hidden;
@@ -61,10 +56,19 @@
       -ms-transform: translate3d(0,0,0);
       -o-transform: translate3d(0,0,0);
     }
+
     &.active {
       visibility: visible;
       opacity: 1;
       > .item-detail {
+        transform: translateY(calc(100% - #{$activeHeight})) translate3d(0,0,0);
+      }
+    }
+
+    &.active.expanded {
+      > .item-detail {
+        height: 100%;
+        transition: transform 0.2s;
         transform: translateY(0) translate3d(0,0,0);
       }
     }
@@ -75,98 +79,106 @@
     left: 0;
     right: 0;
     bottom: 0;
-    height: calc(100% - 260rpx);
+    height: 100%;
     background-color: #ffffff;
-    display: flex;
-    flex-direction: column;
-    > .image {
+    .item-detail-wrapper {
       width: 100%;
-      height: 566rpx;
-      background-color: black;
-    }
-    > .close {
-      position: absolute;
-      top: 21rpx;
-      right: 30rpx;
-      height: 47rpx;
-      width: 47rpx;
-      background: rgba(#adadad, .3);
-      border-radius: 15rpx;
-      color: #f5f5f5;
-      font-size: 25rpx;
-      @include center-flex;
-    }
-    > .main {
-      width: calc(100% - 41rpx * 2);
-      height: calc(100% - 566rpx);
-      margin: 30rpx 41rpx 0 41rpx;
       display: flex;
       flex-direction: column;
-      align-items: center;
-      > .line {
+      > view {
+        flex-shrink: 0;
+      }
+      > .image {
         width: 100%;
+        height: 566rpx;
+        background-color: black;
+      }
+      > .close {
+        position: absolute;
+        // top: 21rpx;
+        top: 150rpx; // TODO: 原来位置会被小程序右上角菜单挡住，先移到这保证功能正确，等设计稿修改
+        right: 30rpx;
+        height: 47rpx;
+        width: 47rpx;
+        background: rgba(#adadad, .3);
+        border-radius: 15rpx;
+        color: #f5f5f5;
+        font-size: 25rpx;
+        @include center-flex;
+      }
+      > .main {
+        width: calc(100% - 41rpx * 2);
+        margin: 30rpx 41rpx 0 41rpx;
         display: flex;
-        justify-content: space-between;
-        > .name {
+        flex-direction: column;
+        align-items: center;
+        > .line {
+          width: 100%;
           height: 56rpx;
-          font-size: 40rpx;
-          color: #232323;
-          letter-spacing: 1rpx;
+          display: flex;
+          justify-content: space-between;
+          > .name {
+            height: 56rpx;
+            font-size: 40rpx;
+            color: #232323;
+            letter-spacing: 1rpx;
+            font-weight: bold;
+            width: 560rpx;
+            @include line-limit;
+          }
+        }
+        > .price {
+          align-self: flex-start;
           font-weight: bold;
-          width: 560rpx;
-          @include line-limit;
+          color: #fe8966;
+          letter-spacing: 1.92rpx;
+          font-weight: bold;
+          font-size: 36rpx;
+          margin-top: 10rpx;
+          > .pre {
+            font-size: 30rpx;
+          }
+          > .post {
+            margin-left: 7rpx;
+            font-size: 26rpx;
+            color: #606060;
+            letter-spacing: 2.08rpx;
+            font-weight: lighter;
+          }
         }
-      }
-      > .price {
-        align-self: flex-start;
-        font-weight: bold;
-        color: #fe8966;
-        letter-spacing: 1.92rpx;
-        font-weight: bold;
-        font-size: 36rpx;
-        margin-top: 10rpx;
-        > .pre {
-          font-size: 30rpx;
+        > .divider {
+          margin: 26rpx auto;
+          width: 549rpx;
+          height: 3rpx;
+          background-color: #ededed;
         }
-        > .post {
-          margin-left: 7rpx;
-          font-size: 26rpx;
+        > .description-title {
+          align-self: flex-start;
+          font-size: 32rpx;
+          color: #9b9b9b;
+          letter-spacing: 1.23rpx;
+          font-weight: bold;
+        }
+        > .description {
+          margin: 21rpx 0 75rpx 0;
+          font-size: 24rpx;
+          width: 100%;
           color: #606060;
-          letter-spacing: 2.08rpx;
-          font-weight: lighter;
+          letter-spacing: 1.18rpx;
         }
       }
-      > .divider {
-        margin: 26rpx auto;
-        width: 549rpx;
-        height: 3rpx;
-        background-color: #ededed;
-      }
-      > .description-title {
-        align-self: flex-start;
-        font-size: 32rpx;
-        color: #9b9b9b;
-        letter-spacing: 1.23rpx;
-        font-weight: bold;
-      }
-      > .description {
-        margin-top: 21rpx;
-        font-size: 24rpx;
-        width: 100%;
-        color: #606060;
-        letter-spacing: 1.18rpx;
-      }
-    }
-    > .span-indicator {
-      position: absolute;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      height: 147rpx;
-      background-image: linear-gradient(-180deg, rgba(255, 255, 255, 0.00) 0%, #ffffff 23%);
-      @include center-flex;
-      > i {
-        color: #9a9a9a;
+
+      > .span-indicator {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: calc(#{$activeHeight} - 147rpx);
+        height: 147rpx;
+        background-image: linear-gradient(-180deg, rgba(255, 255, 255, 0.00) 0%, #ffffff 23%);
+        @include center-flex;
+        > i {
+          color: #9a9a9a;
+        }
       }
     }
   }
@@ -198,13 +210,27 @@ export default class Detail extends wepy.component {
 1.火焰奶霜红水乌龙：26元
 2.火焰奶霜茉莉花茶：26元
 3.火焰奶霜金萱乌龙：26元
-4.火焰奶霜蜜叶红茶：26元`
+4.火焰奶霜蜜叶红茶：26元`,
+    expanded: false
   }
 
   methods = {
     noop () {},
     close () {
       store.dispatch(closeDetail());
+    },
+    expand () {
+      console.log('expand');
+      this.expanded = true;
+    }
+  }
+
+  watch = {
+    'active' (now) {
+      if (!now) {
+        // not active
+        this.expanded = false;
+      }
     }
   }
 }
