@@ -216,7 +216,7 @@ export default class Cart extends wepy.component {
   }
 
   data = {
-    active: true
+    active: false
   }
 
   onLoad () {
