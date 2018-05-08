@@ -4,7 +4,7 @@
     <view class="cart-bar">
       <view class="left" @tap.stop="toggle">
         <image src="../../assets/cart.png" />
-        <view class="bubble" wx:if="{{basketSize !== 0}}">{{basketSize}}</view>
+        <view class="bubble" wx:if="{{basketSize !== 0}}">{{dishCount}}</view>
         <view class="price">
           <span>¥</span>{{total}}
         </view>
@@ -69,7 +69,6 @@
       display: flex;
       font-weight: bold;
       > .left {
-        // background-image:linear-gradient(-95deg, #fccf31 14%, #fdaa47 100%);
         background-image: linear-gradient(95deg, #fccf31 14%, #fdaa47 100%);
         width: 522rpx;
         height: 100%;
@@ -208,6 +207,9 @@ const store = getStore();
   },
   basketSize (state) {
     return state.menu.basket.size;
+  },
+  dishCount (state) {
+    return this.basketArray.map(o => o.context.count).reduce((x, acc) => x + acc, 0);
   }
 })
 export default class Cart extends wepy.component {
