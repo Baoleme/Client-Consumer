@@ -1,5 +1,5 @@
 import { handleActions } from 'redux-actions';
-import { MENU_UPDATE, MENU_MODIFY_ITEM_COUNT, MENU_EMPTY_BASKET } from '../types/menu';
+import { MENU_UPDATE, MENU_MODIFY_ITEM_COUNT, MENU_EMPTY_BASKET, MENU_OPEN_DETAIL, MENU_CLOSE_DETAIL } from '../types/menu';
 import { List } from 'immutable';
 
 export default handleActions({
@@ -56,10 +56,23 @@ export default handleActions({
       ...state,
       basket: new List()
     };
+  },
+  [MENU_OPEN_DETAIL] (state, action) {
+    return {
+      ...state,
+      detailingItem: action.payload.id
+    };
+  },
+  [MENU_CLOSE_DETAIL] (state, action) {
+    return {
+      ...state,
+      detailingItem: null
+    };
   }
 }, {
   data: {},
   categories: [],
   idMap: new Map(),
-  basket: new List()
+  basket: new List(),
+  detailingItem: null // item id
 });

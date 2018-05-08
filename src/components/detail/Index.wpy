@@ -1,0 +1,182 @@
+<template>
+  <view class="item-detail-container {{active ? 'active' : ''}}">
+    <view class="mask" />
+    <view class="item-detail">
+      <image class="image" src="http://ouim3dnf4.bkt.clouddn.com/18-5-8/42170685.jpg" mode="aspectFill" />
+      <view class="close" @tap.stop="close">
+        <i class="iconfont icon-close" />
+      </view>
+      <view class="main">
+        <view class="line">
+          <view class="name">火焰奶霜红水乌龙</view>
+        </view>
+        <view class="price">
+          <span class="pre">¥</span>
+          <span class="mid">12</span>
+          <span class="post">起</span>
+        </view>
+        <view class="divider" />
+        <view class="description-title">商品描述</view>
+        <text class="description">{{description}}</text>
+      </view>
+      <view class="span-indicator">
+        <i class="iconfont icon-up" />
+      </view>
+    </view>
+  </view>
+</template>
+
+<style lang="scss">
+  @import "../../lib/var.scss";
+
+  .item-detail-container {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(#000, .45);
+    display: none;
+    &.active {
+      display: flex;
+    }
+  }
+
+  .item-detail {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: calc(100% - 260rpx);
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    > .image {
+      width: 100%;
+      height: 566rpx;
+    }
+    > .close {
+      position: absolute;
+      top: 21rpx;
+      right: 30rpx;
+      height: 47rpx;
+      width: 47rpx;
+      background: rgba(#adadad, .3);
+      border-radius: 15rpx;
+      color: #f5f5f5;
+      font-size: 25rpx;
+      @include center-flex;
+    }
+    > .main {
+      width: calc(100% - 41rpx * 2);
+      height: calc(100% - 566rpx);
+      margin: 30rpx 41rpx 0 41rpx;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      > .line {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        > .name {
+          height: 56rpx;
+          font-size: 40rpx;
+          color: #232323;
+          letter-spacing: 1rpx;
+          font-weight: bold;
+          width: 560rpx;
+          @include line-limit;
+        }
+      }
+      > .price {
+        align-self: flex-start;
+        font-weight: bold;
+        color: #fe8966;
+        letter-spacing: 1.92rpx;
+        font-weight: bold;
+        font-size: 36rpx;
+        margin-top: 10rpx;
+        > .pre {
+          font-size: 30rpx;
+        }
+        > .post {
+          margin-left: 7rpx;
+          font-size: 26rpx;
+          color: #606060;
+          letter-spacing: 2.08rpx;
+          font-weight: lighter;
+        }
+      }
+      > .divider {
+        margin: 26rpx auto;
+        width: 549rpx;
+        height: 3rpx;
+        background-color: #ededed;
+      }
+      > .description-title {
+        align-self: flex-start;
+        font-size: 32rpx;
+        color: #9b9b9b;
+        letter-spacing: 1.23rpx;
+        font-weight: bold;
+      }
+      > .description {
+        margin-top: 21rpx;
+        font-size: 24rpx;
+        width: 100%;
+        color: #606060;
+        letter-spacing: 1.18rpx;
+      }
+    }
+    > .span-indicator {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 147rpx;
+      background-image: linear-gradient(-180deg, rgba(255, 255, 255, 0.00) 0%, #ffffff 23%);
+      @include center-flex;
+      > i {
+        color: #9a9a9a;
+      }
+    }
+  }
+</style>
+
+<script>
+import wepy from 'wepy';
+
+import { connect, getStore } from 'wepy-redux';
+import { closeDetail } from '../../store/actions';
+
+const store = getStore();
+
+@connect({
+  item (state) {
+    const id = state.menu.detailingItem;
+    if (!id) return {};
+    return state.menu.idMap.get(id);
+  },
+  active (state) {
+    return !!state.menu.detailingItem;
+    // return true;
+  }
+})
+export default class Detail extends wepy.component {
+  data = {
+    description: `9元单点是无糖的，需要的朋友请跟厨房讲，不要随意打差评，谢谢。
+茶阁里的猫眼石饮品6选2~
+火焰黑糖系列（共5款）
+1.火焰奶霜红水乌龙：26元
+2.火焰奶霜茉莉花茶：26元
+3.火焰奶霜金萱乌龙：26元
+4.火焰奶霜蜜叶红茶：26元`
+  }
+
+  methods = {
+    close () {
+      store.dispatch(closeDetail());
+    }
+  }
+}
+</script>

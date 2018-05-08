@@ -147,7 +147,7 @@
 import wepy from 'wepy';
 
 import { connect, getStore } from 'wepy-redux';
-import { modifyItemCount } from '../../store/actions';
+import { modifyItemCount, openDetail } from '../../store/actions';
 
 import Counter from './DishCounter';
 
@@ -180,10 +180,8 @@ export default class DishItem extends wepy.component {
     },
     openDetail () {
       // stub
-      console.log('open detail');
-      console.log(this.item);
+      store.dispatch(openDetail(this.item.context.id));
     }
-
   }
 }
 </script>

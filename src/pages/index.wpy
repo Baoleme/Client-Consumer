@@ -13,6 +13,7 @@
     <view class="nav-tab nav-2" wx:else>
       nav-2!
     </view>
+    <detail />
   </view>
 </template>
 
@@ -25,6 +26,7 @@
   import RestaurantInfo from '../components/RestaurantInfo';
   import Menu from '../components/menu/Menu';
   import Cart from '../components/cart/Cart';
+  import Detail from '../components/detail/Index';
 
   const store = getStore();
 
@@ -41,7 +43,8 @@
       header: Header,
       restaurantInfo: RestaurantInfo,
       menu: Menu,
-      cart: Cart
+      cart: Cart,
+      detail: Detail
     }
 
     data = {
