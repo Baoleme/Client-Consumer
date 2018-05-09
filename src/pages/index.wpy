@@ -26,7 +26,7 @@
   import RestaurantInfo from '../components/RestaurantInfo';
   import Menu from '../components/menu/Menu';
   import Cart from '../components/cart/Cart';
-  import Detail from '../components/detail/Index';
+  import Detail from '../components/Detail';
 
   const store = getStore();
 

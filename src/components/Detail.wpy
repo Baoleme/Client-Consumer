@@ -5,7 +5,7 @@
       <view class="item-detail-wrapper">
         <image class="image" src="http://ouim3dnf4.bkt.clouddn.com/18-5-8/42170685.jpg" mode="aspectFill" />
         <view class="close" @tap.stop="close">
-          <i class="iconfont icon-close" />
+          <i class="iconfont icon-up" />
         </view>
         <view class="main">
           <view class="line">
@@ -29,7 +29,7 @@
 </template>
 
 <style lang="scss">
-  @import "../../lib/var.scss";
+  @import "../lib/var.scss";
 
   $emptyHeight: 100rpx;
   $activeHeight: 1075rpx;
@@ -71,6 +71,9 @@
         transition: transform 0.2s;
         transform: translateY(0) translate3d(0,0,0);
       }
+      .close {
+        top: 50rpx;
+      }
     }
   }
 
@@ -91,20 +94,24 @@
       > .image {
         width: 100%;
         height: 566rpx;
-        background-color: black;
+        background-color: #b4b4b4;
       }
       > .close {
         position: absolute;
-        // top: 21rpx;
-        top: 150rpx; // TODO: 原来位置会被小程序右上角菜单挡住，先移到这保证功能正确，等设计稿修改
-        right: 30rpx;
-        height: 47rpx;
-        width: 47rpx;
+        top: 21rpx;
+        left: 30rpx;
+        height: 60rpx;
+        width: 60rpx;
         background: rgba(#adadad, .3);
         border-radius: 15rpx;
         color: #f5f5f5;
-        font-size: 25rpx;
         @include center-flex;
+        transform: rotate(-90deg);
+        transition: top .2s;
+        > i {
+          color: #f5f5f5;
+          font-size: 20rpx;
+        }
       }
       > .main {
         width: calc(100% - 41rpx * 2);
@@ -188,7 +195,7 @@
 import wepy from 'wepy';
 
 import { connect, getStore } from 'wepy-redux';
-import { closeDetail } from '../../store/actions';
+import { closeDetail } from '../store/actions';
 
 const store = getStore();
 
