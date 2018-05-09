@@ -194,22 +194,22 @@ import CartItem from './CartItem';
 const store = getStore();
 
 @connect({
+  basketArray (state) {
+    return state.menu.basket.toArray().map(v => ({
+      ...v,
+      item: state.menu.idMap.get(v.id)
+    }));
+  },
   total (state) {
-    return [...state.menu.idMap.values()]
-      .map(item => item.context.count * item.price)
+    return this.basketArray
+      .map(o => o.count * o.unitPrice)
       .reduce((x, acc) => x + acc, 0);
   },
-  basket (state) {
-    return state.menu.basket;
-  },
-  basketArray (state) {
-    return state.menu.basket.toArray().map(id => state.menu.idMap.get(id));
-  },
   basketSize (state) {
-    return state.menu.basket.size;
+    return state.menu.basket.size();
   },
   dishCount (state) {
-    return this.basketArray.map(o => o.context.count).reduce((x, acc) => x + acc, 0);
+    return this.basketArray.map(o => o.count).reduce((x, acc) => x + acc, 0);
   }
 })
 export default class Cart extends wepy.component {

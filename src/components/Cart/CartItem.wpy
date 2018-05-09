@@ -1,17 +1,17 @@
 <template>
   <view class="cart-item">
     <view class="left">
-      <view class="name">{{item.name}}</view>
+      <view class="name">{{item.item.name}}</view>
       <view class="spec">烧烤味/不放辣椒</view>
     </view>
     <view class="right">
-      <view class="price"><span>¥</span>{{item.price * item.context.count}}</view>
+      <view class="price"><span>¥</span>{{item.unitPrice * item.count}}</view>
 
-      <view class="dish-counter" wx:if="{{!item.spec}}">
-        <view class="button minus" wx:if="{{item.context.count !== 0}}" @tap="minus">
+      <view class="dish-counter" wx:if="{{!item.specStr}}">
+        <view class="button minus" wx:if="{{item.count !== 0}}" @tap="minus">
           <i class="iconfont icon-jianhao"/>
         </view>
-        <view class="count" wx:if="{{item.context.count !== 0}}">{{item.context.count}}</view>
+        <view class="count" wx:if="{{item.count !== 0}}">{{item.count}}</view>
         <view class="button plus" @tap="plus">
           <i class="iconfont icon-jiahao1"/>
         </view>
@@ -83,11 +83,13 @@ export default class CartItem extends wepy.component {
 
   methods = {
     minus () {
-      store.dispatch(modifyItemCount(this.item.context.id, -1));
+      // TODO: what if with spec
+      store.dispatch(modifyItemCount(this.item.id, -1));
       this.$apply();
     },
     plus () {
-      store.dispatch(modifyItemCount(this.item.context.id, 1));
+      // TODO: what if with spec
+      store.dispatch(modifyItemCount(this.item.id, 1));
       this.$apply();
     }
   }

@@ -1,0 +1,29 @@
+<template>
+
+</template>
+
+<style lang="scss">
+
+</style>
+
+<script>
+import wepy from 'wepy';
+
+import { connect, getStore } from 'wepy-redux';
+import { closeDetail, modifyItemCount } from '../store/actions';
+
+const store = getStore();
+
+@connect({
+  item (state) {
+    const id = state.menu.detailingItem;
+    if (!id) return {};
+    return state.menu.idMap.get(id);
+  },
+  active (state) {
+    return !!state.menu.detailingItem;
+  }
+})
+export default class Detail extends wepy.component {
+}
+</script>
