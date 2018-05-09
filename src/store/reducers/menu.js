@@ -5,7 +5,9 @@ import {
   MENU_EMPTY_BASKET,
   MENU_OPEN_DETAIL,
   MENU_CLOSE_DETAIL,
-  MENU_MODIFY_ITEM_COUNT_WITH_SPEC
+  MENU_MODIFY_ITEM_COUNT_WITH_SPEC,
+  MENU_OPEN_SPEC_SELECT,
+  MENU_CLOSE_SPEC_SELECT
 } from '../types/menu';
 import { Map as IMap } from 'immutable';
 
@@ -139,11 +141,25 @@ export default handleActions({
       ...state,
       detailingItem: null
     };
+  },
+  [MENU_OPEN_SPEC_SELECT] (state, action) {
+    const { id } = action.payload;
+    return {
+      ...state,
+      selectSpecItem: id
+    };
+  },
+  [MENU_CLOSE_SPEC_SELECT] (state, action) {
+    return {
+      ...state,
+      selectSpecItem: null
+    };
   }
 }, {
   data: {},
   categories: [],
   idMap: new Map(),
   basket: new ImmutableBasket(),
-  detailingItem: null // item id
+  detailingItem: null, // item id
+  selectSpecItem: null
 });
