@@ -3,22 +3,34 @@
     <view class="mask" />
     <scroll-view scroll-y="{{expanded}}" class="item-detail" @tap.stop="noop">
       <view class="item-detail-wrapper">
-        <image class="image" src="http://ouim3dnf4.bkt.clouddn.com/18-5-8/42170685.jpg" mode="aspectFill" />
+        <image class="image" src="{{item.image}}" mode="aspectFill" />
         <view class="close" @tap.stop="close">
           <i class="iconfont icon-up" />
         </view>
         <view class="main">
           <view class="line">
-            <view class="name">火焰奶霜红水乌龙</view>
+            <view class="name">{{item.name}}</view>
+            <view class="dish-counter" wx:if="{{!item.spec}}" @tap.stop="noop">
+              <view class="button minus" wx:if="{{item.context.count !== 0}}" @tap.stop="minus">
+                <i class="iconfont icon-jianhao"/>
+              </view>
+              <view class="count" wx:if="{{item.context.count !== 0}}">{{item.context.count}}</view>
+              <view class="button plus" @tap.stop="plus">
+                <i class="iconfont icon-jiahao1"/>
+              </view>
+            </view>
+            <view class="spec-button" wx:if="{{item.spec}}" @tap.stop="selectSpec">
+              选规格
+            </view>
           </view>
           <view class="price">
             <span class="pre">¥</span>
             <span class="mid">12</span>
-            <span class="post">起</span>
+            <span class="post" wx:if="{{item.spec}}">起</span>
           </view>
           <view class="divider" />
           <view class="description-title">商品描述</view>
-          <text class="description">{{description}}{{description}}{{description}}{{description}}</text>
+          <text class="description">{{item.description}}</text>
         </view>
         <view class="span-indicator" @tap.stop="expand" wx:if="{{!expanded}}">
           <i class="iconfont icon-up" />
@@ -195,7 +207,7 @@
 import wepy from 'wepy';
 
 import { connect, getStore } from 'wepy-redux';
-import { closeDetail } from '../store/actions';
+import { closeDetail, modifyItemCount } from '../store/actions';
 
 const store = getStore();
 
@@ -229,6 +241,16 @@ export default class Detail extends wepy.component {
     expand () {
       console.log('expand');
       this.expanded = true;
+    },
+    minus () {
+      store.dispatch(modifyItemCount(this.item.context.id, -1));
+    },
+    plus () {
+      store.dispatch(modifyItemCount(this.item.context.id, +1));
+    },
+    selectSpec () {
+      // stub
+      console.log('select spec');
     }
   }
 
