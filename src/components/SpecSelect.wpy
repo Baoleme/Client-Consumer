@@ -202,7 +202,7 @@
 import wepy from 'wepy';
 
 import { connect, getStore } from 'wepy-redux';
-import { closeSpecSelect } from '../store/actions';
+import { closeSpecSelect, modifyItemCount } from '../store/actions';
 
 const store = getStore();
 
@@ -252,8 +252,8 @@ export default class Detail extends wepy.component {
       for (const [q, o] of Object.entries(this.selection)) {
         result[q] = o;
       }
-      // TODO: open new page
-      console.log('spec select done');
+      store.dispatch(modifyItemCount(this.item.context.id, +1, result));
+      store.dispatch(closeSpecSelect());
     }
   }
 
@@ -265,7 +265,6 @@ export default class Detail extends wepy.component {
       this.price = this.item.price;
       this.specText = '';
       // set default value
-      console.log(this.item.spec);
       this.item.spec.forEach((question, idx) => {
         if (question.required || !isNaN(question.default)) {
           this.selection[idx] = question.default || 0;

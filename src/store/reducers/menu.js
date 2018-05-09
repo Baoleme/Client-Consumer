@@ -5,7 +5,6 @@ import {
   MENU_EMPTY_BASKET,
   MENU_OPEN_DETAIL,
   MENU_CLOSE_DETAIL,
-  MENU_MODIFY_ITEM_COUNT_WITH_SPEC,
   MENU_OPEN_SPEC_SELECT,
   MENU_CLOSE_SPEC_SELECT
 } from '../types/menu';
@@ -22,20 +21,20 @@ class ImmutableBasket {
   /**
    *
    * @param {number} id item id
-   * @param {object} spec key: option name, value: selected option
+   * @param {Array} spec key: option index, value: selected option index
    */
-  plus (id, spec) {
-    const uniqKey = this._genKey(id, spec);
-    const oldV = this.map.get(uniqKey) || { count: 0, unitPrice: this._calculateUnitPrice(id, spec), spec };
+  plus (item, spec) {
+    const uniqKey = this._genKey(item, spec);
+    const oldV = this.map.get(uniqKey) || { count: 0, unitPrice: this._calculateUnitPrice(item, spec), spec };
     const newV = { ...oldV, count: this._clamp(oldV.count + 1) };
     return new ImmutableBasket(
       this.map.set(uniqKey, newV)
     );
   }
 
-  minus (id, spec) {
-    const uniqKey = this._genKey(id, spec);
-    const oldV = this.map.get(uniqKey) || { count: 0, unitPrice: this._calculateUnitPrice(id, spec), spec };
+  minus (item, spec) {
+    const uniqKey = this._genKey(item, spec);
+    const oldV = this.map.get(uniqKey) || { count: 0, unitPrice: this._calculateUnitPrice(item, spec), spec };
     const newV = { ...oldV, count: this._clamp(oldV.count - 1) };
     if (newV.count <= 0) return new ImmutableBasket(this.map.delete(uniqKey));
     return new ImmutableBasket(
@@ -64,9 +63,11 @@ class ImmutableBasket {
     return this.map.size;
   }
 
-  _genKey (id, spec) {
-    const specStr = spec ? [...Object.values(spec)].join('/') : '';
-    return `${id}#${specStr}`;
+  _genKey (item, specArray) {
+    const { spec } = item;
+    const specStr = specArray ? specArray.filter(o => !!o).map((o, q) => spec[q].options[o].name).join('/') : '';
+    console.log(`${item.context.id}#${specStr}`);
+    return `${item.context.id}#${specStr}`;
   }
 
   _clone () {
@@ -77,8 +78,8 @@ class ImmutableBasket {
     return Math.min(99, Math.max(0, v));
   }
 
-  _calculateUnitPrice (id, spec) {
-    return 12; // TODO:
+  _calculateUnitPrice (item, specResult) {
+    return item.price + (specResult || []).map((o, q) => o ? item.spec[q].options[o].price : 0).reduce((acc, x) => acc + x, 0);
   }
 }
 
@@ -105,16 +106,16 @@ export default handleActions({
   [MENU_MODIFY_ITEM_COUNT] (state, action) {
     const newState = { ...state };
 
-    const { id, modifier } = action.payload;
+    const { id, modifier, specResult } = action.payload;
     const item = state.idMap.get(id);
 
     const oldCount = item.context.count;
     item.context.count = state.basket._clamp(oldCount + modifier);
 
     if (modifier === 1) { // add
-      newState.basket = newState.basket.plus(id, null);
+      newState.basket = newState.basket.plus(item, specResult || null);
     } else {
-      newState.basket = newState.basket.minus(id, null);
+      newState.basket = newState.basket.minus(item, specResult || null);
     }
 
     return newState;
@@ -130,18 +131,21 @@ export default handleActions({
       basket: state.basket.clear()
     };
   },
+
   [MENU_OPEN_DETAIL] (state, action) {
     return {
       ...state,
       detailingItem: action.payload.id
     };
   },
+
   [MENU_CLOSE_DETAIL] (state, action) {
     return {
       ...state,
       detailingItem: null
     };
   },
+
   [MENU_OPEN_SPEC_SELECT] (state, action) {
     const { id } = action.payload;
     return {
@@ -149,6 +153,7 @@ export default handleActions({
       selectSpecItem: id
     };
   },
+
   [MENU_CLOSE_SPEC_SELECT] (state, action) {
     return {
       ...state,
