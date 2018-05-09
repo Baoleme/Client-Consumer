@@ -86,7 +86,8 @@
                   { name: '菊花茶', price: 0 },
                   { name: '红茶', price: 0 },
                   { name: '绿茶', price: 0 }
-                ]
+                ],
+                required: true
               }, {
                 name: '长测试',
                 options: [

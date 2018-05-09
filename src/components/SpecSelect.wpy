@@ -1,13 +1,13 @@
 <template>
   <view class="spec-select-container {{active ? 'active' : ''}}" @tap.stop="close" catchtouchmove="noop" >
-    <scroll-view scroll-y class="spec-select-scroller">
+    <scroll-view scroll-y class="spec-select-scroller" @tap.stop="noop">
       <view class="spec-select">
         <view class="header">
-          <image src="http://ouim3dnf4.bkt.clouddn.com/18-5-8/42170685.jpg" mode="aspectFill" />
+          <image src="{{item.image}}" mode="aspectFill" />
           <view class="content">
-            <view class="name">火焰奶霜红水乌龙</view>
-            <view class="spec">已选：+柚子果砖 / 冷 / 乌龙茶 / 去冰 / 少糖 / +芦荟</view>
-            <view class="price">¥<span>12</span></view>
+            <view class="name">{{item.name}}</view>
+            <view class="spec" wx:if="{{specText}}">已选：{{specText}}</view>
+            <view class="price">¥<span>{{price}}</span></view>
           </view>
         </view>
         <view class="form">
@@ -16,7 +16,9 @@
               <view class="name">{{question.name}}</view>
               <view class="options">
                 <repeat for="{{question.options}}" index="oIndex" item="option">
-                  <view class="option {{oIndex === 0 ? 'selected' : ''}}"><span>{{option.name}}</span></view>
+                  <view class="option {{selection[index] === oIndex ? 'selected' : ''}}" @tap.stop="select({{index}}, {{oIndex}})">
+                    <span>{{option.name}}</span>
+                  </view>
                 </repeat>
               </view>
             </view>
@@ -187,22 +189,78 @@ import { closeSpecSelect } from '../store/actions';
 const store = getStore();
 
 @connect({
+  id (state) {
+    return state.menu.selectSpecItem;
+  },
   item (state) {
-    const id = state.menu.selectSpecItem;
-    if (!id) return {};
-    console.log(state.menu.idMap.get(id));
-    return state.menu.idMap.get(id);
+    if (!this.id) return {};
+    return state.menu.idMap.get(this.id);
   },
   active (state) {
     return !!state.menu.selectSpecItem;
   }
 })
 export default class Detail extends wepy.component {
+  data = {
+    selection: null,
+    price: 0,
+    specText: ''
+  }
+
   methods = {
     noop () {},
     close () {
       store.dispatch(closeSpecSelect());
+    },
+    select (qIndex, oIndex) {
+      if (this.selection[qIndex] === oIndex) {
+        // toggle result
+        if (!this.item.spec[qIndex].required) { // 必填项不可取消（置空）
+          this.price -= this.item.spec[qIndex].options[oIndex].price;
+          delete this.selection[qIndex];
+        }
+      } else {
+        if (this.selection[qIndex]) { // 减去原来选项的
+          this.price -= this.item.spec[qIndex].options[this.selection[qIndex]].price;
+        }
+        this.selection[qIndex] = oIndex;
+        this.price += this.item.spec[qIndex].options[oIndex].price;
+      }
+      this.updateSpecText();
+      this.$apply();
+    },
+    done () {
+      const result = Array(this.item.spec.length).fill(null);
+      for (const [q, o] of Object.entries(this.selection)) {
+        result[q] = o;
+      }
+      // TODO: open new page
+      console.log('spec select done');
     }
+  }
+
+  watch = {
+    'id' (newV, oldV) {
+      if (!newV) return;
+      // selecting item changed, re-establish context
+      this.selection = {};
+      this.price = this.item.price;
+      this.specText = '';
+      // set default value
+      console.log(this.item.spec);
+      this.item.spec.forEach((question, idx) => {
+        if (question.required || !isNaN(question.default)) {
+          this.selection[idx] = question.default || 0;
+          this.price += question.options[this.selection[idx]].price;
+        }
+      });
+      this.updateSpecText();
+      this.$apply();
+    }
+  }
+
+  updateSpecText () {
+    this.specText = [...Object.entries(this.selection)].map(([q, o]) => this.item.spec[q].options[o].name).join(' / ');
   }
 }
 </script>
