@@ -1,31 +1,36 @@
 <template>
   <view class="spec-select-container {{active ? 'active' : ''}}" @tap.stop="close" catchtouchmove="noop" >
-    <scroll-view scroll-y class="spec-select-scroller" @tap.stop="noop">
-      <view class="spec-select">
-        <view class="header">
-          <image src="{{item.image}}" mode="aspectFill" />
-          <view class="content">
-            <view class="name">{{item.name}}</view>
-            <view class="spec" wx:if="{{specText}}">已选：{{specText}}</view>
-            <view class="price">¥<span>{{price}}</span></view>
+    <view class="spec-select-scroller-container">
+      <view class="close" @tap.stop="close">
+        <i class="iconfont icon-close" />
+      </view>
+      <scroll-view scroll-y class="spec-select-scroller" @tap.stop="noop">
+        <view class="spec-select">
+          <view class="header">
+            <image src="{{item.image}}" mode="aspectFill" />
+            <view class="content">
+              <view class="name">{{item.name}}</view>
+              <view class="spec" wx:if="{{specText}}">已选：{{specText}}</view>
+              <view class="price">¥<span>{{price}}</span></view>
+            </view>
+          </view>
+          <view class="form">
+            <repeat for="{{item.spec}}" index="index" item="question">
+              <view class="question">
+                <view class="name">{{question.name}}</view>
+                <view class="options">
+                  <repeat for="{{question.options}}" index="oIndex" item="option">
+                    <view class="option {{selection[index] === oIndex ? 'selected' : ''}}" @tap.stop="select({{index}}, {{oIndex}})">
+                      <span>{{option.name}}</span>
+                    </view>
+                  </repeat>
+                </view>
+              </view>
+            </repeat>
           </view>
         </view>
-        <view class="form">
-          <repeat for="{{item.spec}}" index="index" item="question">
-            <view class="question">
-              <view class="name">{{question.name}}</view>
-              <view class="options">
-                <repeat for="{{question.options}}" index="oIndex" item="option">
-                  <view class="option {{selection[index] === oIndex ? 'selected' : ''}}" @tap.stop="select({{index}}, {{oIndex}})">
-                    <span>{{option.name}}</span>
-                  </view>
-                </repeat>
-              </view>
-            </view>
-          </repeat>
-        </view>
-      </view>
-    </scroll-view>
+      </scroll-view>
+    </view>
     <view class="spec-select-done" @tap.stop="done">加入购物车</view>
   </view>
 </template>
@@ -49,12 +54,22 @@
     &.active {
       visibility: visible;
       opacity: 1;
-      .spec-select-scroller {
+      .spec-select-scroller-container {
         transform: translateY(calc(100% - #{$activeHeight})) translate3d(0,0,0);
       }
     }
 
-    .spec-select-scroller {
+    .close {
+      position: absolute;
+      right: 30rpx;
+      top: 25rpx;
+      font-size: 30rpx;
+      z-index: 100;
+      color: #8f8f8f;
+    }
+
+    .spec-select-scroller-container {
+      width: 100%;
       position: absolute;
       bottom: 0;
       transition: transform 0.5s;
@@ -63,17 +78,21 @@
       -moz-transform: translate3d(0,0,0);
       -ms-transform: translate3d(0,0,0);
       -o-transform: translate3d(0,0,0);
-      box-shadow: #ffffff 0 -35rpx;
       height: $activeHeight;
       background-color: #ffffff;
+      padding-top: 60rpx;
+    }
 
+    .spec-select-scroller {
+      height: 100%;
       .spec-select {
         width: calc(100% - 88rpx);
-        margin: 60rpx 44rpx;
+        margin: 0 44rpx 60rpx 44rpx;
         display: flex;
         flex-direction: column;
-        padding-bottom: 150rpx; // 为了给【加入购物车】按钮留空位
+        padding-bottom: 250rpx; // 为了给【加入购物车】按钮留空位
         > .header {
+          width: 100%;
           display: flex;
           position: relative;
           > image {
@@ -117,7 +136,6 @@
         }
         > .form {
           margin-top: 35rpx;
-          width: 100%;
           display: flex;
           flex-direction: column;
           align-items: center;
