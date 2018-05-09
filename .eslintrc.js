@@ -21,6 +21,7 @@ module.exports = {
     'semi': ['warn', 'always'],
     'space-before-function-paren': ['warn', 'always'],
     'object-curly-spacing': ['warn', 'always'],
+    'no-unused-vars': ['warn'],
     // allow paren-less arrow functions
     'arrow-parens': 0,
     // allow async-await

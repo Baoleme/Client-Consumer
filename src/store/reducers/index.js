@@ -1,6 +1,10 @@
 import { combineReducers } from 'redux';
-import counter from './counter';
+import menu from './menu';
+import user from './user';
+import restaurant from './restaurant';
 
 export default combineReducers({
-  counter
+  menu,
+  user,
+  restaurant
 });

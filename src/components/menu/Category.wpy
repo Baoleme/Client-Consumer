@@ -1,0 +1,81 @@
+<template>
+  <view class="category" >
+    <repeat for="{{menu.categories}}" key="index" index="index" item="item">
+      <view class="item {{state === index ? 'activated' : ''}}"
+        @tap="select({{index}})">
+        <span>{{item}}</span>
+      </view>
+    </repeat>
+    <view class="indicator" style="top: {{indicatorTopOffset}}" />
+  </view>
+</template>
+
+<style lang="scss">
+  @import "../../lib/var.scss";
+
+  .category {
+    height: 100%;
+    width: 170rpx;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    > .item {
+      margin-top: 30rpx;
+      padding: 0 10rpx;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26rpx;
+      font-weight: bold;
+      color: #606060;
+      height: 90rpx;
+      width: calc(100% - 20rpx);
+      text-align: center;
+      &.activated {
+        color: #232323;
+      }
+      > span {
+        @include line-limit(2);
+      }
+    }
+    > .indicator {
+      position: absolute;
+      height: 90rpx;
+      width: 8rpx;
+      border-radius: 4rpx;
+      background-color: rgb(254, 196, 51);
+      transition: top 0.2s;
+    }
+  }
+</style>
+
+<script>
+import wepy from 'wepy';
+
+import { connect } from 'wepy-redux';
+
+// const store = getStore();
+
+@connect({
+  menu: 'menu'
+})
+export default class Category extends wepy.component {
+  data = {
+    state: 0
+  }
+
+  methods = {
+    select (which) {
+      this.state = Number(which);
+      this.$emit('categoryChange', this.menu.categories[this.state]);
+      this.$apply();
+    }
+  }
+
+  computed = {
+    indicatorTopOffset () {
+      return `${this.state * (90 + 30) + 30}rpx`;
+    }
+  }
+}
+</script>

@@ -1,0 +1,95 @@
+<template>
+  <view class="cart-item">
+    <view class="left">
+      <view class="name">{{item.name}}</view>
+      <view class="spec">烧烤味/不放辣椒</view>
+    </view>
+    <view class="right">
+      <view class="price"><span>¥</span>{{item.price * item.context.count}}</view>
+
+      <view class="dish-counter" wx:if="{{!item.spec}}">
+        <view class="button minus" wx:if="{{item.context.count !== 0}}" @tap="minus">
+          <i class="iconfont icon-jianhao"/>
+        </view>
+        <view class="count" wx:if="{{item.context.count !== 0}}">{{item.context.count}}</view>
+        <view class="button plus" @tap="plus">
+          <i class="iconfont icon-jiahao1"/>
+        </view>
+      </view>
+    </view>
+  </view>
+</template>
+
+<style lang="scss">
+  @import "../../lib/var.scss";
+
+  .cart-item {
+    height: 80rpx;
+    margin: 24rpx 40rpx 20rpx 40rpx;
+    width: calc(100% - 80rpx);
+    display: flex;
+    > .left {
+      width: 350rpx;
+      > .name {
+        width: 100%;
+        font-size: 32rpx;
+        color: #232323;
+        letter-spacing: 0.5rpx;
+        font-weight: bold;
+        height: 45rpx;
+        @include line-limit;
+      }
+      > .spec {
+        width: 100%;
+        margin-top: 4rpx;
+        font-size: 22rpx;
+        color: #9b9b9b;
+        letter-spacing: 0.5rpx;
+        font-weight: lighter;
+        @include line-limit;
+      }
+    }
+    > .right {
+      width: calc(100% - 350rpx);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      > .price {
+        color: #fe8966;
+        font-size: 36rpx;
+        font-weight: bold;
+        > span {
+          font-size: 24rpx;
+        }
+      }
+    }
+  }
+</style>
+
+<script>
+import wepy from 'wepy';
+
+import { connect, getStore } from 'wepy-redux';
+import { modifyItemCount } from '../../store/actions';
+
+const store = getStore();
+
+@connect({
+})
+export default class CartItem extends wepy.component {
+  props = {
+    item: Object
+  }
+
+  methods = {
+    minus () {
+      store.dispatch(modifyItemCount(this.item.context.id, -1));
+      this.$apply();
+    },
+    plus () {
+      store.dispatch(modifyItemCount(this.item.context.id, 1));
+      this.$apply();
+    }
+  }
+}
+</script>
