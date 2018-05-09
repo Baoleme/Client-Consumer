@@ -101,6 +101,7 @@
 
   .dish-counter {
     display: flex;
+    align-items: center;
     .button {
       width: 45rpx;
       height: 45rpx;
@@ -147,7 +148,7 @@
 import wepy from 'wepy';
 
 import { connect, getStore } from 'wepy-redux';
-import { modifyItemCount } from '../../store/actions';
+import { modifyItemCount, openDetail } from '../../store/actions';
 
 import Counter from './DishCounter';
 
@@ -168,11 +169,9 @@ export default class DishItem extends wepy.component {
     noop () {},
     minus () {
       store.dispatch(modifyItemCount(this.item.context.id, -1));
-      this.$apply();
     },
     plus () {
       store.dispatch(modifyItemCount(this.item.context.id, +1));
-      this.$apply();
     },
     selectSpec () {
       // stub
@@ -180,10 +179,8 @@ export default class DishItem extends wepy.component {
     },
     openDetail () {
       // stub
-      console.log('open detail');
-      console.log(this.item);
+      store.dispatch(openDetail(this.item.context.id));
     }
-
   }
 }
 </script>

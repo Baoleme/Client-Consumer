@@ -8,6 +8,10 @@
     font-size: 24rpx;
     overflow: hidden;
   }
+
+  .container {
+    overflow: hidden;
+  }
 </style>
 
 <script>
@@ -18,6 +22,7 @@ import jar from './lib/cookieJar';
 
 import { setStore } from 'wepy-redux';
 import configStore from './store';
+
 import { updateUser } from './store/actions';
 
 const store = configStore();
