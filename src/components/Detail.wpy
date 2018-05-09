@@ -207,7 +207,7 @@
 import wepy from 'wepy';
 
 import { connect, getStore } from 'wepy-redux';
-import { closeDetail, modifyItemCount } from '../store/actions';
+import { closeDetail, modifyItemCount, openSpecSelect } from '../store/actions';
 
 const store = getStore();
 
@@ -239,7 +239,6 @@ export default class Detail extends wepy.component {
       store.dispatch(closeDetail());
     },
     expand () {
-      console.log('expand');
       this.expanded = true;
     },
     minus () {
@@ -249,8 +248,8 @@ export default class Detail extends wepy.component {
       store.dispatch(modifyItemCount(this.item.context.id, +1));
     },
     selectSpec () {
-      // stub
-      console.log('select spec');
+      store.dispatch(openSpecSelect(this.item.context.id));
+      store.dispatch(closeDetail());
     }
   }
 

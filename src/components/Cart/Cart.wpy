@@ -247,12 +247,12 @@ export default class Cart extends wepy.component {
     //   });
     //   this.$apply();
     // }, 500);
-    setTimeout(() => {
-      store.dispatch({
-        type: 'MENU_OPEN_SPEC_SELECT',
-        payload: { id: 1 }
-      });
-    }, 500);
+    // setTimeout(() => {
+    //   store.dispatch({
+    //     type: 'MENU_OPEN_SPEC_SELECT',
+    //     payload: { id: 1 }
+    //   });
+    // }, 500);
   }
 
   methods = {
