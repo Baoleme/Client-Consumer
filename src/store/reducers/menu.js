@@ -65,7 +65,7 @@ class ImmutableBasket {
 
   _genKey (item, specArray) {
     const { spec } = item;
-    const specStr = specArray ? specArray.filter(o => !!o).map((o, q) => spec[q].options[o].name).join('/') : '';
+    const specStr = specArray ? specArray.filter(o => !isNaN(o)).map((o, q) => spec[q].options[o].name).join('/') : '';
     return `${item.context.id}#${specStr}`;
   }
 

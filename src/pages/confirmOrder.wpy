@@ -183,7 +183,7 @@
             letter-spacing: 1.08rpx;
           }
           > .item {
-            height: 90rpx;
+            min-height: 90rpx;
             width: 100%;
             display: flex;
             align-items: center;
@@ -206,9 +206,6 @@
                 width: calc(100% - 83rpx - 17rpx);
                 height: 100%;
                 margin-left: 17rpx;
-                display: flex;
-                flex-direction: column;
-                justify-content: space-between;
                 > .name {
                   width: 100%;
                   @include line-limit;
@@ -217,11 +214,12 @@
                   letter-spacing: 1.08rpx;
                 }
                 > .spec {
+                  margin-top: 15rpx;
                   width: 100%;
-                  @include line-limit;
                   font-size: 24rpx;
                   color: #c8c8c8;
                   letter-spacing: 0.92rpx;
+                  word-break: break-all;
                 }
               }
             }

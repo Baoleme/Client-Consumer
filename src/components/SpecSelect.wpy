@@ -248,7 +248,7 @@ export default class Detail extends wepy.component {
       this.$apply();
     },
     done () {
-      const result = Array(this.item.spec.length).fill(null);
+      const result = Array(this.item.spec.length).fill(NaN);
       for (const [q, o] of Object.entries(this.selection)) {
         result[q] = o;
       }
