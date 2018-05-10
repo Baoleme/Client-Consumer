@@ -1,6 +1,6 @@
 <template>
   <scroll-view class="menu-list" scroll-y>
-    <view class="category-name">{{title}}</view>
+    <view class="category-name">{{categoryName}}</view>
     <repeat for="{{list}}" index="index" item="item">
       <dishItem :item="item" />
     </repeat>
@@ -50,6 +50,9 @@ export default class MenuList extends wepy.component {
     list () {
       if (!this.menu) return [];
       return this.menu.data[this.category || this.menu.categories[0]] || [];
+    },
+    categoryName () {
+      return this.category || (this.menu && (this.menu.categories || [])[0]) || '';
     }
   }
 }

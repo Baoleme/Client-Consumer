@@ -9,7 +9,7 @@
           <span>¥</span>{{total}}
         </view>
       </view>
-      <view class="right" @tap="ok">选好了</view>
+      <view class="right" @tap.stop="ok">选好了</view>
     </view>
     <view class="cart-float" wx:if="{{active}}" @tap.stop="noop">
       <view class="triangle" />
@@ -221,40 +221,6 @@ export default class Cart extends wepy.component {
     active: false
   }
 
-  onLoad () {
-    // for debug
-    // setTimeout(() => {
-    //   store.dispatch({
-    //     type: 'MENU_MODIFY_ITEM_COUNT',
-    //     payload: {
-    //       id: 2,
-    //       modifier: 1
-    //     }
-    //   });
-    //   store.dispatch({
-    //     type: 'MENU_MODIFY_ITEM_COUNT',
-    //     payload: {
-    //       id: 3,
-    //       modifier: 1
-    //     }
-    //   });
-    //   store.dispatch({
-    //     type: 'MENU_MODIFY_ITEM_COUNT',
-    //     payload: {
-    //       id: 4,
-    //       modifier: 1
-    //     }
-    //   });
-    //   this.$apply();
-    // }, 500);
-    // setTimeout(() => {
-    //   store.dispatch({
-    //     type: 'MENU_OPEN_SPEC_SELECT',
-    //     payload: { id: 1 }
-    //   });
-    // }, 500);
-  }
-
   methods = {
     toggle () {
       this.active = !this.active;
@@ -267,8 +233,9 @@ export default class Cart extends wepy.component {
       this.$apply();
     },
     ok () {
-      // stub
-      console.log('select ok');
+      wepy.navigateTo({
+        url: 'confirmOrder'
+      });
     }
   }
 

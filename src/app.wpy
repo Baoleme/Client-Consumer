@@ -31,7 +31,8 @@ setStore(store);
 export default class extends wepy.app {
   config = {
     pages: [
-      'pages/index'
+      'pages/index',
+      'pages/confirmOrder'
     ],
     window: {
       backgroundColor: '#f9f9f9',
@@ -52,7 +53,7 @@ export default class extends wepy.app {
   async onLaunch () {
     jar.init();
 
-    this.checkLogin();
+    // this.checkLogin();
   }
 
   async checkLogin () {

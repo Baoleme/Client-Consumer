@@ -15,7 +15,7 @@ class CookieJar {
    */
   take () {
     if (!this.initialized) console.warn('cookie jar not initialized');
-    return [...Object.entries(this.data)]
+    return Object.entries(this.data)
       .map(([k, v]) => `${k}=${v}`)
       .join('; ');
   }
