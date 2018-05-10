@@ -24,12 +24,15 @@
   @import "../../lib/var.scss";
 
   .cart-item {
-    height: 80rpx;
+    min-height: 80rpx;
     margin: 24rpx 40rpx 20rpx 40rpx;
     width: calc(100% - 80rpx);
     display: flex;
+    align-items: center;
     > .left {
       width: 350rpx;
+      display: flex;
+      flex-direction: column;
       > .name {
         width: 100%;
         font-size: 32rpx;

@@ -248,7 +248,7 @@ export default class Detail extends wepy.component {
       this.$apply();
     },
     done () {
-      const result = Array(this.item.spec.length).fill(null);
+      const result = Array(this.item.spec.length).fill(NaN);
       for (const [q, o] of Object.entries(this.selection)) {
         result[q] = o;
       }
@@ -277,7 +277,7 @@ export default class Detail extends wepy.component {
   }
 
   updateSpecText () {
-    this.specText = [...Object.entries(this.selection)].map(([q, o]) => this.item.spec[q].options[o].name).join(' / ');
+    this.specText = Object.entries(this.selection).map(([q, o]) => this.item.spec[q].options[o].name).join(' / ');
   }
 }
 </script>
