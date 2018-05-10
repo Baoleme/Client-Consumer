@@ -1,5 +1,5 @@
 <template>
-  <view class="container">
+  <view class="page-container page-index">
     <!-- <p>{{user.nickName}}</p> -->
     <!-- <p>{{user.openid}}</p> -->
     <header @navChanged.user="onNavChanged"/>
@@ -200,7 +200,7 @@
 </script>
 
 <style lang="scss">
-  .container {
+  .page-index {
     height: 100%;
     display: flex;
     flex-direction: column;
