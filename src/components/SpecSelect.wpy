@@ -277,7 +277,7 @@ export default class Detail extends wepy.component {
   }
 
   updateSpecText () {
-    this.specText = [...Object.entries(this.selection)].map(([q, o]) => this.item.spec[q].options[o].name).join(' / ');
+    this.specText = Object.entries(this.selection).map(([q, o]) => this.item.spec[q].options[o].name).join(' / ');
   }
 }
 </script>

@@ -47,7 +47,7 @@ class ImmutableBasket {
   }
 
   toArray () {
-    return [...Object.entries(this.map.toObject())].map(([uniqKey, { unitPrice, count, spec }]) => {
+    return Object.entries(this.map.toObject()).map(([uniqKey, { unitPrice, count, spec }]) => {
       const [, id, specStr] = uniqKey.match(/(\d+)#(.*)/);
       return {
         id: Number(id),
@@ -98,7 +98,7 @@ export default handleActions({
     return {
       ...state,
       data: action.payload,
-      categories: [...Object.keys(action.payload)],
+      categories: Object.keys(action.payload),
       idMap: idMap
     };
   },
