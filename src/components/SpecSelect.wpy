@@ -115,7 +115,7 @@
             }
             > .spec {
               width: 100%;
-              @include line-limit(3);
+              @include line-limit(2);
               margin-top: 5rpx;
               font-size: 24rpx;
               color: #606060;
