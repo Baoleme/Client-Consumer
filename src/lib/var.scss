@@ -1,3 +1,5 @@
+$headBarHeight: 143rpx;
+
 @mixin line-limit($n: 1) {
   word-wrap: break-word;
   word-break: break-all;

@@ -11,7 +11,9 @@
       </view>
     </view>
     <view class="nav-tab nav-2" wx:else>
-      nav-2!
+      <view class="tab-wrapper">
+        <orderList />
+      </view>
     </view>
     <detail />
     <specSelect />
@@ -29,6 +31,7 @@
   import Cart from '../components/cart/Cart';
   import Detail from '../components/Detail';
   import SpecSelect from '../components/SpecSelect';
+  import OrderList from '../components/OrderList';
 
   const store = getStore();
 
@@ -47,7 +50,8 @@
       menu: Menu,
       cart: Cart,
       detail: Detail,
-      specSelect: SpecSelect
+      specSelect: SpecSelect,
+      orderList: OrderList
     }
 
     data = {
