@@ -1,0 +1,247 @@
+<template>
+  <view class="page-container order-detail-container">
+    <view class="head-bar">
+      <view class="back" @tap.stop="back">
+        <view class="icon"><i class="iconfont icon-up" /></view>
+        <span>返回</span>
+      </view>
+      <view class="page-title">订单详情</view>
+    </view>
+    <scroll-view scroll-y class="scroller">
+      <view class="scroller-container">
+        <view class="card-container order-state">
+          <view class="step-bar">
+            <view class="line at-0 {{doneStep >= 1 ? 'done' : ''}}" />
+            <view class="line at-1 {{doneStep >= 2 ? 'done' : ''}}" />
+            <view class="step at-0 {{doneStep >= 0 ? 'done' : ''}} {{doneStep === 0 ? 'active' : ''}}">
+              <view class="name">下单成功</view>
+              <view class="circle" />
+            </view>
+            <view class="step at-1 {{doneStep >= 1 ? 'done' : ''}} {{doneStep === 1 ? 'active' : ''}}">
+              <view class="name">厨房接单</view>
+              <view class="circle" />
+            </view>
+            <view class="step at-2 {{doneStep >= 2 ? 'done' : ''}} {{doneStep === 2 ? 'active' : ''}}">
+              <view class="name">完成订单</view>
+              <view class="circle" />
+            </view>
+          </view>
+          <view class="state-text active">订单已完成</view>
+          <view class="state-text-more">感谢您的惠顾</view>
+        </view>
+        <orderContent />
+        <view class="card-container info">
+          <view class="row table">
+            <view class="row-name">就餐位置</view>
+            <view class="info"><span>12</span>号桌</view>
+          </view>
+          <view class="divider" />
+          <view class="row order-id">
+            <view class="row-name">订单号</view>
+            <view class="info">
+              <view>{{orderId}}</view>
+              <view class="copy" @tap.stop="copyOrderId">复制</view>
+            </view>
+          </view>
+          <view class="divider" />
+          <view class="row date">
+            <view class="row-name">下单时间</view>
+            <view class="info">2018-05-05 10:30</view>
+          </view>
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+</template>
+
+<style lang="scss">
+  @import '../lib/var.scss';
+
+  @mixin stepStyle($total, $index) {
+    left: calc(100% / #{$total - 1} * #{$index} - 60rpx);
+  }
+
+  @mixin lineStyle($total, $index) {
+    left: calc(100% / #{$total} * #{$index});
+    width: calc(100% / #{$total});
+  }
+
+  .order-detail-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    > .scroller {
+      height: calc(100% - #{$headBarHeight});
+      .scroller-container {
+        margin: 15rpx 18rpx 150rpx 18rpx;
+        width: calc(100% - 36rpx);
+        > .order-state {
+          position: relative;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          font-weight: bold;
+          color: #606060;
+          > .step-bar {
+            position: relative;
+            width: 560rpx;
+            height: 70rpx;
+            margin: 0 68rpx;
+            .step {
+              position: absolute;
+              height: 70rpx;
+              width: 120rpx;
+              display: flex;
+              flex-direction: column;
+              justify-content: space-between;
+              align-items: center;
+              > .name {
+                font-size: 24rpx;
+                font-weight: lighter;
+                color: #c8c8c8;
+                letter-spacing: 0.99rpx;
+              }
+              > .circle {
+                height: 22rpx;
+                width: 22rpx;
+                border-radius: 50%;
+                background-color: #e4e4e4;
+              }
+
+              &.done {
+                .name {
+                  color: #fdc543;
+                }
+                .circle {
+                  background-color: #ffeec1;
+                }
+              }
+              &.done.active .circle {
+                background-color: #fdc543;
+              }
+
+              &.at-0 {
+                @include stepStyle(3, 0);
+              }
+              &.at-1 {
+                @include stepStyle(3, 1);
+              }
+              &.at-2 {
+                @include stepStyle(3, 2);
+              }
+            }
+
+            .line {
+              position: absolute;
+              height: 10rpx;
+              background-color: #e4e4e4;
+              bottom: 6rpx;
+              &.done {
+                background-color: #ffeec1;
+              }
+              &.at-0 {
+                @include lineStyle(2, 0);
+              }
+              &.at-1 {
+                @include lineStyle(2, 1);
+              }
+            }
+          }
+          > .state-text {
+            margin-top: 40rpx;
+            font-size: 36rpx;
+            letter-spacing: 0;
+            &.active {
+              color: #ff8b18;
+            }
+          }
+          > .state-text-more {
+            margin-top: 15rpx;
+            margin-bottom: 15rpx;
+            letter-spacing: 0.99rpx;
+          }
+        }
+        > .info {
+          margin-top: 25rpx;
+          color: #606060;
+          font-size: 30rpx;
+          > .row {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            > .row-name {
+              letter-spacing: 1.15rpx;
+            }
+          }
+          > .table > .info {
+            font-weight: bold;
+            font-size: 30rpx;
+            letter-spacing: 1.15rpx;
+            @include center-flex;
+            > span {
+              margin-right: 6rpx;
+              color: #fe8966;
+              font-size: 38rpx;
+            }
+          }
+          > .order-id > .info {
+            @include center-flex;
+            .copy {
+              margin-left: 42rpx;
+              border: 1rpx solid #979797;
+              border-radius: 12rpx;
+              width: 86rpx;
+              height: 48rpx;
+              @include center-flex;
+            }
+          }
+        }
+      }
+    }
+  }
+</style>
+
+<script>
+  import wepy from 'wepy';
+  import { connect } from 'wepy-redux';
+
+  import OrderContent from '../components/OrderContent';
+
+  // const store = getStore();
+
+  @connect({
+  })
+  export default class ConfirmOrder extends wepy.page {
+    config = {}
+
+    components = {
+      orderContent: OrderContent
+    }
+
+    data = {
+      orderId: 2138911,
+      doneStep: 1
+    }
+
+    methods = {
+      back () {
+        wepy.navigateBack();
+      },
+      async copyOrderId () {
+        await wepy.setClipboardData({ data: String(this.orderId) });
+        wepy.showToast({
+          title: '复制成功',
+          icon: 'success',
+          duration: 2000
+        });
+      }
+    }
+  }
+
+  // function stringifyStyle (obj) {
+  //   return Object.entries(obj)
+  //     .map(([k, v]) => `${k}:${v};`)
+  //     .join('');
+  // }
+</script>
