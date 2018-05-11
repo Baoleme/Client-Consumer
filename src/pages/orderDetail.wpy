@@ -11,21 +11,19 @@
       <view class="scroller-container">
         <view class="card-container order-state">
           <view class="step-bar">
-            <view class="step">
+            <view class="line at-0 {{doneStep >= 1 ? 'done' : ''}}" />
+            <view class="line at-1 {{doneStep >= 2 ? 'done' : ''}}" />
+            <view class="step at-0 {{doneStep >= 0 ? 'done' : ''}} {{doneStep === 0 ? 'active' : ''}}">
               <view class="name">下单成功</view>
               <view class="circle" />
             </view>
-            <view class="step">
+            <view class="step at-1 {{doneStep >= 1 ? 'done' : ''}} {{doneStep === 1 ? 'active' : ''}}">
               <view class="name">厨房接单</view>
               <view class="circle" />
             </view>
-            <view class="step">
+            <view class="step at-2 {{doneStep >= 2 ? 'done' : ''}} {{doneStep === 2 ? 'active' : ''}}">
               <view class="name">完成订单</view>
               <view class="circle" />
-            </view>
-            <view class="container">
-              <view class="line" />
-              <view class="line" />
             </view>
           </view>
           <view class="state-text active">订单已完成</view>
@@ -89,11 +87,6 @@
             width: 560rpx;
             height: 70rpx;
             margin: 0 68rpx;
-            > .container {
-              position: relative;
-              width: 100%;
-              height: 100%;
-            }
             .step {
               position: absolute;
               height: 70rpx;
@@ -105,37 +98,53 @@
               > .name {
                 font-size: 24rpx;
                 font-weight: lighter;
-                color: #fdc543;
+                color: #c8c8c8;
                 letter-spacing: 0.99rpx;
               }
               > .circle {
                 height: 22rpx;
                 width: 22rpx;
                 border-radius: 50%;
-                background-color: #ffeec1;
+                background-color: #e4e4e4;
               }
-            }
-            .step:nth-child(1) {
-              @include stepStyle(3, 0);
-            }
-            .step:nth-child(2) {
-              @include stepStyle(3, 1);
-            }
-            .step:nth-child(3) {
-              @include stepStyle(3, 2);
+
+              &.done {
+                .name {
+                  color: #fdc543;
+                }
+                .circle {
+                  background-color: #ffeec1;
+                }
+              }
+              &.done.active .circle {
+                background-color: #fdc543;
+              }
+
+              &.at-0 {
+                @include stepStyle(3, 0);
+              }
+              &.at-1 {
+                @include stepStyle(3, 1);
+              }
+              &.at-2 {
+                @include stepStyle(3, 2);
+              }
             }
 
             .line {
               position: absolute;
               height: 10rpx;
-              background-color: #ffeec1;
+              background-color: #e4e4e4;
               bottom: 6rpx;
-            }
-            .line:nth-child(1) {
-              @include lineStyle(2, 0);
-            }
-            .line:nth-child(2) {
-              @include lineStyle(2, 1);
+              &.done {
+                background-color: #ffeec1;
+              }
+              &.at-0 {
+                @include lineStyle(2, 0);
+              }
+              &.at-1 {
+                @include lineStyle(2, 1);
+              }
             }
           }
           > .state-text {
@@ -211,7 +220,8 @@
     }
 
     data = {
-      orderId: 2138911
+      orderId: 2138911,
+      doneStep: 1
     }
 
     methods = {
