@@ -7,9 +7,9 @@ export default handleActions({
     console.log(action.payload);
     return {
       ...state,
-      orders: state.orders.push(action.payload)
+      data: state.data.push(action.payload)
     };
   }
 }, {
-  orders: new List()
+  data: new List()
 });

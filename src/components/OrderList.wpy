@@ -1,33 +1,21 @@
 <template>
   <scroll-view class="order-list" scroll-y>
-    <view class="order">
-      <view class="left">
-        <image src="http://s2.cdn.xiachufang.com/56913c828ba911e6a9a10242ac110002_1616w_1080h.jpg?imageView2/2/w/660/interlace/1/q/90" mode="aspectFill" />
-        <view class="content">
-          <view class="restaurant">开心蛋糕（大学城店）</view>
-          <view class="date">2018-04-04</view>
-          <view class="brief">舒芙蕾蛋糕等{{2}}件商品</view>
+    <repeat for="{{orders}}" index="index" item="item">
+      <view class="order">
+        <view class="left">
+          <image src="http://s2.cdn.xiachufang.com/56913c828ba911e6a9a10242ac110002_1616w_1080h.jpg?imageView2/2/w/660/interlace/1/q/90" mode="aspectFill" />
+          <view class="content">
+            <view class="restaurant">开心蛋糕（大学城店）</view>
+            <view class="date">2018-04-04</view>
+            <view class="brief">舒芙蕾蛋糕等{{2}}件商品</view>
+          </view>
+        </view>
+        <view class="right">
+          <view class="status active">订单制作中</view>
+          <view class="price"><span>¥</span>29</view>
         </view>
       </view>
-      <view class="right">
-        <view class="status active">订单制作中</view>
-        <view class="price"><span>¥</span>29</view>
-      </view>
-    </view>
-    <view class="order">
-      <view class="left">
-        <image src="http://s2.cdn.xiachufang.com/56913c828ba911e6a9a10242ac110002_1616w_1080h.jpg?imageView2/2/w/660/interlace/1/q/90" mode="aspectFill" />
-        <view class="content">
-          <view class="restaurant">开心蛋糕（大学城店）</view>
-          <view class="date">2018-04-04</view>
-          <view class="brief">舒芙蕾蛋糕等{{2}}件商品</view>
-        </view>
-      </view>
-      <view class="right">
-        <view class="status">订单已完成</view>
-        <view class="price"><span>¥</span>29</view>
-      </view>
-    </view>
+    </repeat>
   </scroll-view>
 </template>
 
@@ -115,7 +103,10 @@ import { connect } from 'wepy-redux';
 // const store = getStore();
 
 @connect({
-  restaurant: 'restaurant'
+  orders (state) {
+    console.log(state.order.data.toArray());
+    return state.order.data.toArray();
+  }
 })
 export default class RestaurantInfo extends wepy.component {
 }
