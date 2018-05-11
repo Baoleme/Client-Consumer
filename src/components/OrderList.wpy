@@ -1,0 +1,122 @@
+<template>
+  <scroll-view class="order-list" scroll-y>
+    <view class="order">
+      <view class="left">
+        <image src="http://s2.cdn.xiachufang.com/56913c828ba911e6a9a10242ac110002_1616w_1080h.jpg?imageView2/2/w/660/interlace/1/q/90" mode="aspectFill" />
+        <view class="content">
+          <view class="restaurant">开心蛋糕（大学城店）</view>
+          <view class="date">2018-04-04</view>
+          <view class="brief">舒芙蕾蛋糕等{{2}}件商品</view>
+        </view>
+      </view>
+      <view class="right">
+        <view class="status active">订单制作中</view>
+        <view class="price"><span>¥</span>29</view>
+      </view>
+    </view>
+    <view class="order">
+      <view class="left">
+        <image src="http://s2.cdn.xiachufang.com/56913c828ba911e6a9a10242ac110002_1616w_1080h.jpg?imageView2/2/w/660/interlace/1/q/90" mode="aspectFill" />
+        <view class="content">
+          <view class="restaurant">开心蛋糕（大学城店）</view>
+          <view class="date">2018-04-04</view>
+          <view class="brief">舒芙蕾蛋糕等{{2}}件商品</view>
+        </view>
+      </view>
+      <view class="right">
+        <view class="status">订单已完成</view>
+        <view class="price"><span>¥</span>29</view>
+      </view>
+    </view>
+  </scroll-view>
+</template>
+
+<style lang="scss">
+  @import "../lib/var.scss";
+
+  .order-list {
+    width: calc(100% - 60rpx);
+    height: 100%;
+    padding: 30rpx;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #ffffff;
+    .order {
+      height: 140rpx;
+      margin-bottom: 30rpx;
+      display: flex;
+      justify-content: space-between;
+      > .left {
+        width: 560rpx;
+        display: flex;
+        image {
+          background: #d8d8d8;
+          border-radius: 4rpx;
+          width: 83rpx;
+          height: 81rpx;
+        }
+        > .content {
+          width: calc(100% - 100rpx);
+          margin-left: 9rpx;
+          > view {
+            @include line-limit;
+            width: 100%;
+          }
+          > .restaurant {
+            font-size: 32rpx;
+            font-weight: bold;
+            color: #000000;
+          }
+          > .date {
+            font-size: 22rpx;
+            font-weight: bold;
+            color: #6e6e6e;
+            margin-top: 11rpx;
+          }
+          > .brief {
+            margin-top: 20rpx;
+            color: #4e4e4e;
+            font-size: 28rpx;
+          }
+        }
+      }
+      > .right {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        justify-content: space-between;
+        > .status {
+          font-size: 24rpx;
+          color: #6e6e6e;
+          &.active {
+            color: #ff8b18;
+          }
+        }
+        > .price {
+          font-weight: bold;
+          color: #fe8966;
+          font-size: 36rpx;
+          > span {
+            font-size: 24rpx;
+          }
+        }
+      }
+    }
+  }
+</style>
+
+<script>
+import wepy from 'wepy';
+
+import { connect } from 'wepy-redux';
+
+// const store = getStore();
+
+@connect({
+  restaurant: 'restaurant'
+})
+export default class RestaurantInfo extends wepy.component {
+}
+</script>
