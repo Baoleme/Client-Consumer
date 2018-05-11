@@ -31,30 +31,7 @@
             <input placeholder="口味、偏好、其他要求" placeholder-class="placeholder" bindinput="onNotesInput" />
           </view>
         </view>
-        <view class="basket card-container">
-          <view class="restaurant-name">{{restaurantName}}</view>
-          <view class="divider" />
-          <repeat for="{{basketArray}}" index="index" item="item">
-            <view class="item">
-              <view class="left">
-                <image src="{{item.item.image}}" mode="aspectFill" />
-                <view class="name-spec">
-                  <view class="name">{{item.item.name}}</view>
-                  <view class="spec">{{item.specStr}}</view>
-                </view>
-              </view>
-              <view class="right">
-                <view class="count">x{{item.count}}</view>
-                <view class="item-price"><span>¥</span>{{item.unitPrice}}</view>
-              </view>
-            </view>
-            <view class="divider" />
-          </repeat>
-          <view class="total-price">
-            <span>小计</span>
-            <view class="price"><span>¥</span>{{total}}</view>
-          </view>
-        </view>
+        <orderContent />
         <view class="confirm-bar">
         </view>
       </view>
@@ -73,64 +50,15 @@
 <style lang="scss">
   @import "../lib/var.scss";
 
-  $headBarHeight: 143rpx;
-
   .confirm-order-container {
     position: relative;
     width: 100%;
     height: 100%;
-    > .head-bar {
-      position: relative;
-      height: $headBarHeight;
-      width: 100%;
-      background-color: #ffffff;
-      color: #232323;
-      > .back {
-        position: absolute;
-        left: 20rpx;
-        bottom: 37rpx;
-        display: flex;
-        > .icon {
-          transform: rotate(-90deg);
-          > i {
-            font-size: 20rpx;
-          }
-        }
-        > span {
-          font-size: 32rpx;
-          letter-spacing: 0;
-        }
-      }
-      > .page-title {
-        position: absolute;
-        width: 364rpx;
-        left: 0;
-        right: 0;
-        bottom: 23rpx;
-        margin-left: auto;
-        margin-right: auto;
-        font-size: 37rpx;
-        text-align: center;
-        font-weight: bold;
-        letter-spacing: 0;
-      }
-    }
     > .scroller {
       height: calc(100% - #{$headBarHeight});
       .scroller-container {
         margin: 15rpx 18rpx 150rpx 18rpx;
         width: calc(100% - 36rpx);
-        > .card-container {
-          width: calc(100% - 76rpx);
-          background-color: #ffffff;
-          padding: 30rpx 38rpx 42rpx 38rpx;
-          > .divider {
-            margin: 24rpx calc(44rpx - 38rpx) 20rpx calc(66rpx - 38rpx);
-            width: calc(100% - (66 - 38)rpx - (44 - 38)rpx);
-            height: 2rpx;
-            background-color: #ededed;
-          }
-        }
         > .header {
           color: #606060;
           font-size: 30rpx;
@@ -168,107 +96,6 @@
             }
             .placeholder {
               color: #c8c8c8;
-            }
-          }
-        }
-        > .basket {
-          margin-top: 18rpx;
-          padding-top: 30rpx; // overrides top-padding in .card-container
-          color: #606060;
-          font-weight: bold;
-          > .restaurant-name {
-            width: 100%;
-            @include line-limit;
-            font-size: 24rpx;
-            letter-spacing: 1.08rpx;
-          }
-          > .item {
-            min-height: 90rpx;
-            width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            > .left, > .right {
-              height: 100%;
-            }
-            > .left {
-              width: 480rpx;
-              display: flex;
-              align-items: center;
-              font-weight: bold;
-              image {
-                width: 83rpx;
-                height: 83rpx;
-                background-color: #d8d8d8;
-                border-radius: 3rpx;
-              }
-              > .name-spec {
-                width: calc(100% - 83rpx - 17rpx);
-                height: 100%;
-                margin-left: 17rpx;
-                > .name {
-                  width: 100%;
-                  @include line-limit;
-                  font-size: 28rpx;
-                  color: #232323;
-                  letter-spacing: 1.08rpx;
-                }
-                > .spec {
-                  margin-top: 15rpx;
-                  width: 100%;
-                  font-size: 24rpx;
-                  color: #c8c8c8;
-                  letter-spacing: 0.92rpx;
-                  word-break: break-all;
-                }
-              }
-            }
-            > .right {
-              display: flex;
-              align-items: center;
-              justify-content: space-around;
-              width: calc(100% - 480rpx - 5rpx);
-              > .count {
-                @include line-limit;
-                width: 60rpx;
-                font-size: 24rpx;
-                color: #606060;
-                letter-spacing: 0.92rpx;
-                text-align: left;
-              }
-              > .item-price {
-                @include line-limit;
-                width: calc(100% - 60rpx - 5rpx);
-                text-align: right;
-                letter-spacing: 1.08rpx;
-                font-size: 36rpx;
-                span {
-                  font-size: 24rpx;
-                }
-              }
-            }
-          }
-          > .total-price {
-            max-width: 100%;
-            display: flex;
-            align-items: flex-end;
-            justify-content: flex-end;
-            > span {
-              flex-shrink: 0;
-              font-size: 24rpx;
-              color: #c8c8c8;
-              letter-spacing: 0.92rpx;
-              margin-bottom: 8rpx;
-            }
-            > .price {
-              @include line-limit;
-              margin-left: 20rpx;
-              color: #fe8966;
-              letter-spacing: 1.08rpx;
-              font-size: 40rpx;
-              span {
-                font-size: 28rpx;
-              }
             }
           }
         }
@@ -319,10 +146,12 @@
 
 <script>
   import wepy from 'wepy';
-  import { connect } from 'wepy-redux';
-  // import { updateRestaurant, updateMenu } from '../store/actions';
+  import { connect, getStore } from 'wepy-redux';
+  import { createOrder } from '../store/actions';
 
-  // const store = getStore();
+  import OrderContent from '../components/OrderContent';
+
+  const store = getStore();
 
   @connect({
     basketArray (state) {
@@ -335,13 +164,14 @@
       return this.basketArray
         .map(o => o.count * o.unitPrice)
         .reduce((x, acc) => x + acc, 0);
-    },
-    restaurantName (state) {
-      return state.restaurant.name;
     }
   })
   export default class ConfirmOrder extends wepy.page {
     config = {}
+
+    components = {
+      orderContent: OrderContent
+    }
 
     data = {
       notes: ''
@@ -354,6 +184,17 @@
       },
       back () {
         wepy.navigateBack();
+      },
+      ok () {
+        store.dispatch(createOrder({
+          restaurant_id: null,
+          table: '',
+          dish: this.basketArray.map(o => ({ dish_id: o.id, specifications: o.spec })),
+          remark: this.notes
+        }));
+        wepy.navigateTo({
+          url: 'orderDetail'
+        });
       }
     }
 }

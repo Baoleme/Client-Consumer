@@ -1,5 +1,6 @@
 <style lang="scss">
   @import 'lib/iconfont.scss';
+  @import 'lib/var.scss';
 
   page {
     font-family:PingFangSC-Regular;
@@ -11,6 +12,55 @@
 
   .container {
     overflow: hidden;
+  }
+
+  .card-container {
+    width: calc(100% - 76rpx);
+    background-color: #ffffff;
+    padding: 30rpx 38rpx 42rpx 38rpx;
+    > .divider {
+      margin: 24rpx calc(44rpx - 38rpx) 20rpx calc(66rpx - 38rpx);
+      width: calc(100% - (66 - 38)rpx - (44 - 38)rpx);
+      height: 2rpx;
+      background-color: #ededed;
+    }
+  }
+
+  .head-bar {
+    position: relative;
+    height: $headBarHeight;
+    width: 100%;
+    background-color: #ffffff;
+    color: #232323;
+    > .back {
+      position: absolute;
+      left: 20rpx;
+      bottom: 37rpx;
+      display: flex;
+      > .icon {
+        transform: rotate(-90deg);
+        > i {
+          font-size: 20rpx;
+        }
+      }
+      > span {
+        font-size: 32rpx;
+        letter-spacing: 0;
+      }
+    }
+    > .page-title {
+      position: absolute;
+      width: 364rpx;
+      left: 0;
+      right: 0;
+      bottom: 23rpx;
+      margin-left: auto;
+      margin-right: auto;
+      font-size: 37rpx;
+      text-align: center;
+      font-weight: bold;
+      letter-spacing: 0;
+    }
   }
 </style>
 
@@ -32,7 +82,8 @@ export default class extends wepy.app {
   config = {
     pages: [
       'pages/index',
-      'pages/confirmOrder'
+      'pages/confirmOrder',
+      'pages/orderDetail'
     ],
     window: {
       backgroundColor: '#f9f9f9',
