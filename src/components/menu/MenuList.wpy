@@ -11,7 +11,7 @@
 <style lang="scss">
   .menu-list {
     height: 100%;
-    flex-grow: 1;
+    width: calc(750rpx - 170rpx);
     .category-name {
       height: 70rpx;
       display: flex;

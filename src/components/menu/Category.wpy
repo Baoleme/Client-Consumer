@@ -1,13 +1,15 @@
 <template>
-  <view class="category" >
-    <repeat for="{{menu.categories}}" key="index" index="index" item="item">
-      <view class="item {{state === index ? 'activated' : ''}}"
-        @tap="select({{index}})">
-        <span>{{item}}</span>
-      </view>
-    </repeat>
-    <view class="indicator" style="top: {{indicatorTopOffset}}" />
-  </view>
+  <scroll-view scroll-y class="category" >
+    <view class="category-container">
+      <repeat for="{{menu.categories}}" key="index" index="index" item="item">
+        <view class="category-item {{state === index ? 'activated' : ''}}"
+          @tap="select({{index}})">
+          <span>{{item}}</span>
+        </view>
+      </repeat>
+      <view class="category-indicator" style="top: {{indicatorTopOffset}}" />
+    </view>
+  </scroll-view>
 </template>
 
 <style lang="scss">
@@ -16,11 +18,15 @@
   .category {
     height: 100%;
     width: 170rpx;
-    display: flex;
-    flex-direction: column;
     position: relative;
-    > .item {
-      margin-top: 30rpx;
+    .category-container {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      padding-bottom: 200rpx;
+    }
+    .category-item {
+      margin-top: 15px;
       padding: 0 10rpx;
       display: flex;
       align-items: center;
@@ -28,7 +34,7 @@
       font-size: 26rpx;
       font-weight: bold;
       color: #606060;
-      height: 90rpx;
+      height: 50px;
       width: calc(100% - 20rpx);
       text-align: center;
       &.activated {
@@ -38,11 +44,11 @@
         @include line-limit(2);
       }
     }
-    > .indicator {
+    .category-indicator {
       position: absolute;
-      height: 90rpx;
+      height: 50px;
       width: 8rpx;
-      border-radius: 4rpx;
+      border-radius: 4px;
       background-color: rgb(254, 196, 51);
       transition: top 0.2s;
     }
@@ -74,7 +80,7 @@ export default class Category extends wepy.component {
 
   computed = {
     indicatorTopOffset () {
-      return `${this.state * (90 + 30) + 30}rpx`;
+      return `${this.state * (50 + 15) + 15}px`;
     }
   }
 }
