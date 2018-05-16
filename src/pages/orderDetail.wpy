@@ -226,7 +226,7 @@
 
     methods = {
       back () {
-        wepy.navigateBack();
+        wepy.navigateBack({ delta: 2 });
       },
       async copyOrderId () {
         await wepy.setClipboardData({ data: String(this.orderId) });

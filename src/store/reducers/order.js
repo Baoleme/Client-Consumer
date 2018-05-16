@@ -6,7 +6,7 @@ export default handleActionsWithoutError({
   [ORDER_CREATE] (state, action) {
     return {
       ...state,
-      data: state.data.push(action.payload)
+      data: state.data.unshift(...action.payload)
     };
   }
 }, {

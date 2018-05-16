@@ -2,7 +2,7 @@ import wepy from 'wepy';
 import jar from './cookieJar';
 import { resolve } from 'url';
 
-export default async function request (arg) {
+async function request (arg) {
   const config = typeof arg === 'string' ? { url: arg, method: 'GET' } : arg;
 
   // insert cookies
@@ -25,3 +25,17 @@ export default async function request (arg) {
 
   return res;
 }
+
+['GET', 'POST', 'DELETE', 'PUT', 'PATCH']
+  .map(s => s.toLowerCase())
+  .forEach(s => {
+    request[s] = arg => {
+      const config = typeof arg === 'string' ? { url: arg } : arg;
+      return request({
+        method: s.toUpperCase(),
+        ...config
+      });
+    };
+  });
+
+export default request;

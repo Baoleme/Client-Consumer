@@ -2,7 +2,6 @@
   <view class="page-container page-index">
     <header @navChanged.user="onNavChanged"/>
     <view class="nav-tab nav-1" wx:if="{{nav === 1}}">
-      <!-- TODO: use visibility instead of wx:if -->
       <view class="tab-wrapper" wx:if="{{loaded}}">
         <restaurantInfo />
         <menu />
@@ -28,7 +27,7 @@
 <script>
   import wepy from 'wepy';
   import { connect, getStore } from 'wepy-redux';
-  import { updateMenu, updateRestaurant } from '../store/actions';
+  import { updateMenu, updateRestaurant, createOrder } from '../store/actions';
   import { zipObject } from 'lodash';
 
   import RequestMixin from '../mixins/request';
@@ -67,138 +66,7 @@
     }
 
     data = {
-      nav: 1,
-      mockMenu: {
-        '招牌推荐': [
-          {
-            name: '方鱼炒芥兰',
-            image: 'http://ouim3dnf4.bkt.clouddn.com/18-5-6/69615219.jpg',
-            description: '做法是方鱼和芥兰一起炒',
-            price: 12,
-            spiciness: 3, // 辣度0-3
-            tags: ['人气推荐', '折扣'],
-            spec: [ // 规格
-              {
-                name: '规格',
-                options: [
-                  { name: '+桃子果砖', price: 0 },
-                  { name: '+橙子果砖', price: 1 },
-                  { name: '+柚子果砖', price: 2 }
-                ],
-                default: 2
-              },
-              {
-                name: '温度',
-                options: [
-                  { name: '冷', price: 0 },
-                  { name: '惹', price: 0 }
-                ],
-                default: 1
-              },
-              {
-                name: '茶基',
-                options: [
-                  { name: '乌龙茶乌龙茶乌龙茶乌龙茶', price: 0 },
-                  { name: '菊花茶', price: 0 },
-                  { name: '红茶', price: 0 },
-                  { name: '绿茶', price: 0 }
-                ],
-                required: true
-              }, {
-                name: '长测试',
-                options: [
-                  {
-                    name: '12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667686970',
-                    price: 0
-                  }, {
-                    name: '短',
-                    price: 0
-                  }
-                ]
-              }
-            ],
-            context: {
-              count: 0
-            }
-          },
-          {
-            name: '方鱼炒芥兰',
-            image: 'http://ouim3dnf4.bkt.clouddn.com/18-5-6/69615219.jpg',
-            description: '',
-            price: 12,
-            spiciness: 0, // 辣度0-3
-            tags: ['人气推荐', '折扣'],
-            spec: null, // 规格
-            context: {
-              count: 0
-            }
-          },
-          {
-            name: '方鱼炒芥兰',
-            image: 'http://ouim3dnf4.bkt.clouddn.com/18-5-6/69615219.jpg',
-            description: '',
-            price: 12,
-            spiciness: 0, // 辣度0-3
-            tags: ['人气推荐', '折扣'],
-            spec: null, // 规格
-            context: {
-              count: 0
-            }
-          },
-          {
-            name: '方鱼炒芥兰',
-            image: 'http://ouim3dnf4.bkt.clouddn.com/18-5-6/69615219.jpg',
-            description: '',
-            price: 12,
-            spiciness: 0, // 辣度0-3
-            tags: ['人气推荐', '折扣'],
-            spec: null, // 规格
-            context: {
-              count: 0
-            }
-          },
-          {
-            name: '方鱼炒芥兰',
-            image: 'http://ouim3dnf4.bkt.clouddn.com/18-5-6/69615219.jpg',
-            description: '',
-            price: 12,
-            spiciness: 0, // 辣度0-3
-            tags: ['人气推荐', '折扣'],
-            spec: null, // 规格
-            context: {
-              count: 0
-            }
-          },
-          {
-            name: '方鱼炒芥兰',
-            image: 'http://ouim3dnf4.bkt.clouddn.com/18-5-6/69615219.jpg',
-            description: '',
-            price: 12,
-            spiciness: 0, // 辣度0-3
-            tags: ['人气推荐', '折扣'],
-            spec: null, // 规格
-            context: {
-              count: 0
-            }
-          }
-        ],
-        '没有好吃的': [
-          {
-            name: '方鱼炒芥兰',
-            image: 'http://ouim3dnf4.bkt.clouddn.com/18-5-6/69615219.jpg',
-            description: '做法是方鱼和芥兰一起炒',
-            price: 12,
-            spiciness: 3, // 辣度0-3
-            tags: ['人气推荐', '折扣'],
-            spec: null,
-            context: {
-              count: 0
-            }
-          }
-        ],
-        '垃圾wepy': [],
-        '长长长长长长长长长长长长': []
-      }
+      nav: 1
     }
 
     computed = {
@@ -211,19 +79,9 @@
       async scan () {
         try {
           const res = await wepy.scanCode();
-          const { rid, tid } = parseQueryString(res.path); // rid: 餐厅id; tid: 桌号
+          let { rid, tid } = parseQueryString(res.path); // rid: 餐厅id; tid: 桌号
           if (rid && tid) {
-            try {
-              wepy.showLoading({
-                mask: true
-              });
-              // load data
-              const { data: { name, dish, logo_url, phone } } = await this.$http(`/restaurant/${rid}`);
-              store.dispatch(updateRestaurant({ rid, tid, name, phone, logo: logo_url }));
-              store.dispatch(updateMenu(dishDataAdapter(dish)));
-            } finally {
-              wepy.hideLoading();
-            }
+            await this.loadRestaurant(Number(rid), tid);
           } else {
             wepy.showToast({
               title: '未知二维码',
@@ -237,10 +95,30 @@
     }
 
     async onLoad () {
-      this.init();
+      this.loadOrders();
     }
 
-    async init () {
+    async loadOrders () {
+      // TODO: loading 态的维护
+      // TODO: 底部翻页
+      const { data } = await this.$http('/order', { since: new Date(0) });
+      if (data.length) {
+        store.dispatch(createOrder(...data));
+      }
+    }
+
+    async loadRestaurant (rid, tid) {
+      try {
+        wepy.showLoading({
+          mask: true
+        });
+        // load data
+        const { data: { name, dish, logo_url, phone } } = await this.$http(`/restaurant/${rid}`);
+        store.dispatch(updateRestaurant({ rid, tid, name, phone, logo: logo_url }));
+        store.dispatch(updateMenu(dishDataAdapter(dish)));
+      } finally {
+        wepy.hideLoading();
+      }
     }
   }
 
