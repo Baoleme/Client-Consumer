@@ -1,17 +1,17 @@
 <template>
-  <view class="cart-container {{active ? 'active' : ''}}" @tap="toggle" catchtouchmove="noop" wx:if="{{basketSize !== 0}}">
+  <view class="cart-container {{active ? 'active' : ''}} {{basketSize !== 0 ? '' : 'gone'}}" @tap="toggle" catchtouchmove="noop">
     <!-- catchtouchmove 用于防止滚动穿透 -->
     <view class="cart-bar">
       <view class="left" @tap.stop="toggle">
         <image src="../../assets/cart.png" />
-        <view class="bubble" wx:if="{{basketSize !== 0}}">{{dishCount}}</view>
+        <view class="bubble">{{dishCount}}</view>
         <view class="price">
           <span>¥</span>{{total}}
         </view>
       </view>
       <view class="right" @tap.stop="ok">选好了</view>
     </view>
-    <view class="cart-float" wx:if="{{active}}" @tap.stop="noop">
+    <view class="cart-float {{active ? '' : 'gone'}}" @tap.stop="noop">
       <view class="triangle" />
       <view class="header">
         <view class="left">购物车</view>
@@ -23,7 +23,7 @@
       <scroll-view class="content" style="height: {{floatHeight}}rpx"  scroll-y="{{floatHeight == 700}}">
         <repeat for="{{basketArray}}" index="index" item="item">
           <view class="cart-item-wrapper">
-            <view class="divider" wx:if="{{index !== 0}}"/>
+            <view class="divider {{index !== 0 ? '' : 'gone'}}"/>
             <cartItem :item="item" />
           </view>
         </repeat>

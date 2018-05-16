@@ -10,11 +10,11 @@
         <view class="main">
           <view class="line">
             <view class="name">{{item.name}}</view>
-            <view class="dish-counter" wx:if="{{!item.spec}}" @tap.stop="noop">
-              <view class="button minus" wx:if="{{item.context.count !== 0}}" @tap.stop="minus">
+            <view class="dish-counter {{!item.spec ? '' : 'gone'}}" @tap.stop="noop">
+              <view class="button minus {{item.context.count !== 0 ? '' : 'gone'}}" @tap.stop="minus">
                 <i class="iconfont icon-jianhao"/>
               </view>
-              <view class="count" wx:if="{{item.context.count !== 0}}">{{item.context.count}}</view>
+              <view class="count {{item.context.count !== 0 ? '' : 'gone'}}">{{item.context.count}}</view>
               <view class="button plus" @tap.stop="plus">
                 <i class="iconfont icon-jiahao1"/>
               </view>
@@ -32,7 +32,7 @@
           <view class="description-title">商品描述</view>
           <text class="description">{{item.description}}</text>
         </view>
-        <view class="span-indicator" @tap.stop="expand" wx:if="{{!expanded}}">
+        <view class="span-indicator {{!expanded ? '' : 'gone'}}" @tap.stop="expand" >
           <i class="iconfont icon-up" />
         </view>
       </view>

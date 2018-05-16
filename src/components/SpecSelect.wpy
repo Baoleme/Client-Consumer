@@ -10,7 +10,7 @@
             <image src="{{item.image}}" mode="aspectFill" />
             <view class="content">
               <view class="name">{{item.name}}</view>
-              <view class="spec" wx:if="{{specText}}">已选：{{specText}}</view>
+              <view class="spec {{specText ? '' : 'gone'}}">已选：{{specText}}</view>
               <view class="price">¥<span>{{price}}</span></view>
             </view>
           </view>

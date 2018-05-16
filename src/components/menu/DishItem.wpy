@@ -18,11 +18,11 @@
           <span class="mid">{{item.price}}</span>
           <span class="post" wx:if="{{!!item.spec}}">起</span>
         </view>
-        <view class="dish-counter" wx:if="{{!item.spec}}" @tap.stop="noop">
-          <view class="button minus" wx:if="{{item.context.count !== 0}}" @tap.stop="minus">
+        <view class="dish-counter {{!item.spec ? '' : 'gone'}}" @tap.stop="noop">
+          <view class="button minus {{item.context.count !== 0 ? '' : 'gone'}}" @tap.stop="minus">
             <i class="iconfont icon-jianhao"/>
           </view>
-          <view class="count" wx:if="{{item.context.count !== 0}}">{{item.context.count}}</view>
+          <view class="count {{item.context.count !== 0 ? '' : 'gone'}}">{{item.context.count}}</view>
           <view class="button plus" @tap.stop="plus">
             <i class="iconfont icon-jiahao1"/>
           </view>

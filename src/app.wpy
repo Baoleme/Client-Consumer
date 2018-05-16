@@ -62,6 +62,10 @@
       letter-spacing: 0;
     }
   }
+
+  .gone {
+    visibility: hidden;
+  }
 </style>
 
 <script>
