@@ -1,13 +1,18 @@
 <template>
   <view class="page-container page-index">
-    <!-- <p>{{user.nickName}}</p> -->
-    <!-- <p>{{user.openid}}</p> -->
     <header @navChanged.user="onNavChanged"/>
     <view class="nav-tab nav-1" wx:if="{{nav === 1}}">
-      <view class="tab-wrapper">
+      <!-- TODO: use visibility instead of wx:if -->
+      <view class="tab-wrapper" wx:if="{{loaded}}">
         <restaurantInfo />
         <menu />
         <cart />
+      </view>
+      <view class="tab-wrapper scan" wx:else>
+        <view class="button" @tap.stop="scan">
+          <i class="iconfont icon-scan" />
+        </view>
+        <view class="hint">扫码开始点餐</view>
       </view>
     </view>
     <view class="nav-tab nav-2" wx:else>
@@ -23,7 +28,7 @@
 <script>
   import wepy from 'wepy';
   import { connect, getStore } from 'wepy-redux';
-  import { updateRestaurant, updateMenu } from '../store/actions';
+  import { loadEnvironment } from '../store/actions';
 
   import Header from '../components/Header';
   import RestaurantInfo from '../components/RestaurantInfo';
@@ -36,9 +41,11 @@
   const store = getStore();
 
   @connect({
-    user: 'user'
+    restaurant: 'restaurant',
+    loaded (state) {
+      return !!state.restaurant.id;
+    }
   })
-
   export default class Index extends wepy.page {
     config = {
       navigationBarTitleText: '饱了么'
@@ -195,6 +202,21 @@
     methods = {
       onNavChanged (which) {
         this.nav = which;
+      },
+      async scan () {
+        try {
+          const res = await wepy.scanCode();
+          const { rid, tid } = parseQueryString(res.path); // rid: 餐厅id; tid: 桌号
+          if (rid && tid) {
+            store.dispatch(loadEnvironment(rid, tid));
+          } else {
+            wepy.showToast({
+              title: '未知二维码',
+              image: '../assets/error.png'
+            });
+          }
+        } catch (err) {
+        }
       }
     }
 
@@ -203,20 +225,23 @@
     }
 
     async init () {
-      // mock
-      const restaurant = {
-        name: '糊涂·龙虾（八佰伴店）',
-        phone: '13827361837',
-        logo: 'http://ouim3dnf4.bkt.clouddn.com/18-5-6/62965288.jpg'
-      };
-
-      store.dispatch(updateRestaurant(restaurant));
-      store.dispatch(updateMenu(this.mockMenu));
     }
+  }
+
+  function parseQueryString (str) {
+    const [, qs] = (str || '').match(/\?(.+)$/) || [];
+    if (!qs) return {};
+    return qs
+      .split('&')
+      .filter(k => !!k)
+      .map(s => s.split('='))
+      .reduce((obj, [k, v]) => (obj[k] = v) && obj, {}); // 搞事，别在意，就只是node里的qs.parse而已
   }
 </script>
 
 <style lang="scss">
+  @import '../lib/var.scss';
+
   .page-index {
     height: 100%;
     display: flex;
@@ -235,6 +260,28 @@
         left: 0;
         right: 0;
         bottom: 0;
+      }
+      > .tab-wrapper.scan {
+        @include center-flex;
+        background-color: #ffffff;
+        flex-direction: column;
+        > .button {
+          @include center-flex;
+          height: 300rpx;
+          width: 300rpx;
+          box-shadow: 0 2rpx 10rpx 0 rgba(252, 193, 56, 0.63), 0 5rpx 20rpx 10rpx rgba(255, 139, 24, 0.33);
+          border-radius: 50%;
+          background-color: #fdc543;
+          > i {
+            color: white;
+            font-size: 150rpx;
+          }
+        }
+        > .hint {
+          margin-top: 50rpx;
+          color: #606060;
+          font-size: 40rpx;
+        }
       }
     }
   }

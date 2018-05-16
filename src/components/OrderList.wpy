@@ -104,7 +104,6 @@ import { connect } from 'wepy-redux';
 
 @connect({
   orders (state) {
-    console.log(state.order.data.toArray());
     return state.order.data.toArray();
   }
 })

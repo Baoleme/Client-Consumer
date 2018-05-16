@@ -1,10 +1,9 @@
-import { handleActions } from 'redux-actions';
+import { handleActionsWithoutError } from '../lib';
 import { List } from 'immutable';
 import { ORDER_CREATE } from '../types';
 
-export default handleActions({
+export default handleActionsWithoutError({
   [ORDER_CREATE] (state, action) {
-    console.log(action.payload);
     return {
       ...state,
       data: state.data.push(action.payload)

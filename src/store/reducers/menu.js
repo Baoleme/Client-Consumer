@@ -1,4 +1,4 @@
-import { handleActions } from 'redux-actions';
+import { handleActionsWithoutError } from '../lib';
 import {
   MENU_UPDATE,
   MENU_MODIFY_ITEM_COUNT,
@@ -82,7 +82,7 @@ class ImmutableBasket {
   }
 }
 
-export default handleActions({
+export default handleActionsWithoutError({
   [MENU_UPDATE] (state, action) {
     const data = action.payload;
     const idMap = new Map();

@@ -1,7 +1,7 @@
-import { handleActions } from 'redux-actions';
+import { handleActionsWithoutError } from '../lib';
 import { RESTAURANT_UPDATE } from '../types/restaurant';
 
-export default handleActions({
+export default handleActionsWithoutError({
   [RESTAURANT_UPDATE] (state, action) {
     return {
       ...state,
@@ -9,6 +9,8 @@ export default handleActions({
     };
   }
 }, {
+  rid: null, // 餐厅id
+  tid: null, // 桌号
   name: '',
   logo: '',
   phone: ''
