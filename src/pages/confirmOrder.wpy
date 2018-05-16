@@ -31,7 +31,7 @@
             <input placeholder="口味、偏好、其他要求" placeholder-class="placeholder" bindinput="onNotesInput" />
           </view>
         </view>
-        <orderContent />
+        <orderContent basket="true" />
         <view class="confirm-bar">
         </view>
       </view>
@@ -147,7 +147,7 @@
 <script>
   import wepy from 'wepy';
   import { connect, getStore } from 'wepy-redux';
-  import { createOrder } from '../store/actions';
+  import { createOrder, selectOrderDetail } from '../store/actions';
 
   import OrderContent from '../components/OrderContent';
   import RequestMixin from '../mixins/request';
@@ -209,7 +209,8 @@
           };
           const { data: created } = await this.$http.post({ url: '/order', data });
           store.dispatch(createOrder(created));
-          wepy.navigateTo({
+          store.dispatch(selectOrderDetail(created));
+          wepy.redirectTo({
             url: 'orderDetail'
           });
         } finally {
