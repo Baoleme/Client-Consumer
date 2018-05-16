@@ -213,10 +213,17 @@
           const res = await wepy.scanCode();
           const { rid, tid } = parseQueryString(res.path); // rid: 餐厅id; tid: 桌号
           if (rid && tid) {
-            // load data
-            const { data: { name, dish, logo_url, phone } } = await this.$http(`/restaurant/${rid}`);
-            store.dispatch(updateRestaurant({ rid, tid, name, phone, logo: logo_url }));
-            store.dispatch(updateMenu(dishDataAdapter(dish)));
+            try {
+              wepy.showLoading({
+                mask: true
+              });
+              // load data
+              const { data: { name, dish, logo_url, phone } } = await this.$http(`/restaurant/${rid}`);
+              store.dispatch(updateRestaurant({ rid, tid, name, phone, logo: logo_url }));
+              store.dispatch(updateMenu(dishDataAdapter(dish)));
+            } finally {
+              wepy.hideLoading();
+            }
           } else {
             wepy.showToast({
               title: '未知二维码',
