@@ -86,11 +86,9 @@ export default handleActionsWithoutError({
   [MENU_UPDATE] (state, action) {
     const data = action.payload;
     const idMap = new Map();
-    let count = 0;
     for (const arr of Object.values(data)) {
       for (const item of arr) {
-        item.context.id = ++count;
-        idMap.set(count, item);
+        idMap.set(item.context.id, item);
       }
     }
 

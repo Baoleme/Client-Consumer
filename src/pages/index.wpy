@@ -28,7 +28,10 @@
 <script>
   import wepy from 'wepy';
   import { connect, getStore } from 'wepy-redux';
-  import { loadEnvironment } from '../store/actions';
+  import { updateMenu, updateRestaurant } from '../store/actions';
+  import { zipObject } from 'lodash';
+
+  import RequestMixin from '../mixins/request';
 
   import Header from '../components/Header';
   import RestaurantInfo from '../components/RestaurantInfo';
@@ -43,13 +46,15 @@
   @connect({
     restaurant: 'restaurant',
     loaded (state) {
-      return !!state.restaurant.id;
+      return !!state.restaurant.rid;
     }
   })
   export default class Index extends wepy.page {
     config = {
       navigationBarTitleText: '饱了么'
     }
+
+    mixins = [ RequestMixin ]
 
     components = {
       header: Header,
@@ -208,7 +213,10 @@
           const res = await wepy.scanCode();
           const { rid, tid } = parseQueryString(res.path); // rid: 餐厅id; tid: 桌号
           if (rid && tid) {
-            store.dispatch(loadEnvironment(rid, tid));
+            // load data
+            const { data: { name, dish, logo_url, phone } } = await this.$http(`/restaurant/${rid}`);
+            store.dispatch(updateRestaurant({ rid, tid, name, phone, logo: logo_url }));
+            store.dispatch(updateMenu(dishDataAdapter(dish)));
           } else {
             wepy.showToast({
               title: '未知二维码',
@@ -216,6 +224,7 @@
             });
           }
         } catch (err) {
+          console.error(err);
         }
       }
     }
@@ -236,6 +245,24 @@
       .filter(k => !!k)
       .map(s => s.split('='))
       .reduce((obj, [k, v]) => (obj[k] = v) && obj, {}); // 搞事，别在意，就只是node里的qs.parse而已
+  }
+
+  function dishDataAdapter (dishes) {
+    return zipObject(
+      dishes.map(o => o.name),
+      dishes.map(o => o.dish.map(d => ({
+        name: d.name,
+        image: (d.image_url && d.image_url[0]) || null,
+        description: d.description,
+        price: d.price,
+        tags: d.tag,
+        spec: d.specifications.length ? d.specifications : null,
+        context: {
+          id: d.dish_id,
+          count: 0
+        }
+      })))
+    );
   }
 </script>
 
