@@ -77,7 +77,7 @@ import jar from './lib/cookieJar';
 import { setStore } from 'wepy-redux';
 import configStore from './store';
 
-import { updateUser } from './store/actions';
+import { updateUser, createOrder } from './store/actions';
 
 const store = configStore();
 setStore(store);
@@ -108,7 +108,8 @@ export default class extends wepy.app {
   async onLaunch () {
     jar.init();
 
-    this.ensureLogin();
+    await this.ensureLogin();
+    await this.loadOrders();
   }
 
   async ensureLogin () {
@@ -127,11 +128,25 @@ export default class extends wepy.app {
           await this.login();
         } else {
           // unknown error
-          // TODO: universal error handler
+          throw err;
         }
+      } finally {
+        wepy.hideLoading();
       }
-    } finally {
-      wepy.hideLoading();
+    } catch (err) {
+      wepy.showToast({
+        image: 'assets/error.png',
+        title: '登录失败'
+      });
+    }
+  }
+
+  async loadOrders () {
+    // TODO: loading 态的维护
+    // TODO: 底部翻页
+    const { data } = await request('/order');
+    if (data.length) {
+      store.dispatch(createOrder(...data));
     }
   }
 

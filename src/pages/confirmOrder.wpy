@@ -210,10 +210,10 @@
           const { data: created } = await this.$http.post({ url: '/order', data });
           store.dispatch(createOrder(created));
           store.dispatch(selectOrderDetail(created));
-          store.dispatch(emptyBasket());
-          wepy.redirectTo({
+          await wepy.redirectTo({
             url: 'orderDetail'
           });
+          store.dispatch(emptyBasket());
         } finally {
           wepy.hideLoading();
         }
