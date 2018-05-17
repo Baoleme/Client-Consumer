@@ -8,10 +8,10 @@
       <view class="price"><span>¥</span>{{item.unitPrice * item.count}}</view>
 
       <view class="dish-counter">
-        <view class="button minus" wx:if="{{item.count !== 0}}" @tap="minus">
+        <view class="button minus {{item.count !== 0 ? '' : 'gone'}}" @tap="minus">
           <i class="iconfont icon-jianhao"/>
         </view>
-        <view class="count" wx:if="{{item.count !== 0}}">{{item.count}}</view>
+        <view class="count {{item.count !== 0 ? '' : 'gone'}}">{{item.count}}</view>
         <view class="button plus" @tap="plus">
           <i class="iconfont icon-jiahao1"/>
         </view>

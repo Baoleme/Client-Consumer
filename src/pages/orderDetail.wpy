@@ -26,27 +26,27 @@
               <view class="circle" />
             </view>
           </view>
-          <view class="state-text active">订单已完成</view>
-          <view class="state-text-more">感谢您的惠顾</view>
+          <view class="state-text active">{{stateMap[order.state]}}</view>
+          <!-- <view class="state-text-more">感谢您的惠顾</view> -->
         </view>
-        <orderContent />
+        <orderContent :order.sync="order" />
         <view class="card-container info">
           <view class="row table">
             <view class="row-name">就餐位置</view>
-            <view class="info"><span>12</span>号桌</view>
+            <view class="info"><span>{{order.table}}</span>号桌</view>
           </view>
           <view class="divider" />
           <view class="row order-id">
             <view class="row-name">订单号</view>
             <view class="info">
-              <view>{{orderId}}</view>
+              <view>{{order.order_id}}</view>
               <view class="copy" @tap.stop="copyOrderId">复制</view>
             </view>
           </view>
           <view class="divider" />
           <view class="row date">
             <view class="row-name">下单时间</view>
-            <view class="info">2018-05-05 10:30</view>
+            <view class="info">{{time}}</view>
           </view>
         </view>
       </view>
@@ -211,6 +211,31 @@
   // const store = getStore();
 
   @connect({
+    order (state) {
+      return state.order.detailing;
+    },
+    time (state) {
+      const date = new Date(this.order.time);
+      const pa = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+      const pb = `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
+      return `${pa} ${pb}`;
+    },
+    doneStep () {
+      switch (this.order.state) {
+        case 'created':
+          return 0;
+        case 'paid':
+          return 0;
+        case 'accepted':
+          return 1;
+        case 'cancelled':
+          return 2;
+        case 'completed':
+          return 2;
+        default:
+          break;
+      }
+    }
   })
   export default class ConfirmOrder extends wepy.page {
     config = {}
@@ -220,8 +245,13 @@
     }
 
     data = {
-      orderId: 2138911,
-      doneStep: 1
+      stateMap: {
+        'created': '等待支付',
+        'paid': '等待商家接单',
+        'accepted': '商家已接单',
+        'cancelled': '已取消',
+        'completed': '已完成'
+      }
     }
 
     methods = {

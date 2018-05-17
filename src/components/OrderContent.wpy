@@ -1,26 +1,26 @@
 <template>
   <view class="order-content card-container">
-    <view class="restaurant-name">{{restaurantName}}</view>
+    <view class="restaurant-name">{{basket ? restaurantName : order.restaurant.name}}</view>
     <view class="divider" />
-    <repeat for="{{basketArray}}" index="index" item="item">
+    <repeat for="{{basket ? basketArray : order.dish}}" index="index" item="item">
       <view class="item">
         <view class="left">
-          <image src="{{item.item.image}}" mode="aspectFill" />
+          <image src="{{basket ? item.item.image : item.image_url}}" mode="aspectFill" />
           <view class="name-spec">
-            <view class="name">{{item.item.name}}</view>
-            <view class="spec">{{item.specStr}}</view>
+            <view class="name">{{basket ? item.item.name : item.name}}</view>
+            <view class="spec">{{basket ? item.specStr : item.specifications}}</view>
           </view>
         </view>
         <view class="right">
           <view class="count">x{{item.count}}</view>
-          <view class="item-price"><span>¥</span>{{item.unitPrice}}</view>
+          <view class="item-price"><span>¥</span>{{basket ? item.unitPrice : item.price}}</view>
         </view>
       </view>
       <view class="divider" />
     </repeat>
     <view class="total-price">
       <span>小计</span>
-      <view class="price"><span>¥</span>{{total}}</view>
+      <view class="price"><span>¥</span>{{basket ? total : order.price}}</view>
     </view>
   </view>
 </template>
@@ -156,5 +156,12 @@ import { connect } from 'wepy-redux';
   }
 })
 export default class RestaurantInfo extends wepy.component {
+  props = {
+    order: Object,
+    basket: {
+      type: String,
+      default: ''
+    }
+  }
 }
 </script>

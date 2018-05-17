@@ -1,7 +1,7 @@
-import { handleActions } from 'redux-actions';
+import { handleActionsWithoutError } from '../lib';
 import { USER_UPDATE } from '../types/user';
 
-export default handleActions({
+export default handleActionsWithoutError({
   [USER_UPDATE] (state, action) {
     return {
       ...state,

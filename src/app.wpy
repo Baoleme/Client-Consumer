@@ -62,6 +62,10 @@
       letter-spacing: 0;
     }
   }
+
+  .gone {
+    visibility: hidden;
+  }
 </style>
 
 <script>
@@ -104,31 +108,31 @@ export default class extends wepy.app {
   async onLaunch () {
     jar.init();
 
-    // this.checkLogin();
+    this.ensureLogin();
   }
 
-  async checkLogin () {
-    wepy.showLoading({
-      mask: true
-    });
-
+  async ensureLogin () {
     try {
-      const { data } = await request('/customer/self');
-      store.dispatch(updateUser({ openid: data['openid'] }));
-    } catch (err) {
-      const { statusCode } = err;
-      if (statusCode === 400) {
-        // not logged in
-        await this.login();
-      } else {
-        // unknown error
-        // TODO: universal error handler
-      }
-    }
-    const { userInfo } = await wepy.getUserInfo();
-    store.dispatch(updateUser(userInfo));
+      wepy.showLoading({
+        mask: true
+      });
 
-    wepy.hideLoading();
+      try {
+        const { data } = await request('/customer/self');
+        store.dispatch(updateUser({ openid: data['openid'] }));
+      } catch (err) {
+        const { statusCode } = err;
+        if (statusCode === 400) {
+          // not logged in
+          await this.login();
+        } else {
+          // unknown error
+          // TODO: universal error handler
+        }
+      }
+    } finally {
+      wepy.hideLoading();
+    }
   }
 
   async login () {

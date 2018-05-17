@@ -1,4 +1,4 @@
-import { handleActions } from 'redux-actions';
+import { handleActionsWithoutError } from '../lib';
 import {
   MENU_UPDATE,
   MENU_MODIFY_ITEM_COUNT,
@@ -78,19 +78,17 @@ class ImmutableBasket {
   }
 
   _calculateUnitPrice (item, specResult) {
-    return item.price + (specResult || []).map((o, q) => o ? item.spec[q].options[o].price : 0).reduce((acc, x) => acc + x, 0);
+    return item.price + (specResult || []).map((o, q) => o ? item.spec[q].options[o].delta : 0).reduce((acc, x) => acc + x, 0);
   }
 }
 
-export default handleActions({
+export default handleActionsWithoutError({
   [MENU_UPDATE] (state, action) {
     const data = action.payload;
     const idMap = new Map();
-    let count = 0;
     for (const arr of Object.values(data)) {
       for (const item of arr) {
-        item.context.id = ++count;
-        idMap.set(count, item);
+        idMap.set(item.context.id, item);
       }
     }
 
