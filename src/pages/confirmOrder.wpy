@@ -203,7 +203,7 @@
           const data = {
             restaurant_id: this.rid,
             table: this.tid,
-            dish: this.basketArray.map(o => ({ dish_id: o.id, specifications: o.spec || [] })),
+            dish: this.basketArray.map(o => ({ dish_id: o.id, specifications: o.spec || [], count: o.count })),
             remark: this.notes || null,
             price: this.total
           };

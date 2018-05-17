@@ -7,7 +7,8 @@
           <view class="content">
             <view class="restaurant">{{item.restaurant.name}}</view>
             <view class="date">{{item.date}}</view>
-            <view class="brief">{{item.dish[0].name}}等{{2}}件商品</view>
+            <view class="brief" wx:if="{{item.dish.length}}">{{item.dish[0].name}}</view>
+            <view class="brief" wx:else>{{item.dish[0].name}}等{{item.dish.length}}件商品</view>
           </view>
         </view>
         <view class="right">

@@ -5,14 +5,14 @@
     <repeat for="{{basket ? basketArray : order.dish}}" index="index" item="item">
       <view class="item">
         <view class="left">
-          <image src="{{item.item.image}}" mode="aspectFill" />
+          <image src="{{basket ? item.item.image : item.image_url}}" mode="aspectFill" />
           <view class="name-spec">
             <view class="name">{{basket ? item.item.name : item.name}}</view>
             <view class="spec">{{basket ? item.specStr : item.specifications}}</view>
           </view>
         </view>
         <view class="right">
-          <view class="count">x{{basket ? item.count : 11111}}</view>
+          <view class="count">x{{item.count}}</view>
           <view class="item-price"><span>¥</span>{{basket ? item.unitPrice : item.price}}</view>
         </view>
       </view>
