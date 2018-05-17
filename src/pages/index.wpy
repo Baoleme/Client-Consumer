@@ -27,7 +27,7 @@
 <script>
   import wepy from 'wepy';
   import { connect, getStore } from 'wepy-redux';
-  import { updateMenu, updateRestaurant, createOrder } from '../store/actions';
+  import { updateMenu, updateRestaurant } from '../store/actions';
   import { zipObject } from 'lodash';
 
   import RequestMixin from '../mixins/request';
@@ -91,19 +91,6 @@
         } catch (err) {
           console.error(err);
         }
-      }
-    }
-
-    async onLoad () {
-      this.loadOrders();
-    }
-
-    async loadOrders () {
-      // TODO: loading 态的维护
-      // TODO: 底部翻页
-      const { data } = await this.$http('/order', { since: new Date(0) });
-      if (data.length) {
-        store.dispatch(createOrder(...data));
       }
     }
 
