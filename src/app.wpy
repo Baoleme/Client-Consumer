@@ -128,11 +128,16 @@ export default class extends wepy.app {
           await this.login();
         } else {
           // unknown error
-          // TODO: universal error handler
+          throw err;
         }
+      } finally {
+        wepy.hideLoading();
       }
-    } finally {
-      wepy.hideLoading();
+    } catch (err) {
+      wepy.showToast({
+        image: 'assets/error.png',
+        title: '登录失败'
+      });
     }
   }
 

@@ -89,7 +89,25 @@
             });
           }
         } catch (err) {
+          wepy.showToast({
+            title: err.message
+          });
           console.error(err);
+        }
+      }
+    }
+
+    onLoad (option) {
+      // check entry args
+      const { rid, tid } = option;
+      if (rid && tid) {
+        // 通过A类二维码的path: index?rid=XX&bid=XX指定
+        this.loadRestaurant(rid, tid);
+      } else if (option.scene) {
+        const { rid, tid } = parseQueryString(`?${decodeURIComponent(option.scene)}`);
+        if (rid && tid) {
+          // 通过B类二维码的scene: rid=XX&bid=XX指定
+          this.loadRestaurant(rid, tid);
         }
       }
     }
@@ -110,13 +128,19 @@
   }
 
   function parseQueryString (str) {
-    const [, qs] = (str || '').match(/\?(.+)$/) || [];
-    if (!qs) return {};
-    return qs
-      .split('&')
-      .filter(k => !!k)
-      .map(s => s.split('='))
-      .reduce((obj, [k, v]) => (obj[k] = v) && obj, {}); // 搞事，别在意，就只是node里的qs.parse而已
+    try {
+      const [, qs] = (str || '').match(/\?(.+)$/) || [];
+      if (!qs) return {};
+      return qs
+        .split('&')
+        .filter(k => !!k)
+        .map(s => s.split('='))
+        .reduce((obj, [k, v]) => (obj[k] = v) && obj, {}); // 搞事，别在意，就只是node里的qs.parse而已
+    } catch (err) {
+      // invalid format etc.
+      console.log(err);
+      return {};
+    }
   }
 
   function dishDataAdapter (dishes) {
