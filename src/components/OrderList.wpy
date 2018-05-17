@@ -1,18 +1,19 @@
 <template>
   <scroll-view class="order-list" scroll-y>
     <repeat for="{{orders}}" index="index" item="item">
-      <view class="order">
+      <view class="order" @tap.stop="open({{item}})">
         <view class="left">
-          <image src="http://s2.cdn.xiachufang.com/56913c828ba911e6a9a10242ac110002_1616w_1080h.jpg?imageView2/2/w/660/interlace/1/q/90" mode="aspectFill" />
+          <image src="{{item.restaurant.logo_url}}" mode="aspectFill" />
           <view class="content">
-            <view class="restaurant">开心蛋糕（大学城店）</view>
-            <view class="date">2018-04-04</view>
-            <view class="brief">舒芙蕾蛋糕等{{2}}件商品</view>
+            <view class="restaurant">{{item.restaurant.name}}</view>
+            <view class="date">{{item.date}}</view>
+            <view class="brief" wx:if="{{item.dish.length}}">{{item.dish[0].name}}</view>
+            <view class="brief" wx:else>{{item.dish[0].name}}等{{item.dish.length}}件商品</view>
           </view>
         </view>
         <view class="right">
-          <view class="status active">订单制作中</view>
-          <view class="price"><span>¥</span>29</view>
+          <view class="status active">{{stateMap[item.state]}}</view>
+          <view class="price"><span>¥</span>{{item.price}}</view>
         </view>
       </view>
     </repeat>
@@ -66,6 +67,7 @@
             margin-top: 20rpx;
             color: #4e4e4e;
             font-size: 28rpx;
+            @include line-limit;
           }
         }
       }
@@ -98,16 +100,39 @@
 <script>
 import wepy from 'wepy';
 
-import { connect } from 'wepy-redux';
+import { connect, getStore } from 'wepy-redux';
+import { selectOrderDetail } from '../store/actions';
 
-// const store = getStore();
+const store = getStore();
 
 @connect({
   orders (state) {
-    console.log(state.order.data.toArray());
-    return state.order.data.toArray();
+    const arr = state.order.data.toArray();
+    for (const item of arr) {
+      const date = new Date(item.time);
+      item.date = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${date.getDate()}`;
+    }
+    return arr;
   }
 })
 export default class RestaurantInfo extends wepy.component {
+  data = {
+    stateMap: {
+      'created': '等待支付',
+      'paid': '等待商家接单',
+      'accepted': '商家已接单',
+      'cancelled': '已取消',
+      'completed': '已完成'
+    }
+  }
+
+  methods = {
+    open (item) {
+      store.dispatch(selectOrderDetail(item));
+      wepy.navigateTo({
+        url: 'orderDetail'
+      });
+    }
+  }
 }
 </script>

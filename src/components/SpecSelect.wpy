@@ -10,7 +10,7 @@
             <image src="{{item.image}}" mode="aspectFill" />
             <view class="content">
               <view class="name">{{item.name}}</view>
-              <view class="spec" wx:if="{{specText}}">已选：{{specText}}</view>
+              <view class="spec {{specText ? '' : 'gone'}}">已选：{{specText}}</view>
               <view class="price">¥<span>{{price}}</span></view>
             </view>
           </view>
@@ -234,15 +234,15 @@ export default class Detail extends wepy.component {
       if (this.selection[qIndex] === oIndex) {
         // toggle result
         if (!this.item.spec[qIndex].required) { // 必填项不可取消（置空）
-          this.price -= this.item.spec[qIndex].options[oIndex].price;
+          this.price -= this.item.spec[qIndex].options[oIndex].delta;
           delete this.selection[qIndex];
         }
       } else {
         if (this.selection[qIndex]) { // 减去原来选项的
-          this.price -= this.item.spec[qIndex].options[this.selection[qIndex]].price;
+          this.price -= this.item.spec[qIndex].options[this.selection[qIndex]].delta;
         }
         this.selection[qIndex] = oIndex;
-        this.price += this.item.spec[qIndex].options[oIndex].price;
+        this.price += this.item.spec[qIndex].options[oIndex].delta;
       }
       this.updateSpecText();
       this.$apply();
@@ -268,7 +268,7 @@ export default class Detail extends wepy.component {
       this.item.spec.forEach((question, idx) => {
         if (question.required || !isNaN(question.default)) {
           this.selection[idx] = question.default || 0;
-          this.price += question.options[this.selection[idx]].price;
+          this.price += question.options[this.selection[idx]].delta;
         }
       });
       this.updateSpecText();

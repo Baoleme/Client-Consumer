@@ -31,7 +31,7 @@
             <input placeholder="口味、偏好、其他要求" placeholder-class="placeholder" bindinput="onNotesInput" />
           </view>
         </view>
-        <orderContent />
+        <orderContent basket="true" />
         <view class="confirm-bar">
         </view>
       </view>
@@ -147,9 +147,10 @@
 <script>
   import wepy from 'wepy';
   import { connect, getStore } from 'wepy-redux';
-  import { createOrder } from '../store/actions';
+  import { createOrder, selectOrderDetail, emptyBasket } from '../store/actions';
 
   import OrderContent from '../components/OrderContent';
+  import RequestMixin from '../mixins/request';
 
   const store = getStore();
 
@@ -164,10 +165,19 @@
       return this.basketArray
         .map(o => o.count * o.unitPrice)
         .reduce((x, acc) => x + acc, 0);
+    },
+    restaurant: 'restaurant',
+    rid (state) {
+      return state.restaurant.rid;
+    },
+    tid (state) {
+      return state.restaurant.tid;
     }
   })
   export default class ConfirmOrder extends wepy.page {
     config = {}
+
+    mixins = [ RequestMixin ]
 
     components = {
       orderContent: OrderContent
@@ -185,16 +195,28 @@
       back () {
         wepy.navigateBack();
       },
-      ok () {
-        store.dispatch(createOrder({
-          restaurant_id: null,
-          table: '',
-          dish: this.basketArray.map(o => ({ dish_id: o.id, specifications: o.spec })),
-          remark: this.notes
-        }));
-        wepy.navigateTo({
-          url: 'orderDetail'
-        });
+      async ok () {
+        try {
+          wepy.showLoading({
+            mask: true
+          });
+          const data = {
+            restaurant_id: this.rid,
+            table: this.tid,
+            dish: this.basketArray.map(o => ({ dish_id: o.id, specifications: o.spec || [], count: o.count })),
+            remark: this.notes || null,
+            price: this.total
+          };
+          const { data: created } = await this.$http.post({ url: '/order', data });
+          store.dispatch(createOrder(created));
+          store.dispatch(selectOrderDetail(created));
+          store.dispatch(emptyBasket());
+          wepy.redirectTo({
+            url: 'orderDetail'
+          });
+        } finally {
+          wepy.hideLoading();
+        }
       }
     }
 }

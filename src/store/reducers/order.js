@@ -1,15 +1,21 @@
-import { handleActions } from 'redux-actions';
+import { handleActionsWithoutError } from '../lib';
 import { List } from 'immutable';
-import { ORDER_CREATE } from '../types';
+import { ORDER_CREATE, ORDER_SELECT_DETAILING } from '../types';
 
-export default handleActions({
+export default handleActionsWithoutError({
   [ORDER_CREATE] (state, action) {
-    console.log(action.payload);
     return {
       ...state,
-      data: state.data.push(action.payload)
+      data: state.data.unshift(...action.payload)
+    };
+  },
+  [ORDER_SELECT_DETAILING] (state, action) {
+    return {
+      ...state,
+      detailing: action.payload
     };
   }
 }, {
-  data: new List()
+  data: new List(),
+  detailing: null
 });
