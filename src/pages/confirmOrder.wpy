@@ -13,7 +13,7 @@
           <view class="row table">
             <view class="row-name">就餐位置</view>
             <view class="table-number">
-              <view class="number">12</view>
+              <view class="number">{{tid}}</view>
               <span>号桌</span>
             </view>
           </view>
