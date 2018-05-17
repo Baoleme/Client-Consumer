@@ -233,6 +233,8 @@ export default class Cart extends wepy.component {
       this.$apply();
     },
     ok () {
+      this.active = !this.active;
+      this.$apply();
       wepy.navigateTo({
         url: 'confirmOrder'
       });

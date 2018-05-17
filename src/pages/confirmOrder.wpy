@@ -147,7 +147,7 @@
 <script>
   import wepy from 'wepy';
   import { connect, getStore } from 'wepy-redux';
-  import { createOrder, selectOrderDetail } from '../store/actions';
+  import { createOrder, selectOrderDetail, emptyBasket } from '../store/actions';
 
   import OrderContent from '../components/OrderContent';
   import RequestMixin from '../mixins/request';
@@ -210,6 +210,7 @@
           const { data: created } = await this.$http.post({ url: '/order', data });
           store.dispatch(createOrder(created));
           store.dispatch(selectOrderDetail(created));
+          store.dispatch(emptyBasket());
           wepy.redirectTo({
             url: 'orderDetail'
           });

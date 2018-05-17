@@ -78,7 +78,7 @@ class ImmutableBasket {
   }
 
   _calculateUnitPrice (item, specResult) {
-    return item.price + (specResult || []).map((o, q) => o ? item.spec[q].options[o].price : 0).reduce((acc, x) => acc + x, 0);
+    return item.price + (specResult || []).map((o, q) => o ? item.spec[q].options[o].delta : 0).reduce((acc, x) => acc + x, 0);
   }
 }
 
