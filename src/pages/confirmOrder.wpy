@@ -13,7 +13,7 @@
           <view class="row table">
             <view class="row-name">就餐位置</view>
             <view class="table-number">
-              <view class="number">{{tid}}</view>
+              <view class="number">{{tid + 1}}</view>
               <span>号桌</span>
             </view>
           </view>
@@ -288,7 +288,7 @@ export default class ConfirmOrder extends wepy.page {
         });
         const data = {
           restaurant_id: this.rid,
-          table: this.tid,
+          table: String(this.tid),
           dish: this.basketArray.map(o => ({
             dish_id: o.id,
             specifications: o.spec || [],

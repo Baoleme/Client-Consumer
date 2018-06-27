@@ -33,7 +33,7 @@
         <view class="card-container info">
           <view class="row table">
             <view class="row-name">就餐位置</view>
-            <view class="info"><span>{{order.table}}</span>号桌</view>
+            <view class="info"><span>{{order.table + 1}}</span>号桌</view>
           </view>
           <view class="divider" />
           <view class="row order-id">

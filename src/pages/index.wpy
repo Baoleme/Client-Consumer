@@ -79,7 +79,7 @@ export default class Index extends wepy.page {
         const res = await wepy.scanCode();
         let { rid, tid } = parseQueryString(res.path); // rid: 餐厅id; tid: 桌号
         if (rid && tid) {
-          await this.loadRestaurant(Number(rid), tid);
+          await this.loadRestaurant(Number(rid), Number(tid));
         } else {
           wepy.showToast({
             title: '未知二维码',
