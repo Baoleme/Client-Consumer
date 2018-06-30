@@ -8,10 +8,9 @@
         <cart />
       </view>
       <view class="tab-wrapper scan" wx:else>
-        <view class="button" @tap.stop="scan">
-          <i class="iconfont icon-scan" />
-        </view>
-        <view class="hint">扫码开始点餐</view>
+        <image src="../assets/bowls.png" class="image" mode="aspectFill" />
+        <view class="hint">暂时还没有点餐信息哦！</view>
+        <view class="button" @tap.stop="scan">扫码开始点餐</view>
       </view>
     </view>
     <view class="nav-tab nav-2" wx:else>
@@ -25,187 +24,202 @@
 </template>
 
 <script>
-  import wepy from 'wepy';
-  import { connect, getStore } from 'wepy-redux';
-  import { updateMenu, updateRestaurant } from '../store/actions';
-  import { zipObject } from 'lodash';
+import wepy from 'wepy';
+import { connect, getStore } from 'wepy-redux';
+import { updateMenu, updateRestaurant } from '../store/actions';
+import { zipObject } from 'lodash';
 
-  import RequestMixin from '../mixins/request';
+import RequestMixin from '../mixins/request';
 
-  import Header from '../components/Header';
-  import RestaurantInfo from '../components/RestaurantInfo';
-  import Menu from '../components/menu/Menu';
-  import Cart from '../components/cart/Cart';
-  import Detail from '../components/Detail';
-  import SpecSelect from '../components/SpecSelect';
-  import OrderList from '../components/OrderList';
+import Header from '../components/Header';
+import RestaurantInfo from '../components/RestaurantInfo';
+import Menu from '../components/menu/Menu';
+import Cart from '../components/cart/Cart';
+import Detail from '../components/Detail';
+import SpecSelect from '../components/SpecSelect';
+import OrderList from '../components/OrderList';
 
-  const store = getStore();
+const store = getStore();
 
-  @connect({
-    restaurant: 'restaurant',
-    loaded (state) {
-      return !!state.restaurant.rid;
-    }
-  })
-  export default class Index extends wepy.page {
-    config = {
-      navigationBarTitleText: '饱了么'
-    }
+@connect({
+  restaurant: 'restaurant',
+  loaded (state) {
+    return !!state.restaurant.rid;
+  }
+})
+export default class Index extends wepy.page {
+  config = {
+    navigationBarTitleText: '饱了么'
+  };
 
-    mixins = [ RequestMixin ]
+  mixins = [RequestMixin];
 
-    components = {
-      header: Header,
-      restaurantInfo: RestaurantInfo,
-      menu: Menu,
-      cart: Cart,
-      detail: Detail,
-      specSelect: SpecSelect,
-      orderList: OrderList
-    }
+  components = {
+    header: Header,
+    restaurantInfo: RestaurantInfo,
+    menu: Menu,
+    cart: Cart,
+    detail: Detail,
+    specSelect: SpecSelect,
+    orderList: OrderList
+  };
 
-    data = {
-      nav: 1
-    }
+  data = {
+    nav: 1
+  };
 
-    computed = {
-    }
+  computed = {};
 
-    methods = {
-      onNavChanged (which) {
-        this.nav = which;
-      },
-      async scan () {
-        try {
-          const res = await wepy.scanCode();
-          let { rid, tid } = parseQueryString(res.path); // rid: 餐厅id; tid: 桌号
-          if (rid && tid) {
-            await this.loadRestaurant(Number(rid), tid);
-          } else {
-            wepy.showToast({
-              title: '未知二维码',
-              image: '../assets/error.png'
-            });
-          }
-        } catch (err) {
-          wepy.showToast({
-            title: err.message
-          });
-          console.error(err);
-        }
-      }
-    }
-
-    onLoad (option) {
-      // check entry args
-      const { rid, tid } = option;
-      if (rid && tid) {
-        // 通过A类二维码的path: index?rid=XX&bid=XX指定
-        this.loadRestaurant(rid, tid);
-      } else if (option.scene) {
-        const { rid, tid } = parseQueryString(`?${decodeURIComponent(option.scene)}`);
-        if (rid && tid) {
-          // 通过B类二维码的scene: rid=XX&bid=XX指定
-          this.loadRestaurant(rid, tid);
-        }
-      }
-    }
-
-    async loadRestaurant (rid, tid) {
+  methods = {
+    onNavChanged (which) {
+      this.nav = which;
+    },
+    async scan () {
       try {
-        wepy.showLoading({
-          mask: true
+        const res = await wepy.scanCode();
+        let { rid, tid } = parseQueryString(res.path); // rid: 餐厅id; tid: 桌号
+        if (rid && tid) {
+          await this.loadRestaurant(Number(rid), Number(tid));
+        } else {
+          wepy.showToast({
+            title: '未知二维码',
+            image: '../assets/error.png'
+          });
+        }
+      } catch (err) {
+        wepy.showToast({
+          title: err.message
         });
-        // load data
-        const { data: { name, dish, logo_url, phone } } = await this.$http(`/restaurant/${rid}`);
-        store.dispatch(updateRestaurant({ rid, tid, name, phone, logo: logo_url }));
-        store.dispatch(updateMenu(dishDataAdapter(dish)));
-      } finally {
-        wepy.hideLoading();
+        console.error(err);
+      }
+    }
+  };
+
+  onLoad (option) {
+    // check entry args
+    const { rid, tid } = option;
+    if (rid && tid) {
+      // 通过A类二维码的path: index?rid=XX&bid=XX指定
+      this.loadRestaurant(rid, tid);
+    } else if (option.scene) {
+      const { rid, tid } = parseQueryString(
+        `?${decodeURIComponent(option.scene)}`
+      );
+      if (rid && tid) {
+        // 通过B类二维码的scene: rid=XX&bid=XX指定
+        this.loadRestaurant(rid, tid);
       }
     }
   }
 
-  function parseQueryString (str) {
+  async loadRestaurant (rid, tid) {
     try {
-      const [, qs] = (str || '').match(/\?(.+)$/) || [];
-      if (!qs) return {};
-      return qs
-        .split('&')
-        .filter(k => !!k)
-        .map(s => s.split('='))
-        .reduce((obj, [k, v]) => (obj[k] = v) && obj, {}); // 搞事，别在意，就只是node里的qs.parse而已
-    } catch (err) {
-      // invalid format etc.
-      console.log(err);
-      return {};
+      wepy.showLoading({
+        mask: true
+      });
+      // load data
+      const { data: { name, dish, logo_url, phone } } = await this.$http(
+        `/restaurant/${rid}`
+      );
+      store.dispatch(
+        updateRestaurant({ rid, tid, name, phone, logo: logo_url })
+      );
+      store.dispatch(updateMenu(dishDataAdapter(dish)));
+    } finally {
+      wepy.hideLoading();
     }
   }
+}
 
-  function dishDataAdapter (dishes) {
-    return zipObject(
-      dishes.map(o => o.name),
-      dishes.map(o => o.dish.map(d => ({
+function parseQueryString (str) {
+  try {
+    const [, qs] = (str || '').match(/\?(.+)$/) || [];
+    if (!qs) return {};
+    return qs
+      .split('&')
+      .filter(k => !!k)
+      .map(s => s.split('='))
+      .reduce((obj, [k, v]) => (obj[k] = v) && obj, {}); // 搞事，别在意，就只是node里的qs.parse而已
+  } catch (err) {
+    // invalid format etc.
+    console.log(err);
+    return {};
+  }
+}
+
+function dishDataAdapter (_data) {
+  const data = _data.filter(o => o.dish && o.dish.length);
+  return zipObject(
+    data.map(o => o.name),
+    data.map(o =>
+      o.dish.map(d => ({
         name: d.name,
         image: (d.image_url && d.image_url[0]) || null,
         description: d.description,
         price: d.price,
         tags: d.tag,
-        spec: d.specifications.length ? d.specifications : null,
+        spec:
+          d.specifications && d.specifications.length ? d.specifications : null,
         context: {
           id: d.dish_id,
           count: 0
         }
-      })))
-    );
-  }
+      }))
+    )
+  );
+}
 </script>
 
 <style lang="scss">
-  @import '../lib/var.scss';
+@import '../lib/var.scss';
 
-  .page-index {
-    height: 100%;
+.page-index {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  > view {
+    flex-shrink: 0;
+  }
+  > .nav-tab {
+    flex-grow: 1;
+    position: relative;
     display: flex;
     flex-direction: column;
-    > view {
-      flex-shrink: 0;
+    > .tab-wrapper {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
     }
-    > .nav-tab {
-      flex-grow: 1;
-      position: relative;
-      display: flex;
+    > .tab-wrapper.scan {
+      @include center-flex;
       flex-direction: column;
-      > .tab-wrapper {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
+      > .image {
+        width: 200rpx;
+        height: 200rpx;
       }
-      > .tab-wrapper.scan {
+      > .hint {
+        margin-top: 44rpx;
+        font-size: 30rpx;
+        color: #c8c8c8;
+        letter-spacing: 3.6rpx;
+      }
+      > .button {
+        margin-top: 84rpx;
+        background-image: linear-gradient(95deg, #fccf31 14%, #fdaa47 100%);
+        box-shadow: 0 15rpx 20rpx 0 rgba(255, 139, 24, 0.33),
+          0 2rpx 10rpx 0 rgba(252, 193, 56, 0.63);
+        border-radius: 25rpx;
+        width: 455rpx;
+        height: 100rpx;
         @include center-flex;
-        background-color: #ffffff;
-        flex-direction: column;
-        > .button {
-          @include center-flex;
-          height: 300rpx;
-          width: 300rpx;
-          box-shadow: 0 2rpx 10rpx 0 rgba(252, 193, 56, 0.63), 0 5rpx 20rpx 10rpx rgba(255, 139, 24, 0.33);
-          border-radius: 50%;
-          background-color: #fdc543;
-          > i {
-            color: white;
-            font-size: 150rpx;
-          }
-        }
-        > .hint {
-          margin-top: 50rpx;
-          color: #606060;
-          font-size: 40rpx;
-        }
+        font-size: 34rpx;
+        font-weight: bold;
+        color: #ffffff;
+        letter-spacing: 1.31rpx;
       }
     }
   }
+}
 </style>
