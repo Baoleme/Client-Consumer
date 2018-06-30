@@ -27,7 +27,6 @@
             </view>
           </view>
           <view class="state-text active">{{stateMap[order.state]}}</view>
-          <!-- <view class="state-text-more">感谢您的惠顾</view> -->
         </view>
         <orderContent :order.sync="order" />
         <view class="card-container info">
@@ -215,7 +214,10 @@ import OrderContent from '../components/OrderContent';
     return state.order.detailing;
   },
   time (state) {
-    const date = new Date(this.order.time);
+    const date = new Date(
+      this.order.time ||
+        this.order.state_record[this.order.state_record.length - 1].time
+    );
     const pa = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
       2,
       '0'
@@ -226,7 +228,10 @@ import OrderContent from '../components/OrderContent';
     return `${pa} ${pb}`;
   },
   doneStep () {
-    switch (this.order.state) {
+    const state =
+      this.order.state ||
+      this.order.state_record[this.order.state_record.length - 1].state;
+    switch (state) {
       case 'created':
         return 0;
       case 'paid':

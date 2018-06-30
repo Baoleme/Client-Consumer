@@ -12,7 +12,7 @@
           </view>
         </view>
         <view class="right">
-          <view class="status active">{{stateMap[item.state]}}</view>
+          <view class="status {{activeMap[item.state] ? 'active' : ''}}">{{stateMap[item.state]}}</view>
           <view class="price"><span>¥</span>{{item.price}}</view>
         </view>
       </view>
@@ -37,7 +37,7 @@
     display: flex;
     justify-content: space-between;
     > .left {
-      width: 560rpx;
+      width: 540rpx;
       display: flex;
       image {
         background: #d8d8d8;
@@ -127,6 +127,13 @@ export default class OrderList extends wepy.component {
       accepted: '商家已接单',
       cancelled: '已取消',
       completed: '已完成'
+    },
+    activeMap: {
+      created: true,
+      paid: true,
+      accepted: true,
+      cancelled: false,
+      completed: false
     }
   };
 
