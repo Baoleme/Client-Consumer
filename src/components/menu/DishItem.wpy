@@ -1,6 +1,9 @@
 <template>
   <view class="dish-item" @tap="openDetail">
     <image class="image" src="{{item.image}}" mode="aspectFill"/>
+    <view class="sold-out-mask" wx:if="{{!item.selling}}">
+      <view class="sold-out">已售罄</view>
+    </view>
     <view class="content">
       <view class="slot">
         <span class="name">{{item.name}}</span>
@@ -18,7 +21,7 @@
           <span class="mid">{{item.price}}</span>
           <span class="post" wx:if="{{!!item.spec}}">起</span>
         </view>
-        <view class="dish-counter {{!item.spec ? '' : 'gone'}}" @tap.stop="noop">
+        <view class="dish-counter {{!item.spec && item.selling ? '' : 'gone'}}" @tap.stop="noop">
           <view class="button minus {{item.context.count !== 0 ? '' : 'gone'}}" @tap.stop="minus">
             <i class="iconfont icon-jianhao"/>
           </view>
@@ -27,7 +30,7 @@
             <i class="iconfont icon-jiahao1"/>
           </view>
         </view>
-        <view class="spec-button" wx:if="{{item.spec}}" @tap.stop="selectSpec">
+        <view class="spec-button" wx:if="{{item.spec && item.selling}}" @tap.stop="selectSpec">
           选规格
         </view>
       </view>
@@ -36,135 +39,155 @@
 </template>
 
 <style lang="scss">
-  @import "../../lib/var.scss";
+@import '../../lib/var.scss';
 
-  .dish-item {
+.dish-item {
+  position: relative;
+  height: 150rpx;
+  width: 100%;
+  margin-bottom: 40rpx;
+  display: flex;
+  align-items: center;
+  > .image {
     height: 150rpx;
-    width: 100%;
-    margin-bottom: 40rpx;
-    display: flex;
-    align-items: center;
-    > .image {
-      height: 150rpx;
-      width: 150rpx;
-      border-radius: 5rpx;
+    width: 150rpx;
+    border-radius: 5rpx;
+  }
+  > .sold-out-mask {
+    position: absolute;
+    height: 150rpx;
+    width: 150rpx;
+    background-color: rgba(#fff, 0.5);
+    > .sold-out {
+      position: absolute;
+      @include center-flex;
+      color: #fff;
+      background-color: rgba(#000, 0.5);
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      height: 37.5rpx;
     }
-    > .content {
-      width: calc(100% - 150rpx - 47rpx);
-      height: 100%;
-      margin-left: 17rpx;
-      margin-right: 30rpx;
+  }
+  > .content {
+    width: calc(100% - 150rpx - 47rpx);
+    height: 100%;
+    margin-left: 17rpx;
+    margin-right: 30rpx;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    > .slot {
+      height: calc(100% / 4);
+      width: 100%;
       display: flex;
-      flex-direction: column;
+      align-items: center;
       justify-content: space-between;
-      > .slot {
-        height: calc(100% / 4);
-        width: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
+    }
+    > .slot > .name {
+      font-size: 32rpx;
+      width: 290rpx;
+      @include line-limit;
+      color: #232323;
+      font-weight: bold;
+    }
+    .spiciness {
+      > .spicy {
+        width: 27rpx;
+        height: 23rpx;
       }
-      > .slot > .name {
-        font-size: 32rpx;
-        width: 290rpx;
-        @include line-limit;
-        color: #232323;
+    }
+    > .slot > .description {
+      width: 100%;
+      font-size: 22rpx;
+      color: #9b9b9b;
+      @include line-limit;
+    }
+    > .slot > .price {
+      color: #fe8966;
+      > .pre {
+        font-size: 24rpx;
+      }
+      > .mid {
+        font-size: 36rpx;
         font-weight: bold;
       }
-      .spiciness {
-        > .spicy {
-          width: 27rpx;
-          height: 23rpx;
-        }
-      }
-      > .slot > .description {
-        width: 100%;
-        font-size: 22rpx;
+      > .post {
+        margin-left: 13rpx;
         color: #9b9b9b;
-        @include line-limit;
-      }
-      > .slot > .price {
-        color: #fe8966;
-        > .pre {
-          font-size: 24rpx;
-        }
-        > .mid {
-          font-size: 36rpx;
-          font-weight: bold;
-        }
-        > .post {
-          margin-left: 13rpx;
-          color: #9b9b9b;
-        }
       }
     }
   }
+}
 
-  .dish-counter {
+.dish-counter {
+  display: flex;
+  align-items: center;
+  .button {
+    width: 45rpx;
+    height: 45rpx;
+    border-radius: 15rpx;
     display: flex;
+    justify-content: center;
     align-items: center;
-    .button {
-      width: 45rpx;
-      height: 45rpx;
-      border-radius: 15rpx;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-weight: bold;
-      font-size: 25rpx;
-      &.minus {
-        background-color: #f5f5f5;
-        color: #979797;
-      }
-      &.plus {
-        background-color: #fcc138;
-        color: #ffffff;
-      }
+    font-weight: bold;
+    font-size: 25rpx;
+    &.minus {
+      background-color: #f5f5f5;
+      color: #979797;
     }
-    .count {
-      display: flex;
-      width: 36rpx;
-      align-items: center;
-      justify-content: center;
-      font-size: 28rpx;
-      color: #606060;
-      letter-spacing: 1.08rpx;
-      margin: 0 16rpx;
-      font-weight: bold;
+    &.plus {
+      background-color: #fcc138;
+      color: #ffffff;
     }
   }
+  .count {
+    display: flex;
+    width: 36rpx;
+    align-items: center;
+    justify-content: center;
+    font-size: 28rpx;
+    color: #606060;
+    letter-spacing: 1.08rpx;
+    margin: 0 16rpx;
+    font-weight: bold;
+  }
+}
 
-  .spec-button {
-    background-color: #fcc138;
-    color: #232323;
-    font-size: 24rpx;
-    height: 50rpx;
-    width: 108rpx;
-    border-radius: 12rpx;
-    @include center-flex;
-  }
+.spec-button {
+  background-color: #fcc138;
+  color: #232323;
+  font-size: 24rpx;
+  height: 50rpx;
+  width: 108rpx;
+  border-radius: 12rpx;
+  @include center-flex;
+}
 </style>
 
 <script>
 import wepy from 'wepy';
 
 import { connect, getStore } from 'wepy-redux';
-import { modifyItemCount, openDetail, openSpecSelect } from '../../store/actions';
+import {
+  modifyItemCount,
+  openDetail,
+  openSpecSelect
+} from '../../store/actions';
 
 import Counter from './DishCounter';
 
 const store = getStore();
 
-@connect({
-})
+@connect({})
 export default class DishItem extends wepy.component {
   components = {
     counter: Counter
-  }
+  };
 
   props = {
     item: Object
-  }
+  };
 
   methods = {
     noop () {},
@@ -181,6 +204,6 @@ export default class DishItem extends wepy.component {
       // stub
       store.dispatch(openDetail(this.item.context.id));
     }
-  }
+  };
 }
 </script>
