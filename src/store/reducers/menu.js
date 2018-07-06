@@ -63,6 +63,7 @@ class ImmutableBasket {
     return this.map.size;
   }
 
+  // since same dish with different selected specs should be treated as different dish, specs combined with dish name are used as key
   _genKey (item, specArray) {
     const { spec } = item;
     const specStr = specArray ? specArray.filter(o => !isNaN(o)).map((o, q) => spec[q].options[o].name).join('/') : '';

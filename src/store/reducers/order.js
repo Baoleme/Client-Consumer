@@ -6,6 +6,7 @@ export default handleActionsWithoutError({
   [ORDER_CREATE] (state, action) {
     for (const order of action.payload) {
       if (order['state_record']) {
+        // use latest state_record to get current state
         order.state = order['state_record'][order['state_record'].length - 1].state;
       }
     }

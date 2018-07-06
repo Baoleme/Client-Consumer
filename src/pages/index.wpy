@@ -132,6 +132,7 @@ export default class Index extends wepy.page {
   }
 }
 
+// query string to query object
 function parseQueryString (str) {
   try {
     const [, qs] = (str || '').match(/\?(.+)$/) || [];
@@ -148,6 +149,7 @@ function parseQueryString (str) {
   }
 }
 
+// transform received format into front-end favored format
 function dishDataAdapter (_data) {
   const data = _data.filter(o => o.dish && o.dish.length);
   return zipObject(

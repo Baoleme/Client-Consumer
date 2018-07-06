@@ -213,6 +213,7 @@ import OrderContent from '../components/OrderContent';
   order (state) {
     return state.order.detailing;
   },
+  // format date
   time (state) {
     const date = new Date(
       this.order.time ||
