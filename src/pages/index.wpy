@@ -88,7 +88,8 @@ export default class Index extends wepy.page {
         }
       } catch (err) {
         wepy.showToast({
-          title: err.message
+          title: err.data && err.data.message ? err.data.message : err.message,
+          image: '../assets/error.png'
         });
         console.error(err);
       }
@@ -158,6 +159,7 @@ function dishDataAdapter (_data) {
         description: d.description,
         price: d.price,
         tags: d.tag,
+        selling: d.selling,
         spec:
           d.specifications && d.specifications.length ? d.specifications : null,
         context: {
