@@ -1,7 +1,9 @@
 <template>
   <view class="dish-item" @tap="openDetail">
     <image class="image" src="{{item.image}}" mode="aspectFill"/>
-    <view class="sold-out" wx:if="{{!item.selling}}">已售罄</view>
+    <view class="sold-out-mask" wx:if="{{!item.selling}}">
+      <view class="sold-out">已售罄</view>
+    </view>
     <view class="content">
       <view class="slot">
         <span class="name">{{item.name}}</span>
@@ -51,15 +53,21 @@
     width: 150rpx;
     border-radius: 5rpx;
   }
-  > .sold-out {
+  > .sold-out-mask {
     position: absolute;
-    @include center-flex;
-    color: #fff;
-    background-color: rgba(#000, 0.5);
-    left: 0;
-    bottom: 0;
+    height: 150rpx;
     width: 150rpx;
-    height: 37.5rpx;
+    background-color: rgba(#fff, 0.5);
+    > .sold-out {
+      position: absolute;
+      @include center-flex;
+      color: #fff;
+      background-color: rgba(#000, 0.5);
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      height: 37.5rpx;
+    }
   }
   > .content {
     width: calc(100% - 150rpx - 47rpx);
