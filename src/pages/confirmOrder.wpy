@@ -156,6 +156,7 @@
   }
 
   > .ok-modal-container {
+    z-index: 100;
     position: absolute;
     left: 0;
     top: 0;
@@ -308,6 +309,15 @@ export default class ConfirmOrder extends wepy.page {
 
         this.showOKModal = true;
         this.$apply();
+      } catch (err) {
+        let errMsg = err.data && err.data.message;
+        errMsg = errMsg || err.data;
+        errMsg = errMsg || err.message;
+        errMsg = errMsg || err;
+        wepy.showToast({
+          title: String(errMsg),
+          image: '../assets/error.png'
+        });
       } finally {
         wepy.hideLoading();
       }
