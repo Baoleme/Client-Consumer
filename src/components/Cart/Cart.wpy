@@ -6,7 +6,7 @@
         <image src="../../assets/cart.png" />
         <view class="bubble">{{dishCount}}</view>
         <view class="price">
-          <span>¥</span>{{total}}
+          <span>¥</span>{{filter.toFixed(total)}}
         </view>
       </view>
       <view class="right" @tap.stop="ok">选好了</view>
@@ -192,6 +192,7 @@ import { connect, getStore } from 'wepy-redux';
 
 import { emptyBasket } from '../../store/actions';
 import CartItem from './CartItem';
+import filter from '../../lib/filter.wxs';
 
 const store = getStore();
 
@@ -215,6 +216,10 @@ const store = getStore();
   }
 })
 export default class Cart extends wepy.component {
+  wxs = {
+    filter
+  };
+
   components = {
     cartItem: CartItem
   };

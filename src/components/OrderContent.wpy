@@ -13,128 +13,131 @@
         </view>
         <view class="right">
           <view class="count">x{{item.count}}</view>
-          <view class="item-price"><span>¥</span>{{basket ? item.unitPrice : item.price}}</view>
+          <view class="item-price"><span>¥</span>{{filter.toFixed(basket ? item.unitPrice : item.price)}}</view>
         </view>
       </view>
       <view class="divider" />
     </repeat>
     <view class="total-price">
       <span>小计</span>
-      <view class="price"><span>¥</span>{{basket ? total : order.price}}</view>
+      <view class="price"><span>¥</span>{{filter.toFixed(basket ? total : order.price)}}</view>
     </view>
   </view>
 </template>
 
 <style lang="scss">
-  @import '../lib/var.scss';
+@import '../lib/var.scss';
 
-  .order-content {
-    margin-top: 18rpx;
-    padding-top: 30rpx; // overrides top-padding in .card-container
-    color: #606060;
-    font-weight: bold;
-    > .restaurant-name {
-      width: 100%;
-      @include line-limit;
-      font-size: 24rpx;
-      letter-spacing: 1.08rpx;
+.order-content {
+  margin-top: 18rpx;
+  padding-top: 30rpx; // overrides top-padding in .card-container
+  color: #606060;
+  font-weight: bold;
+  > .restaurant-name {
+    width: 100%;
+    @include line-limit;
+    font-size: 24rpx;
+    letter-spacing: 1.08rpx;
+  }
+  > .item {
+    min-height: 90rpx;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    > .left,
+    > .right {
+      height: 100%;
     }
-    > .item {
-      min-height: 90rpx;
-      width: 100%;
+    > .left {
+      width: 480rpx;
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      > .left, > .right {
+      font-weight: bold;
+      image {
+        width: 83rpx;
+        height: 83rpx;
+        background-color: #d8d8d8;
+        border-radius: 3rpx;
+      }
+      > .name-spec {
+        width: calc(100% - 83rpx - 17rpx);
         height: 100%;
-      }
-      > .left {
-        width: 480rpx;
-        display: flex;
-        align-items: center;
-        font-weight: bold;
-        image {
-          width: 83rpx;
-          height: 83rpx;
-          background-color: #d8d8d8;
-          border-radius: 3rpx;
-        }
-        > .name-spec {
-          width: calc(100% - 83rpx - 17rpx);
-          height: 100%;
-          margin-left: 17rpx;
-          > .name {
-            width: 100%;
-            @include line-limit;
-            font-size: 28rpx;
-            color: #232323;
-            letter-spacing: 1.08rpx;
-          }
-          > .spec {
-            margin-top: 15rpx;
-            width: 100%;
-            font-size: 24rpx;
-            color: #c8c8c8;
-            letter-spacing: 0.92rpx;
-            word-break: break-all;
-          }
-        }
-      }
-      > .right {
-        display: flex;
-        align-items: center;
-        justify-content: space-around;
-        width: calc(100% - 480rpx - 5rpx);
-        > .count {
+        margin-left: 17rpx;
+        > .name {
+          width: 100%;
           @include line-limit;
-          width: 60rpx;
-          font-size: 24rpx;
-          color: #606060;
-          letter-spacing: 0.92rpx;
-          text-align: left;
-        }
-        > .item-price {
-          @include line-limit;
-          width: calc(100% - 60rpx - 5rpx);
-          text-align: right;
+          font-size: 28rpx;
+          color: #232323;
           letter-spacing: 1.08rpx;
-          font-size: 36rpx;
-          span {
-            font-size: 24rpx;
-          }
+        }
+        > .spec {
+          margin-top: 15rpx;
+          width: 100%;
+          font-size: 24rpx;
+          color: #c8c8c8;
+          letter-spacing: 0.92rpx;
+          word-break: break-all;
         }
       }
     }
-    > .total-price {
-      max-width: 100%;
+    > .right {
       display: flex;
-      align-items: flex-end;
-      justify-content: flex-end;
-      > span {
-        flex-shrink: 0;
-        font-size: 24rpx;
-        color: #c8c8c8;
-        letter-spacing: 0.92rpx;
-        margin-bottom: 8rpx;
-      }
-      > .price {
+      align-items: center;
+      justify-content: space-around;
+      width: calc(100% - 480rpx - 5rpx);
+      > .count {
         @include line-limit;
-        margin-left: 20rpx;
-        color: #fe8966;
+        width: 60rpx;
+        font-size: 24rpx;
+        color: #606060;
+        letter-spacing: 0.92rpx;
+        text-align: left;
+      }
+      > .item-price {
+        @include line-limit;
+        width: calc(100% - 60rpx - 5rpx);
+        text-align: right;
         letter-spacing: 1.08rpx;
-        font-size: 40rpx;
+        font-size: 36rpx;
         span {
-          font-size: 28rpx;
+          font-size: 24rpx;
         }
       }
     }
   }
+  > .total-price {
+    max-width: 100%;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    > span {
+      flex-shrink: 0;
+      font-size: 24rpx;
+      color: #c8c8c8;
+      letter-spacing: 0.92rpx;
+      margin-bottom: 8rpx;
+    }
+    > .price {
+      @include line-limit;
+      margin-left: 20rpx;
+      color: #fe8966;
+      letter-spacing: 1.08rpx;
+      font-size: 40rpx;
+      span {
+        font-size: 28rpx;
+      }
+    }
+  }
+}
 </style>
 
 <script>
 import wepy from 'wepy';
 
 import { connect } from 'wepy-redux';
+
+import filter from '../lib/filter.wxs';
 
 // const store = getStore();
 
@@ -156,12 +159,16 @@ import { connect } from 'wepy-redux';
   }
 })
 export default class RestaurantInfo extends wepy.component {
+  wxs = {
+    filter
+  };
+
   props = {
     order: Object,
     basket: {
       type: String,
       default: ''
     }
-  }
+  };
 }
 </script>

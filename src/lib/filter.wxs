@@ -1,0 +1,12 @@
+
+module.exports.toFixed = function (num) {
+  if (isNaN(num)) return '0';
+  // return num.toFixed(2);
+  if (Math.abs(num.toFixed(0) - Number(num)) < 0.0001) {
+    return num.toFixed(0);
+  }
+  if (Math.abs(num.toFixed(1) - Number(num)) < 0.0001) {
+    return num.toFixed(1);
+  }
+  return num.toFixed(2);
+};

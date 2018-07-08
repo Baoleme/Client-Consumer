@@ -25,7 +25,7 @@
           </view>
           <view class="price">
             <span class="pre">¥</span>
-            <span class="mid">{{item.price}}</span>
+            <span class="mid">{{filter.toFixed(item.price)}}</span>
             <span class="post" wx:if="{{item.spec}}">起</span>
           </view>
           <view class="divider" />
@@ -212,6 +212,7 @@ import wepy from 'wepy';
 
 import { connect, getStore } from 'wepy-redux';
 import { closeDetail, modifyItemCount, openSpecSelect } from '../store/actions';
+import filter from '../lib/filter.wxs';
 
 const store = getStore();
 
@@ -226,14 +227,11 @@ const store = getStore();
   }
 })
 export default class Detail extends wepy.component {
+  wxs = {
+    filter
+  };
+
   data = {
-    description: `9元单点是无糖的，需要的朋友请跟厨房讲，不要随意打差评，谢谢。
-茶阁里的猫眼石饮品6选2~
-火焰黑糖系列（共5款）
-1.火焰奶霜红水乌龙：26元
-2.火焰奶霜茉莉花茶：26元
-3.火焰奶霜金萱乌龙：26元
-4.火焰奶霜蜜叶红茶：26元`,
     expanded: false
   };
 

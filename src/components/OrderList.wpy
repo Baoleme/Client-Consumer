@@ -13,7 +13,7 @@
         </view>
         <view class="right">
           <view class="status {{activeMap[item.state] ? 'active' : ''}}">{{stateMap[item.state]}}</view>
-          <view class="price"><span>¥</span>{{item.price}}</view>
+          <view class="price"><span>¥</span>{{filter.toFixed(item.price)}}</view>
         </view>
       </view>
     </repeat>
@@ -102,6 +102,7 @@ import wepy from 'wepy';
 
 import { connect, getStore } from 'wepy-redux';
 import { selectOrderDetail } from '../store/actions';
+import filter from '../lib/filter.wxs';
 
 const store = getStore();
 
@@ -120,6 +121,10 @@ const store = getStore();
   }
 })
 export default class OrderList extends wepy.component {
+  wxs = {
+    filter
+  };
+
   data = {
     stateMap: {
       created: '等待支付',
