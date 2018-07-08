@@ -240,7 +240,7 @@ export default class Detail extends wepy.component {
     select (qIndex, oIndex) {
       if (this.selection[qIndex] === oIndex) {
         // toggle result
-        if (!this.item.spec[qIndex].required) {
+        if (!this.item.spec[qIndex].require) {
           // 必填项不可取消（置空）
           this.price -= this.item.spec[qIndex].options[oIndex].delta;
           delete this.selection[qIndex];
@@ -278,7 +278,7 @@ export default class Detail extends wepy.component {
       this.specText = '';
       // set default value
       this.item.spec.forEach((question, idx) => {
-        if (question.required || !isNaN(question.default)) {
+        if (question.require || !isNaN(question.default)) {
           this.selection[idx] = question.default || 0;
           this.price += question.options[this.selection[idx]].delta;
         }
