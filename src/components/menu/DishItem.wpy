@@ -13,8 +13,12 @@
           </repeat>
         </view>
       </view>
-      <view class="slot"><view class="description">{{item.description}}</view></view>
-      <view class="slot"></view>
+      <view class="slot"><view class="description">{{item.description || ''}}</view></view>
+      <view class="slot tags">
+        <repeat for="{{item.tags}}" index="index" item="tag">
+          <view class="tag">{{tag}}</view>
+        </repeat>
+      </view>
       <view class="slot">
         <view class="price">
           <span class="pre">¥</span>
@@ -90,6 +94,42 @@
       @include line-limit;
       color: #232323;
       font-weight: bold;
+    }
+    > .slot.tags {
+      justify-content: flex-start;
+      > .tag {
+        @include center-flex;
+        @include line-limit;
+        margin: 0;
+        font-size: 20rpx;
+        letter-spacing: 0.5rpx;
+        font-weight: bold;
+        max-width: calc((100% - 12rpx) / 4);
+        height: 28rpx;
+        border-radius: 4rpx;
+        padding: 0 6rpx;
+        border-width: 1px;
+        border-style: solid;
+        &:nth-child(1) {
+          margin-right: 4rpx;
+          border-color: #67c6ff;
+          color: #67c6ff;
+        }
+        &:nth-child(2) {
+          margin-right: 4rpx;
+          border-color: #a9d87a;
+          color: #a9d87a;
+        }
+        &:nth-child(3) {
+          margin-right: 4rpx;
+          border-color: #f8c86b;
+          color: #f8c86b;
+        }
+        &:nth-child(4) {
+          border-color: #ff9b7d;
+          color: #ff9b7d;
+        }
+      }
     }
     .spiciness {
       > .spicy {
