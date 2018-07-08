@@ -1,5 +1,6 @@
 import wepy from 'wepy';
 
+// our implementation of cookiejar, used for manual handling of cookies in http requests
 class CookieJar {
   CookieJar () {
     this.initialized = false;

@@ -11,7 +11,7 @@
             <view class="content">
               <view class="name">{{item.name}}</view>
               <view class="spec {{specText ? '' : 'gone'}}">已选：{{specText}}</view>
-              <view class="price">¥<span>{{price}}</span></view>
+              <view class="price">¥<span>{{filter.toFixed(price)}}</span></view>
             </view>
           </view>
           <view class="form">
@@ -36,166 +36,168 @@
 </template>
 
 <style lang="scss">
-  @import "../lib/var.scss";
+@import '../lib/var.scss';
 
-  $activeHeight: 1075rpx;
+$activeHeight: 1075rpx;
 
-  .spec-select-container {
-    position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    right: 0;
-    overflow: hidden;
-    background-color: rgba(#000, .45);
-    visibility: hidden;
-    opacity: 0;
-    transition: opacity 0.2s, visibility 0.2s;
-    &.active {
-      visibility: visible;
-      opacity: 1;
-      .spec-select-scroller-container {
-        transform: translateY(calc(100% - #{$activeHeight})) translate3d(0,0,0);
-      }
-    }
-
-    .close {
-      position: absolute;
-      right: 30rpx;
-      top: 25rpx;
-      font-size: 30rpx;
-      z-index: 100;
-      color: #8f8f8f;
-    }
-
+.spec-select-container {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  overflow: hidden;
+  background-color: rgba(#000, 0.45);
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.2s, visibility 0.2s;
+  &.active {
+    visibility: visible;
+    opacity: 1;
     .spec-select-scroller-container {
-      width: 100%;
-      position: absolute;
-      bottom: 0;
-      transition: transform 0.5s;
-      transform: translateY(100%) translate3d(0,0,0);
-      webkit-transform: translate3d(0,0,0);
-      -moz-transform: translate3d(0,0,0);
-      -ms-transform: translate3d(0,0,0);
-      -o-transform: translate3d(0,0,0);
-      height: $activeHeight;
-      background-color: #ffffff;
-      padding-top: 60rpx;
-    }
-
-    .spec-select-scroller {
-      height: 100%;
-      .spec-select {
-        width: calc(100% - 88rpx);
-        margin: 0 44rpx 60rpx 44rpx;
-        display: flex;
-        flex-direction: column;
-        padding-bottom: 250rpx; // 为了给【加入购物车】按钮留空位
-        > .header {
-          width: 100%;
-          display: flex;
-          position: relative;
-          > image {
-            height: 190rpx;
-            width: 190rpx;
-            background-color: #d8d8d8;
-            border-radius: 5rpx;
-          }
-          > .content {
-            position: relative;
-            margin-left: 50rpx;
-            width: 427rpx;
-            font-weight: bold;
-            > .name {
-              width: 100%;
-              @include line-limit;
-              font-size: 36rpx;
-              color: #232323;
-              letter-spacing: 2.08rpx;
-            }
-            > .spec {
-              width: 100%;
-              @include line-limit(2);
-              margin-top: 5rpx;
-              font-size: 24rpx;
-              color: #606060;
-              letter-spacing: 1rpx;
-            }
-            > .price {
-              position: absolute;
-              left: 0;
-              bottom: 0;
-              font-size: 36rpx;
-              color: #fe8966;
-              letter-spacing: 2rpx;
-              > span {
-                font-size: 40rpx;
-              }
-            }
-          }
-        }
-        > .form {
-          margin-top: 35rpx;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          > .question {
-            width: 100%;
-            > .name {
-              font-size: 24rpx;
-              color: #9b9b9b;
-              letter-spacing: 1rpx;
-              width: 100%;
-              @include line-limit;
-            }
-            > .options {
-              margin-top: 20rpx;
-              width: calc(100% + 25rpx); // 用于容纳最后一个option的margin-right防止换行
-              display: flex;
-              flex-wrap: wrap;
-              .option {
-                height: 70rpx;
-                background: #f5f5f5;
-                border-radius: 11rpx;
-                font-size: 28rpx;
-                color: #8f8f8f;
-                min-width: 205rpx;
-                @include center-flex;
-                margin-right: 25rpx;
-                margin-bottom: 25rpx;
-                > span {
-                  @include line-limit;
-                  margin: 0 20rpx;
-                  width: calc(100% - 2 * 20rpx);
-                  text-align: center;
-                }
-                &.selected {
-                  background-color: #ffeec1;
-                  color: #ff8b18;
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-
-    .spec-select-done {
-      background-image:linear-gradient(-95deg, #fccf31 14%, #fdaa47 100%);
-      box-shadow: 0 15rpx 20rpx 0 rgba(255, 139, 24, 0.33), 0 2rpx 10rpx 0 rgba(252, 193, 56, 0.63);
-      border-radius: 25rpx;
-      width: 726rpx;
-      height: 100rpx;
-      @include center-flex;
-      font-size: 34rpx;
-      color: #ffffff;
-      letter-spacing: 1.31rpx;
-      position: absolute;
-      left: 12rpx;
-      right: 12rpx;
-      bottom: 30rpx;
+      transform: translateY(calc(100% - #{$activeHeight})) translate3d(0, 0, 0);
     }
   }
+
+  .close {
+    position: absolute;
+    right: 30rpx;
+    top: 25rpx;
+    font-size: 30rpx;
+    z-index: 100;
+    color: #8f8f8f;
+  }
+
+  .spec-select-scroller-container {
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    transition: transform 0.5s;
+    transform: translateY(100%) translate3d(0, 0, 0);
+    webkit-transform: translate3d(0, 0, 0);
+    -moz-transform: translate3d(0, 0, 0);
+    -ms-transform: translate3d(0, 0, 0);
+    -o-transform: translate3d(0, 0, 0);
+    height: $activeHeight;
+    background-color: #ffffff;
+    padding-top: 60rpx;
+  }
+
+  .spec-select-scroller {
+    height: 100%;
+    .spec-select {
+      width: calc(100% - 88rpx);
+      margin: 0 44rpx 60rpx 44rpx;
+      display: flex;
+      flex-direction: column;
+      padding-bottom: 250rpx; // 为了给【加入购物车】按钮留空位
+      > .header {
+        width: 100%;
+        display: flex;
+        position: relative;
+        > image {
+          height: 190rpx;
+          width: 190rpx;
+          background-color: #d8d8d8;
+          border-radius: 5rpx;
+        }
+        > .content {
+          position: relative;
+          margin-left: 50rpx;
+          width: 427rpx;
+          font-weight: bold;
+          > .name {
+            width: 100%;
+            @include line-limit;
+            font-size: 36rpx;
+            color: #232323;
+            letter-spacing: 2.08rpx;
+          }
+          > .spec {
+            width: 100%;
+            @include line-limit(2);
+            margin-top: 5rpx;
+            font-size: 24rpx;
+            color: #606060;
+            letter-spacing: 1rpx;
+          }
+          > .price {
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            font-size: 36rpx;
+            color: #fe8966;
+            letter-spacing: 2rpx;
+            > span {
+              font-size: 40rpx;
+            }
+          }
+        }
+      }
+      > .form {
+        margin-top: 35rpx;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        > .question {
+          width: 100%;
+          > .name {
+            font-size: 24rpx;
+            color: #9b9b9b;
+            letter-spacing: 1rpx;
+            width: 100%;
+            @include line-limit;
+          }
+          > .options {
+            margin-top: 20rpx;
+            width: calc(
+              100% + 25rpx
+            ); // 用于容纳最后一个option的margin-right防止换行
+            display: flex;
+            flex-wrap: wrap;
+            .option {
+              height: 70rpx;
+              background: #f5f5f5;
+              border-radius: 11rpx;
+              font-size: 28rpx;
+              color: #8f8f8f;
+              min-width: 205rpx;
+              @include center-flex;
+              margin-right: 25rpx;
+              margin-bottom: 25rpx;
+              > span {
+                @include line-limit;
+                margin: 0 20rpx;
+                width: calc(100% - 2 * 20rpx);
+                text-align: center;
+              }
+              &.selected {
+                background-color: #ffeec1;
+                color: #ff8b18;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  .spec-select-done {
+    background-image: linear-gradient(-95deg, #fccf31 14%, #fdaa47 100%);
+    box-shadow: 0 15rpx 20rpx 0 rgba(255, 139, 24, 0.33),
+      0 2rpx 10rpx 0 rgba(252, 193, 56, 0.63);
+    border-radius: 25rpx;
+    width: 726rpx;
+    height: 100rpx;
+    @include center-flex;
+    font-size: 34rpx;
+    color: #ffffff;
+    letter-spacing: 1.31rpx;
+    position: absolute;
+    left: 12rpx;
+    right: 12rpx;
+    bottom: 30rpx;
+  }
+}
 </style>
 
 <script>
@@ -203,6 +205,7 @@ import wepy from 'wepy';
 
 import { connect, getStore } from 'wepy-redux';
 import { closeSpecSelect, modifyItemCount } from '../store/actions';
+import filter from '../lib/filter.wxs';
 
 const store = getStore();
 
@@ -219,11 +222,15 @@ const store = getStore();
   }
 })
 export default class Detail extends wepy.component {
+  wxs = {
+    filter
+  };
+
   data = {
     selection: null,
     price: 0,
     specText: ''
-  }
+  };
 
   methods = {
     noop () {},
@@ -233,13 +240,18 @@ export default class Detail extends wepy.component {
     select (qIndex, oIndex) {
       if (this.selection[qIndex] === oIndex) {
         // toggle result
-        if (!this.item.spec[qIndex].required) { // 必填项不可取消（置空）
+        if (!this.item.spec[qIndex].require) {
+          // 必填项不可取消（置空）
           this.price -= this.item.spec[qIndex].options[oIndex].delta;
           delete this.selection[qIndex];
         }
       } else {
-        if (this.selection[qIndex]) { // 减去原来选项的
-          this.price -= this.item.spec[qIndex].options[this.selection[qIndex]].delta;
+        if (this.selection[qIndex]) {
+          // 减去原来选项的
+          // eslint-disable-next-line
+          this.price -= this.item.spec[qIndex].options[
+            this.selection[qIndex]
+          ].delta;
         }
         this.selection[qIndex] = oIndex;
         this.price += this.item.spec[qIndex].options[oIndex].delta;
@@ -255,10 +267,10 @@ export default class Detail extends wepy.component {
       store.dispatch(modifyItemCount(this.item.context.id, +1, result));
       store.dispatch(closeSpecSelect());
     }
-  }
+  };
 
   watch = {
-    'id' (newV, oldV) {
+    id (newV, oldV) {
       if (!newV) return;
       // selecting item changed, re-establish context
       this.selection = {};
@@ -266,7 +278,7 @@ export default class Detail extends wepy.component {
       this.specText = '';
       // set default value
       this.item.spec.forEach((question, idx) => {
-        if (question.required || !isNaN(question.default)) {
+        if (question.require || !isNaN(question.default)) {
           this.selection[idx] = question.default || 0;
           this.price += question.options[this.selection[idx]].delta;
         }
@@ -274,10 +286,12 @@ export default class Detail extends wepy.component {
       this.updateSpecText();
       this.$apply();
     }
-  }
+  };
 
   updateSpecText () {
-    this.specText = Object.entries(this.selection).map(([q, o]) => this.item.spec[q].options[o].name).join(' / ');
+    this.specText = Object.entries(this.selection)
+      .map(([q, o]) => this.item.spec[q].options[o].name)
+      .join(' / ');
   }
 }
 </script>

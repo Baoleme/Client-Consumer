@@ -63,6 +63,7 @@ class ImmutableBasket {
     return this.map.size;
   }
 
+  // since same dish with different selected specs should be treated as different dish, specs combined with dish name are used as key
   _genKey (item, specArray) {
     const { spec } = item;
     const specStr = specArray ? specArray.filter(o => !isNaN(o)).map((o, q) => spec[q].options[o].name).join('/') : '';
@@ -78,7 +79,7 @@ class ImmutableBasket {
   }
 
   _calculateUnitPrice (item, specResult) {
-    return item.price + (specResult || []).map((o, q) => o ? item.spec[q].options[o].delta : 0).reduce((acc, x) => acc + x, 0);
+    return item.price + (specResult || []).map((o, q) => !isNaN(o) ? item.spec[q].options[o].delta : 0).reduce((acc, x) => acc + x, 0);
   }
 }
 

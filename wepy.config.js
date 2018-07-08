@@ -44,7 +44,7 @@ module.exports = {
   },
   appConfig: {
     noPromiseAPI: ['createSelectorQuery'],
-    baseUrl: prod ? 'https://api.baoleme.andiedie.cn/' : 'http://127.0.0.1:8520/'
+    baseUrl: 'https://api.baoleme.andiedie.cn/'
   }
 };
 

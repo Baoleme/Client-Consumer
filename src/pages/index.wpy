@@ -91,7 +91,6 @@ export default class Index extends wepy.page {
           title: err.data && err.data.message ? err.data.message : err.message,
           image: '../assets/error.png'
         });
-        console.error(err);
       }
     }
   };
@@ -118,6 +117,8 @@ export default class Index extends wepy.page {
       wepy.showLoading({
         mask: true
       });
+      // TODO: check existance of rid & tid
+
       // load data
       const { data: { name, dish, logo_url, phone } } = await this.$http(
         `/restaurant/${rid}`
@@ -132,6 +133,7 @@ export default class Index extends wepy.page {
   }
 }
 
+// query string to query object
 function parseQueryString (str) {
   try {
     const [, qs] = (str || '').match(/\?(.+)$/) || [];
@@ -148,6 +150,7 @@ function parseQueryString (str) {
   }
 }
 
+// transform received format into front-end favored format
 function dishDataAdapter (_data) {
   const data = _data.filter(o => o.dish && o.dish.length);
   return zipObject(

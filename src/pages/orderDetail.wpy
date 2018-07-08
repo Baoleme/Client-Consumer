@@ -10,7 +10,7 @@
     <scroll-view scroll-y class="scroller">
       <view class="scroller-container">
         <view class="card-container order-state">
-          <view class="step-bar">
+          <view class="step-bar" wx:if="{{order.state !== 'cancelled'}}">
             <view class="line at-0 {{doneStep >= 1 ? 'done' : ''}}" />
             <view class="line at-1 {{doneStep >= 2 ? 'done' : ''}}" />
             <view class="step at-0 {{doneStep >= 0 ? 'done' : ''}} {{doneStep === 0 ? 'active' : ''}}">
@@ -32,7 +32,7 @@
         <view class="card-container info">
           <view class="row table">
             <view class="row-name">就餐位置</view>
-            <view class="info"><span>{{order.table + 1}}</span>号桌</view>
+            <view class="info"><span>{{table}}</span>号桌</view>
           </view>
           <view class="divider" />
           <view class="row order-id">
@@ -85,7 +85,7 @@
           position: relative;
           width: 560rpx;
           height: 70rpx;
-          margin: 0 68rpx;
+          margin: 0 68rpx 40rpx 68rpx;
           .step {
             position: absolute;
             height: 70rpx;
@@ -147,7 +147,6 @@
           }
         }
         > .state-text {
-          margin-top: 40rpx;
           font-size: 36rpx;
           letter-spacing: 0;
           &.active {
@@ -213,6 +212,10 @@ import OrderContent from '../components/OrderContent';
   order (state) {
     return state.order.detailing;
   },
+  table (state) {
+    return Number(this.order.table) + 1;
+  },
+  // format date
   time (state) {
     const date = new Date(
       this.order.time ||

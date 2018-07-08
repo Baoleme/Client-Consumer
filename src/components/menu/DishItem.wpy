@@ -18,7 +18,7 @@
       <view class="slot">
         <view class="price">
           <span class="pre">¥</span>
-          <span class="mid">{{item.price}}</span>
+          <span class="mid">{{filter.toFixed(item.price)}}</span>
           <span class="post" wx:if="{{!!item.spec}}">起</span>
         </view>
         <view class="dish-counter {{!item.spec && item.selling ? '' : 'gone'}}" @tap.stop="noop">
@@ -176,11 +176,16 @@ import {
 } from '../../store/actions';
 
 import Counter from './DishCounter';
+import filter from '../lib/filter.wxs';
 
 const store = getStore();
 
 @connect({})
 export default class DishItem extends wepy.component {
+  wxs = {
+    filter
+  };
+
   components = {
     counter: Counter
   };

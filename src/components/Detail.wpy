@@ -25,7 +25,7 @@
           </view>
           <view class="price">
             <span class="pre">¥</span>
-            <span class="mid">12</span>
+            <span class="mid">{{filter.toFixed(item.price)}}</span>
             <span class="post" wx:if="{{item.spec}}">起</span>
           </view>
           <view class="divider" />
@@ -41,166 +41,170 @@
 </template>
 
 <style lang="scss">
-  @import "../lib/var.scss";
+@import '../lib/var.scss';
 
-  $emptyHeight: 100rpx;
-  $activeHeight: 1075rpx;
+$emptyHeight: 100rpx;
+$activeHeight: 1075rpx;
 
-  .item-detail-container {
-    position: absolute;
-    left: 0;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    overflow: hidden;
-    // below are about in/out transitional effects
-    background-color: rgba(#000, .45);
-    visibility: hidden;
-    opacity: 0;
-    transition: opacity 0.2s, visibility 0.2s;
+.item-detail-container {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+  // below are about in/out transitional effects
+  background-color: rgba(#000, 0.45);
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.2s, visibility 0.2s;
+  > .item-detail {
+    transition: transform 0.5s;
+    // 以下translated3d是魔法，是玄学。传说中在移动网页端可以开启硬件加速
+    // 但在小程序上还没见到明显改善
+    transform: translateY(100%) translate3d(0, 0, 0);
+    webkit-transform: translate3d(0, 0, 0);
+    -moz-transform: translate3d(0, 0, 0);
+    -ms-transform: translate3d(0, 0, 0);
+    -o-transform: translate3d(0, 0, 0);
+  }
+
+  &.active {
+    visibility: visible;
+    opacity: 1;
     > .item-detail {
-      transition: transform 0.5s;
-      // 以下translated3d是魔法，是玄学。传说中在移动网页端可以开启硬件加速
-      // 但在小程序上还没见到明显改善
-      transform: translateY(100%) translate3d(0,0,0);
-      webkit-transform: translate3d(0,0,0);
-      -moz-transform: translate3d(0,0,0);
-      -ms-transform: translate3d(0,0,0);
-      -o-transform: translate3d(0,0,0);
-    }
-
-    &.active {
-      visibility: visible;
-      opacity: 1;
-      > .item-detail {
-        transform: translateY(calc(100% - #{$activeHeight})) translate3d(0,0,0);
-      }
-    }
-
-    &.active.expanded {
-      > .item-detail {
-        height: 100%;
-        transition: transform 0.2s;
-        transform: translateY(0) translate3d(0,0,0);
-      }
-      .close {
-        top: 50rpx;
-      }
+      transform: translateY(calc(100% - #{$activeHeight})) translate3d(0, 0, 0);
     }
   }
 
-  .item-detail {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    height: 100%;
-    background-color: #ffffff;
-    .item-detail-wrapper {
+  &.active.expanded {
+    > .item-detail {
+      height: 100%;
+      transition: transform 0.2s;
+      transform: translateY(0) translate3d(0, 0, 0);
+    }
+    .close {
+      top: 50rpx;
+    }
+  }
+}
+
+.item-detail {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 100%;
+  background-color: #ffffff;
+  .item-detail-wrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    > view {
+      flex-shrink: 0;
+    }
+    > .image {
       width: 100%;
+      height: 566rpx;
+      background-color: #b4b4b4;
+    }
+    > .close {
+      position: absolute;
+      top: 21rpx;
+      left: 30rpx;
+      height: 60rpx;
+      width: 60rpx;
+      background: rgba(#adadad, 0.3);
+      border-radius: 15rpx;
+      color: #f5f5f5;
+      @include center-flex;
+      transform: rotate(-90deg);
+      transition: top 0.2s;
+      > i {
+        color: #f5f5f5;
+        font-size: 20rpx;
+      }
+    }
+    > .main {
+      width: calc(100% - 41rpx * 2);
+      margin: 30rpx 41rpx 0 41rpx;
       display: flex;
       flex-direction: column;
-      > view {
-        flex-shrink: 0;
-      }
-      > .image {
+      align-items: center;
+      > .line {
         width: 100%;
-        height: 566rpx;
-        background-color: #b4b4b4;
-      }
-      > .close {
-        position: absolute;
-        top: 21rpx;
-        left: 30rpx;
-        height: 60rpx;
-        width: 60rpx;
-        background: rgba(#adadad, .3);
-        border-radius: 15rpx;
-        color: #f5f5f5;
-        @include center-flex;
-        transform: rotate(-90deg);
-        transition: top .2s;
-        > i {
-          color: #f5f5f5;
-          font-size: 20rpx;
-        }
-      }
-      > .main {
-        width: calc(100% - 41rpx * 2);
-        margin: 30rpx 41rpx 0 41rpx;
+        height: 56rpx;
         display: flex;
-        flex-direction: column;
-        align-items: center;
-        > .line {
-          width: 100%;
+        justify-content: space-between;
+        > .name {
           height: 56rpx;
-          display: flex;
-          justify-content: space-between;
-          > .name {
-            height: 56rpx;
-            font-size: 40rpx;
-            color: #232323;
-            letter-spacing: 1rpx;
-            font-weight: bold;
-            width: 560rpx;
-            @include line-limit;
-          }
-        }
-        > .price {
-          align-self: flex-start;
+          font-size: 40rpx;
+          color: #232323;
+          letter-spacing: 1rpx;
           font-weight: bold;
-          color: #fe8966;
-          letter-spacing: 1.92rpx;
-          font-weight: bold;
-          font-size: 36rpx;
-          margin-top: 10rpx;
-          > .pre {
-            font-size: 30rpx;
-          }
-          > .post {
-            margin-left: 7rpx;
-            font-size: 26rpx;
-            color: #606060;
-            letter-spacing: 2.08rpx;
-            font-weight: lighter;
-          }
-        }
-        > .divider {
-          margin: 26rpx auto;
-          width: 549rpx;
-          height: 3rpx;
-          background-color: #ededed;
-        }
-        > .description-title {
-          align-self: flex-start;
-          font-size: 32rpx;
-          color: #9b9b9b;
-          letter-spacing: 1.23rpx;
-          font-weight: bold;
-        }
-        > .description {
-          margin: 21rpx 0 75rpx 0;
-          font-size: 24rpx;
-          width: 100%;
-          color: #606060;
-          letter-spacing: 1.18rpx;
+          width: 560rpx;
+          @include line-limit;
         }
       }
-
-      > .span-indicator {
-        position: absolute;
-        left: 0;
-        right: 0;
-        top: calc(#{$activeHeight} - 147rpx);
-        height: 147rpx;
-        background-image: linear-gradient(-180deg, rgba(255, 255, 255, 0.00) 0%, #ffffff 23%);
-        @include center-flex;
-        > i {
-          color: #9a9a9a;
+      > .price {
+        align-self: flex-start;
+        font-weight: bold;
+        color: #fe8966;
+        letter-spacing: 1.92rpx;
+        font-weight: bold;
+        font-size: 36rpx;
+        margin-top: 10rpx;
+        > .pre {
+          font-size: 30rpx;
         }
+        > .post {
+          margin-left: 7rpx;
+          font-size: 26rpx;
+          color: #606060;
+          letter-spacing: 2.08rpx;
+          font-weight: lighter;
+        }
+      }
+      > .divider {
+        margin: 26rpx auto;
+        width: 549rpx;
+        height: 3rpx;
+        background-color: #ededed;
+      }
+      > .description-title {
+        align-self: flex-start;
+        font-size: 32rpx;
+        color: #9b9b9b;
+        letter-spacing: 1.23rpx;
+        font-weight: bold;
+      }
+      > .description {
+        margin: 21rpx 0 75rpx 0;
+        font-size: 24rpx;
+        width: 100%;
+        color: #606060;
+        letter-spacing: 1.18rpx;
+      }
+    }
+
+    > .span-indicator {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: calc(#{$activeHeight} - 147rpx);
+      height: 147rpx;
+      background-image: linear-gradient(
+        -180deg,
+        rgba(255, 255, 255, 0) 0%,
+        #ffffff 23%
+      );
+      @include center-flex;
+      > i {
+        color: #9a9a9a;
       }
     }
   }
+}
 </style>
 
 <script>
@@ -208,6 +212,7 @@ import wepy from 'wepy';
 
 import { connect, getStore } from 'wepy-redux';
 import { closeDetail, modifyItemCount, openSpecSelect } from '../store/actions';
+import filter from '../lib/filter.wxs';
 
 const store = getStore();
 
@@ -222,16 +227,13 @@ const store = getStore();
   }
 })
 export default class Detail extends wepy.component {
+  wxs = {
+    filter
+  };
+
   data = {
-    description: `9元单点是无糖的，需要的朋友请跟厨房讲，不要随意打差评，谢谢。
-茶阁里的猫眼石饮品6选2~
-火焰黑糖系列（共5款）
-1.火焰奶霜红水乌龙：26元
-2.火焰奶霜茉莉花茶：26元
-3.火焰奶霜金萱乌龙：26元
-4.火焰奶霜蜜叶红茶：26元`,
     expanded: false
-  }
+  };
 
   methods = {
     noop () {},
@@ -251,15 +253,15 @@ export default class Detail extends wepy.component {
       store.dispatch(openSpecSelect(this.item.context.id));
       store.dispatch(closeDetail());
     }
-  }
+  };
 
   watch = {
-    'active' (now) {
+    active (now) {
       if (!now) {
         // not active
         this.expanded = false;
       }
     }
-  }
+  };
 }
 </script>

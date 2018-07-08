@@ -5,7 +5,7 @@
       <view class="spec">{{item.specStr}}</view>
     </view>
     <view class="right">
-      <view class="price"><span>¥</span>{{item.unitPrice * item.count}}</view>
+      <view class="price"><span>¥</span>{{filter.toFixed(item.unitPrice * item.count)}}</view>
 
       <view class="dish-counter">
         <view class="button minus {{item.count !== 0 ? '' : 'gone'}}" @tap="minus">
@@ -21,52 +21,52 @@
 </template>
 
 <style lang="scss">
-  @import "../../lib/var.scss";
+@import '../../lib/var.scss';
 
-  .cart-item {
-    min-height: 80rpx;
-    margin: 24rpx 40rpx 20rpx 40rpx;
-    width: calc(100% - 80rpx);
+.cart-item {
+  min-height: 80rpx;
+  margin: 24rpx 40rpx 20rpx 40rpx;
+  width: calc(100% - 80rpx);
+  display: flex;
+  align-items: center;
+  > .left {
+    width: 350rpx;
+    display: flex;
+    flex-direction: column;
+    > .name {
+      width: 100%;
+      font-size: 32rpx;
+      color: #232323;
+      letter-spacing: 0.5rpx;
+      font-weight: bold;
+      height: 45rpx;
+      @include line-limit;
+    }
+    > .spec {
+      width: 100%;
+      margin-top: 4rpx;
+      font-size: 22rpx;
+      color: #9b9b9b;
+      letter-spacing: 0.5rpx;
+      font-weight: lighter;
+      @include line-limit;
+    }
+  }
+  > .right {
+    width: calc(100% - 350rpx);
     display: flex;
     align-items: center;
-    > .left {
-      width: 350rpx;
-      display: flex;
-      flex-direction: column;
-      > .name {
-        width: 100%;
-        font-size: 32rpx;
-        color: #232323;
-        letter-spacing: 0.5rpx;
-        font-weight: bold;
-        height: 45rpx;
-        @include line-limit;
-      }
-      > .spec {
-        width: 100%;
-        margin-top: 4rpx;
-        font-size: 22rpx;
-        color: #9b9b9b;
-        letter-spacing: 0.5rpx;
-        font-weight: lighter;
-        @include line-limit;
-      }
-    }
-    > .right {
-      width: calc(100% - 350rpx);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      > .price {
-        color: #fe8966;
-        font-size: 36rpx;
-        font-weight: bold;
-        > span {
-          font-size: 24rpx;
-        }
+    justify-content: space-between;
+    > .price {
+      color: #fe8966;
+      font-size: 36rpx;
+      font-weight: bold;
+      > span {
+        font-size: 24rpx;
       }
     }
   }
+}
 </style>
 
 <script>
@@ -75,14 +75,19 @@ import wepy from 'wepy';
 import { connect, getStore } from 'wepy-redux';
 import { modifyItemCount } from '../../store/actions';
 
+import filter from '../lib/filter.wxs';
+
 const store = getStore();
 
-@connect({
-})
+@connect({})
 export default class CartItem extends wepy.component {
+  wxs = {
+    filter
+  };
+
   props = {
     item: Object
-  }
+  };
 
   methods = {
     minus () {
@@ -93,6 +98,6 @@ export default class CartItem extends wepy.component {
       store.dispatch(modifyItemCount(this.item.id, +1, this.item.spec || null));
       this.$apply();
     }
-  }
+  };
 }
 </script>

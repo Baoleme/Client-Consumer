@@ -39,7 +39,7 @@
     <view class="status-bar">
       <view class="left">
         <view class="price">
-          <span>¥</span>{{total}}
+          <span>¥</span>{{filter.toFixed(total)}}
         </view>
       </view>
       <view class="right" @tap.stop="ok">支付</view>
@@ -51,7 +51,7 @@
         <view class="restaurant">{{created.restaurant.name}}</view>
         <view class="price">
           <span>¥</span>
-          {{created.price}}
+          {{filter.toFixed(created.price)}}
         </view>
         <view class="button" @tap.stop="payDone">完成</view>
       </view>
@@ -156,6 +156,7 @@
   }
 
   > .ok-modal-container {
+    z-index: 100;
     position: absolute;
     left: 0;
     top: 0;
@@ -226,6 +227,7 @@ import { createOrder, selectOrderDetail, emptyBasket } from '../store/actions';
 
 import OrderContent from '../components/OrderContent';
 import RequestMixin from '../mixins/request';
+import filter from '../lib/filter.wxs';
 
 const store = getStore();
 
@@ -250,6 +252,10 @@ const store = getStore();
   }
 })
 export default class ConfirmOrder extends wepy.page {
+  wxs = {
+    filter
+  };
+
   config = {};
 
   mixins = [RequestMixin];
@@ -308,8 +314,17 @@ export default class ConfirmOrder extends wepy.page {
 
         this.showOKModal = true;
         this.$apply();
-      } finally {
         wepy.hideLoading();
+      } catch (err) {
+        wepy.hideLoading();
+        let errMsg = err.data && err.data.message;
+        errMsg = errMsg || err.data;
+        errMsg = errMsg || err.message;
+        errMsg = errMsg || err;
+        wepy.showToast({
+          title: String(errMsg),
+          image: '../assets/error.png'
+        });
       }
     }
   };

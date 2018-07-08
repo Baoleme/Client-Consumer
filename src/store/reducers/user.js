@@ -10,6 +10,6 @@ export default handleActionsWithoutError({
   }
 }, {
   nickName: '登录中...',
-  avatarUrl: '', // TODO: add default avatar
+  avatarUrl: '',
   openid: ''
 });

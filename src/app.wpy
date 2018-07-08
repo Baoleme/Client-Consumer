@@ -1,71 +1,71 @@
 <style lang="scss">
-  @import 'lib/iconfont.scss';
-  @import 'lib/var.scss';
+@import 'lib/iconfont.scss';
+@import 'lib/var.scss';
 
-  page {
-    font-family:PingFangSC-Regular;
-    height: 100%;
-    background-color: #f9f9f9;
-    font-size: 24rpx;
-    overflow: hidden;
+page {
+  font-family: PingFangSC-Regular;
+  height: 100%;
+  background-color: #f9f9f9;
+  font-size: 24rpx;
+  overflow: hidden;
+}
+
+.container {
+  overflow: hidden;
+}
+
+.card-container {
+  width: calc(100% - 76rpx);
+  background-color: #ffffff;
+  padding: 30rpx 38rpx 42rpx 38rpx;
+  > .divider {
+    margin: 24rpx calc(44rpx - 38rpx) 20rpx calc(66rpx - 38rpx);
+    width: calc(100% - (66 - 38) rpx - (44 - 38) rpx);
+    height: 2rpx;
+    background-color: #ededed;
   }
+}
 
-  .container {
-    overflow: hidden;
-  }
-
-  .card-container {
-    width: calc(100% - 76rpx);
-    background-color: #ffffff;
-    padding: 30rpx 38rpx 42rpx 38rpx;
-    > .divider {
-      margin: 24rpx calc(44rpx - 38rpx) 20rpx calc(66rpx - 38rpx);
-      width: calc(100% - (66 - 38)rpx - (44 - 38)rpx);
-      height: 2rpx;
-      background-color: #ededed;
-    }
-  }
-
-  .head-bar {
-    position: relative;
-    height: $headBarHeight;
-    width: 100%;
-    background-color: #ffffff;
-    color: #232323;
-    > .back {
-      position: absolute;
-      left: 20rpx;
-      bottom: 37rpx;
-      display: flex;
-      > .icon {
-        transform: rotate(-90deg);
-        > i {
-          font-size: 20rpx;
-        }
-      }
-      > span {
-        font-size: 32rpx;
-        letter-spacing: 0;
+.head-bar {
+  position: relative;
+  height: $headBarHeight;
+  width: 100%;
+  background-color: #ffffff;
+  color: #232323;
+  > .back {
+    position: absolute;
+    left: 20rpx;
+    bottom: 37rpx;
+    display: flex;
+    > .icon {
+      transform: rotate(-90deg);
+      > i {
+        font-size: 20rpx;
       }
     }
-    > .page-title {
-      position: absolute;
-      width: 364rpx;
-      left: 0;
-      right: 0;
-      bottom: 23rpx;
-      margin-left: auto;
-      margin-right: auto;
-      font-size: 37rpx;
-      text-align: center;
-      font-weight: bold;
+    > span {
+      font-size: 32rpx;
       letter-spacing: 0;
     }
   }
-
-  .gone {
-    visibility: hidden;
+  > .page-title {
+    position: absolute;
+    width: 364rpx;
+    left: 0;
+    right: 0;
+    bottom: 23rpx;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 37rpx;
+    text-align: center;
+    font-weight: bold;
+    letter-spacing: 0;
   }
+}
+
+.gone {
+  visibility: hidden;
+}
 </style>
 
 <script>
@@ -77,18 +77,15 @@ import jar from './lib/cookieJar';
 import { setStore } from 'wepy-redux';
 import configStore from './store';
 
-import { updateUser, createOrder } from './store/actions';
+import { updateUser, refreshOrder } from './store/actions';
 
 const store = configStore();
 setStore(store);
 
 export default class extends wepy.app {
+  // global setting as in native mini-program
   config = {
-    pages: [
-      'pages/index',
-      'pages/confirmOrder',
-      'pages/orderDetail'
-    ],
+    pages: ['pages/index', 'pages/confirmOrder', 'pages/orderDetail'],
     window: {
       backgroundColor: '#f9f9f9',
       backgroundTextStyle: 'light',
@@ -97,21 +94,31 @@ export default class extends wepy.app {
       navigationBarTextStyle: 'black',
       navigationStyle: 'custom'
     }
-  }
+  };
 
   constructor () {
     super();
     this.use('requestfix');
-    this.use('promisify');
+    this.use('promisify'); // transform api into promise favor
+
+    // on some Android env, this method is missing
+    // eslint-disable-next-line
+    String.prototype.padStart =
+      String.prototype.padStart ||
+      function (len, pad) {
+        if (this.length >= len) return this.toString();
+        return String(pad).repeat(len - this.length) + this.toString();
+      };
   }
 
   async onLaunch () {
-    jar.init();
+    jar.init(); // initialize cookie jar container
 
     await this.ensureLogin();
-    await this.loadOrders();
+    this.startPollingOrders();
   }
 
+  // if not logged in, then do it
   async ensureLogin () {
     try {
       wepy.showLoading({
@@ -142,16 +149,26 @@ export default class extends wepy.app {
   }
 
   async loadOrders () {
-    // TODO: loading 态的维护
-    // TODO: 底部翻页
     const { data } = await request('/order');
     if (data.length) {
-      store.dispatch(createOrder(...data));
+      store.dispatch(refreshOrder(...data));
+    }
+  }
+
+  async startPollingOrders () {
+    while (true) {
+      try {
+        await this.loadOrders();
+      } finally {
+        await new Promise(resolve => {
+          setTimeout(resolve, 5000);
+        });
+      }
     }
   }
 
   async login () {
-    const { code } = await wepy.login();
+    const { code } = await wepy.login(); // wechat api, get code for logging in
     const { data } = await request({
       url: '/customer/session',
       method: 'post',
