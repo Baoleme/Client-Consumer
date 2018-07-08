@@ -309,7 +309,9 @@ export default class ConfirmOrder extends wepy.page {
 
         this.showOKModal = true;
         this.$apply();
+        wepy.hideLoading();
       } catch (err) {
+        wepy.hideLoading();
         let errMsg = err.data && err.data.message;
         errMsg = errMsg || err.data;
         errMsg = errMsg || err.message;
@@ -318,8 +320,6 @@ export default class ConfirmOrder extends wepy.page {
           title: String(errMsg),
           image: '../assets/error.png'
         });
-      } finally {
-        wepy.hideLoading();
       }
     }
   };

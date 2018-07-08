@@ -100,6 +100,15 @@ export default class extends wepy.app {
     super();
     this.use('requestfix');
     this.use('promisify'); // transform api into promise favor
+
+    // on some Android env, this method is missing
+    // eslint-disable-next-line
+    String.prototype.padStart =
+      String.prototype.padStart ||
+      function (len, pad) {
+        if (this.length >= len) return this.toString();
+        return String(pad).repeat(len - this.length) + this.toString();
+      };
   }
 
   async onLaunch () {
